@@ -52,3 +52,4 @@ Thumbs.db
 .vs/
 bin/
 bin-int/
+*.user

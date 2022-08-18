@@ -1,7 +1,7 @@
 #pragma once
 
 #ifdef CL_PLATFORM_WINDOWS 
-	#ifdef CL_BUID_DLL
+	#ifdef CL_BUILD_DLL
 		#define CRYSTAL_API _declspec(dllexport)
 	#else 
 		#define CRYSTAL_API _declspec(dllimport)
