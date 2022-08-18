@@ -48,3 +48,7 @@ Thumbs.db
 *.mov
 *.wmv
 
+#Visual Studio settings and binaries
+.vs/
+bin/
+bin-int/
