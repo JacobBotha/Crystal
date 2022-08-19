@@ -26,7 +26,8 @@ project "Crystal"
 
 	includedirs
 	{
-		"%{prj.name}/vendor/spdlog/include"
+		"%{prj.name}/vendor/spdlog/include",
+        "Crystal/src"
 	}
 
 	filter "system:windows"

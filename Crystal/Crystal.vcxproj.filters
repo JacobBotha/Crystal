@@ -4,6 +4,9 @@
     <Filter Include="Crystal">
       <UniqueIdentifier>{873AF83B-F319-77D7-FC31-02AE6890DD38}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Crystal\Events">
+      <UniqueIdentifier>{8BE85F61-77B6-5367-604A-C48D4CB72FCC}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Crystal.h" />
@@ -16,9 +19,15 @@
     <ClInclude Include="src\Crystal\EntryPoint.h">
       <Filter>Crystal</Filter>
     </ClInclude>
+    <ClInclude Include="src\Crystal\Events\Event.h">
+      <Filter>Crystal\Events</Filter>
+    </ClInclude>
     <ClInclude Include="src\Crystal\Log.h">
       <Filter>Crystal</Filter>
     </ClInclude>
+    <ClInclude Include="src\Crystal\Events\KeyEvent.h" />
+    <ClInclude Include="src\Crystal\Events\MouseEvent.h" />
+    <ClInclude Include="src\Crystal\Events\ApplicationEvent.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Crystal\Application.cpp">
