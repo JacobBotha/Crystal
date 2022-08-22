@@ -8,7 +8,20 @@ workspace "Crystal"
 		"Dist"
 	}
 
+    flags
+	{
+		"MultiProcessorCompile"
+	}
+
 outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
+
+VulkanSDK = os.getenv("VULKAN_SDK")
+
+IncludeDir = {}
+IncludeDir["GLFW"] = "Crystal/vendor/GLFW/include"
+
+
+include "Crystal/vendor/GLFW"
 
 project "Crystal"
 	location "Crystal"
@@ -17,6 +30,9 @@ project "Crystal"
 
 	targetdir ("bin/" .. outputdir .. "/%{prj.name}")
 	objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
+
+    pchheader "clpch.h"
+    pchsource "Crystal/src/clpch.cpp"
 
 	files
 	{
@@ -27,7 +43,20 @@ project "Crystal"
 	includedirs
 	{
 		"%{prj.name}/vendor/spdlog/include",
-        "Crystal/src"
+        "%{prj.name}/src",
+        "%{IncludeDir.GLFW}",
+        "%{VulkanSDK}/Include"
+	}
+
+    links
+    {
+        "GLFW",
+        "%{VulkanSDK}/Lib/vulkan-1.lib"
+    }
+
+	defines
+	{
+		"GLFW_INCLUDE_VULKAN"
 	}
 
 	filter "system:windows"

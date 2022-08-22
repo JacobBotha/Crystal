@@ -7,6 +7,15 @@
     <Filter Include="Crystal\Events">
       <UniqueIdentifier>{8BE85F61-77B6-5367-604A-C48D4CB72FCC}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Platform">
+      <UniqueIdentifier>{2AC788B4-1694-E3BF-3FAD-D1672BD9184E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Platform\Vulkan">
+      <UniqueIdentifier>{6AE1DE2D-D66C-4CF2-DF7D-CFE64B88A8F2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Platform\Windows">
+      <UniqueIdentifier>{64FBD71A-50F4-F66C-7926-DCF1657ED678}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Crystal.h" />
@@ -19,15 +28,34 @@
     <ClInclude Include="src\Crystal\EntryPoint.h">
       <Filter>Crystal</Filter>
     </ClInclude>
+    <ClInclude Include="src\Crystal\Events\ApplicationEvent.h">
+      <Filter>Crystal\Events</Filter>
+    </ClInclude>
     <ClInclude Include="src\Crystal\Events\Event.h">
       <Filter>Crystal\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Crystal\Events\KeyEvent.h">
+      <Filter>Crystal\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Crystal\Events\MouseEvent.h">
+      <Filter>Crystal\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Crystal\GraphicsContext.h">
+      <Filter>Crystal</Filter>
     </ClInclude>
     <ClInclude Include="src\Crystal\Log.h">
       <Filter>Crystal</Filter>
     </ClInclude>
-    <ClInclude Include="src\Crystal\Events\KeyEvent.h" />
-    <ClInclude Include="src\Crystal\Events\MouseEvent.h" />
-    <ClInclude Include="src\Crystal\Events\ApplicationEvent.h" />
+    <ClInclude Include="src\Crystal\Window.h">
+      <Filter>Crystal</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\Vulkan\VKGraphicsContext.h">
+      <Filter>Platform\Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\Windows\WindowsWindow.h">
+      <Filter>Platform\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="src\clpch.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Crystal\Application.cpp">
@@ -36,5 +64,12 @@
     <ClCompile Include="src\Crystal\Log.cpp">
       <Filter>Crystal</Filter>
     </ClCompile>
+    <ClCompile Include="src\Platform\Vulkan\VKGraphicsContext.cpp">
+      <Filter>Platform\Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Platform\Windows\WindowsWindow.cpp">
+      <Filter>Platform\Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="src\clpch.cpp" />
   </ItemGroup>
 </Project>

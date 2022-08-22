@@ -1,3 +1,6 @@
 [submodule "Crystal/vendor/spdlog"]
 	path = Crystal/vendor/spdlog
 	url = https://github.com/gabime/spdlog
+[submodule "Crystal/vendor/GLFW"]
+	path = Crystal/vendor/GLFW
+	url = https://github.com/glfw/glfw

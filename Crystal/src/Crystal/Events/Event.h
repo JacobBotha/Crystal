@@ -1,8 +1,6 @@
 #pragma once
 
-#include "Crystal/Core.h"
-#include <string>
-#include <functional>
+#include "clpch.h"
 
 namespace Crystal {
 	enum class EventType {
