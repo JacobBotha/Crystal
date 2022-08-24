@@ -20,19 +20,45 @@ namespace Crystal {
 
 	void Application::OnEvent(Event& e) {
 		//Check if window was closed
-		if (e.GetEventType() == EventType::WindowClose) {
-			m_Running = false;
+		EventDispatcher dispatcher(e);
+		dispatcher.Dispatch<WindowCloseEvent>(BIND_EVENT_FN(OnWindowClose));
+
+		//ApplyEvent to all layers in the layer stack
+		for (auto it = m_LayerStack.end(); it != m_LayerStack.begin(); )
+		{
+			(*--it)->OnEvent(e);
+			if (e.Handled)
+				break;
 		}
 
 		//Log Event
 		CL_TRACE(e);
 	}
 
+	void Application::PushLayer(Layer* layer)
+	{
+		m_LayerStack.PushLayer(layer);
+	}
+	
+	void Application::PushOverlay(Layer* overlay)
+	{
+		m_LayerStack.PushOverlay(overlay);
+	}
+
 	void Application::run() {
 		WindowResizeEvent e(1200, 950);
 		CL_TRACE(e);
 		while (m_Running) {
+			for (Layer* layer : m_LayerStack)
+				layer->OnUpdate();
+
 			m_Window->OnUpdate();
 		}
+	}
+
+	bool Application::OnWindowClose(WindowCloseEvent& e) {
+		m_Running = false;
+
+		return true;
 	}
 }
