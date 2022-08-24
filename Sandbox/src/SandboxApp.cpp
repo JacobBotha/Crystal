@@ -10,7 +10,7 @@ public:
 
 	void OnUpdate() override
 	{
-		CL_INFO("ExampleLayer::Update");
+		//CL_INFO("ExampleLayer::Update");
 	}
 
 	void OnEvent(Crystal::Event& event) override

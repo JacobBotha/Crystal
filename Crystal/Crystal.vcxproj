@@ -86,6 +86,7 @@
       <MinimalRebuild>false</MinimalRebuild>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <AdditionalOptions>/MDd %(AdditionalOptions)</AdditionalOptions>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
@@ -112,6 +113,7 @@
       <StringPooling>true</StringPooling>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <AdditionalOptions>/MDd %(AdditionalOptions)</AdditionalOptions>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
@@ -139,6 +141,7 @@
       <StringPooling>true</StringPooling>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <AdditionalOptions>/MDd %(AdditionalOptions)</AdditionalOptions>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
@@ -162,16 +165,23 @@
     <ClInclude Include="src\Crystal\Events\KeyEvent.h" />
     <ClInclude Include="src\Crystal\Events\MouseEvent.h" />
     <ClInclude Include="src\Crystal\GraphicsContext.h" />
+    <ClInclude Include="src\Crystal\Input.h" />
+    <ClInclude Include="src\Crystal\Layer.h" />
+    <ClInclude Include="src\Crystal\LayerStack.h" />
     <ClInclude Include="src\Crystal\Log.h" />
     <ClInclude Include="src\Crystal\Window.h" />
     <ClInclude Include="src\Platform\Vulkan\VKGraphicsContext.h" />
+    <ClInclude Include="src\Platform\Windows\WindowsInput.h" />
     <ClInclude Include="src\Platform\Windows\WindowsWindow.h" />
     <ClInclude Include="src\clpch.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Crystal\Application.cpp" />
+    <ClCompile Include="src\Crystal\Layer.cpp" />
+    <ClCompile Include="src\Crystal\LayerStack.cpp" />
     <ClCompile Include="src\Crystal\Log.cpp" />
     <ClCompile Include="src\Platform\Vulkan\VKGraphicsContext.cpp" />
+    <ClCompile Include="src\Platform\Windows\WindowsInput.cpp" />
     <ClCompile Include="src\Platform\Windows\WindowsWindow.cpp" />
     <ClCompile Include="src\clpch.cpp">
       <PrecompiledHeader>Create</PrecompiledHeader>

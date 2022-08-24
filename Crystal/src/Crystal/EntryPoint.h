@@ -10,7 +10,7 @@ int main(int argc, char** argv) {
 	CL_INFO("Hello!");
 
 	auto app = Crystal::CreateApplication();
-	app->run();
+	app->Run();
 	delete app;
 }
 
