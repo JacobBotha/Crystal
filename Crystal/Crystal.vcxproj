@@ -166,9 +166,11 @@
     <ClInclude Include="src\Crystal\Events\MouseEvent.h" />
     <ClInclude Include="src\Crystal\GraphicsContext.h" />
     <ClInclude Include="src\Crystal\Input.h" />
+    <ClInclude Include="src\Crystal\KeyCodes.h" />
     <ClInclude Include="src\Crystal\Layer.h" />
     <ClInclude Include="src\Crystal\LayerStack.h" />
     <ClInclude Include="src\Crystal\Log.h" />
+    <ClInclude Include="src\Crystal\MouseButtonCodes.h" />
     <ClInclude Include="src\Crystal\Window.h" />
     <ClInclude Include="src\Platform\Vulkan\VKGraphicsContext.h" />
     <ClInclude Include="src\Platform\Windows\WindowsInput.h" />

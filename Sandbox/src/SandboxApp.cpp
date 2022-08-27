@@ -10,7 +10,8 @@ public:
 
 	void OnUpdate() override
 	{
-		//CL_INFO("ExampleLayer::Update");
+		if (Crystal::Input::IsKeyPressed(CL_KEY_TAB))
+			CL_TRACE("Tab key is pressed!");
 	}
 
 	void OnEvent(Crystal::Event& event) override
