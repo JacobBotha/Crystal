@@ -46,6 +46,9 @@
     <ClInclude Include="src\Crystal\Input.h">
       <Filter>Crystal</Filter>
     </ClInclude>
+    <ClInclude Include="src\Crystal\KeyCodes.h">
+      <Filter>Crystal</Filter>
+    </ClInclude>
     <ClInclude Include="src\Crystal\Layer.h">
       <Filter>Crystal</Filter>
     </ClInclude>
@@ -53,6 +56,9 @@
       <Filter>Crystal</Filter>
     </ClInclude>
     <ClInclude Include="src\Crystal\Log.h">
+      <Filter>Crystal</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Crystal\MouseButtonCodes.h">
       <Filter>Crystal</Filter>
     </ClInclude>
     <ClInclude Include="src\Crystal\Window.h">
@@ -68,8 +74,6 @@
       <Filter>Platform\Windows</Filter>
     </ClInclude>
     <ClInclude Include="src\clpch.h" />
-    <ClInclude Include="src\Crystal\KeyCodes.h" />
-    <ClInclude Include="src\Crystal\MouseButtonCodes.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Crystal\Application.cpp">

@@ -19,7 +19,7 @@ VulkanSDK = os.getenv("VULKAN_SDK")
 
 IncludeDir = {}
 IncludeDir["GLFW"] = "Crystal/vendor/GLFW/include"
-
+IncludeDir["glm"] = "Crystal/vendor/glm"
 
 include "Crystal/vendor/GLFW"
 
@@ -45,7 +45,8 @@ project "Crystal"
 		"%{prj.name}/vendor/spdlog/include",
         "%{prj.name}/src",
         "%{IncludeDir.GLFW}",
-        "%{VulkanSDK}/Include"
+        "%{VulkanSDK}/Include",
+        "%{IncludeDir.glm}"
 	}
 
     links
@@ -107,7 +108,8 @@ project "Sandbox"
 	includedirs
 	{
 		"Crystal/vendor/spdlog/include",
-		"Crystal/src"
+		"Crystal/src",
+        "%{IncludeDir.glm}"
 	}
 
 	links
