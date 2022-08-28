@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Core.h"
-#include "Events/Event.h"
+#include "Crystal/Core/Core.h"
+#include "Crystal/Events/Event.h"
 
 namespace Crystal {
 	class CRYSTAL_API Layer {

@@ -12,8 +12,8 @@
 #include <unordered_map>
 #include <unordered_set>
 
-#include "Crystal/Core.h"
-#include "Crystal/Log.h"
+#include "Crystal/Core/Core.h"
+#include "Crystal/Core/Log.h"
 
 #ifdef CL_PLATFORM_WINDOWS 
 	#include <Windows.h>

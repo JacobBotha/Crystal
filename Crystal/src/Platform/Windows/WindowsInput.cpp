@@ -1,6 +1,6 @@
 #include "clpch.h"
 #include "WindowsInput.h"
-#include "Crystal/Application.h"
+#include "Crystal/Core/Application.h"
 
 #include <GLFW/glfw3.h>
 

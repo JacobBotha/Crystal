@@ -71,7 +71,7 @@ namespace Crystal {
 			data.Width = width;
 			data.Height = height;
 
-			WindowResizeEvent event(width, height);
+			WindowResizeEvent event((float)width, (float)height);
 			data.EventCallback(event);
 		});
 

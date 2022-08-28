@@ -157,31 +157,31 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="src\Crystal.h" />
-    <ClInclude Include="src\Crystal\Application.h" />
-    <ClInclude Include="src\Crystal\Core.h" />
-    <ClInclude Include="src\Crystal\EntryPoint.h" />
+    <ClInclude Include="src\Crystal\Core\Application.h" />
+    <ClInclude Include="src\Crystal\Core\Core.h" />
+    <ClInclude Include="src\Crystal\Core\EntryPoint.h" />
     <ClInclude Include="src\Crystal\Events\ApplicationEvent.h" />
     <ClInclude Include="src\Crystal\Events\Event.h" />
     <ClInclude Include="src\Crystal\Events\KeyEvent.h" />
     <ClInclude Include="src\Crystal\Events\MouseEvent.h" />
     <ClInclude Include="src\Crystal\GraphicsContext.h" />
-    <ClInclude Include="src\Crystal\Input.h" />
-    <ClInclude Include="src\Crystal\KeyCodes.h" />
-    <ClInclude Include="src\Crystal\Layer.h" />
-    <ClInclude Include="src\Crystal\LayerStack.h" />
-    <ClInclude Include="src\Crystal\Log.h" />
-    <ClInclude Include="src\Crystal\MouseButtonCodes.h" />
-    <ClInclude Include="src\Crystal\Window.h" />
+    <ClInclude Include="src\Crystal\Input\Input.h" />
+    <ClInclude Include="src\Crystal\Input\KeyCodes.h" />
+    <ClInclude Include="src\Crystal\Core\Layer.h" />
+    <ClInclude Include="src\Crystal\Core\LayerStack.h" />
+    <ClInclude Include="src\Crystal\Core\Log.h" />
+    <ClInclude Include="src\Crystal\Input\MouseButtonCodes.h" />
+    <ClInclude Include="src\Crystal\Core\Window.h" />
     <ClInclude Include="src\Platform\Vulkan\VKGraphicsContext.h" />
     <ClInclude Include="src\Platform\Windows\WindowsInput.h" />
     <ClInclude Include="src\Platform\Windows\WindowsWindow.h" />
     <ClInclude Include="src\clpch.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\Crystal\Application.cpp" />
-    <ClCompile Include="src\Crystal\Layer.cpp" />
-    <ClCompile Include="src\Crystal\LayerStack.cpp" />
-    <ClCompile Include="src\Crystal\Log.cpp" />
+    <ClCompile Include="src\Crystal\Core\Application.cpp" />
+    <ClCompile Include="src\Crystal\Core\Layer.cpp" />
+    <ClCompile Include="src\Crystal\Core\LayerStack.cpp" />
+    <ClCompile Include="src\Crystal\Core\Log.cpp" />
     <ClCompile Include="src\Platform\Vulkan\VKGraphicsContext.cpp" />
     <ClCompile Include="src\Platform\Windows\WindowsInput.cpp" />
     <ClCompile Include="src\Platform\Windows\WindowsWindow.cpp" />

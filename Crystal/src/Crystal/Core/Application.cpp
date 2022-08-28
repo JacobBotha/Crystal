@@ -3,7 +3,6 @@
 #include "Application.h"
 #include "Crystal/Events/Event.h"
 #include "Crystal/Events/ApplicationEvent.h"
-#include "Crystal/Log.h"
 //#include "Platform/Windows/WindowsWindow.h"
 
 namespace Crystal {

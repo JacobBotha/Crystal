@@ -2,14 +2,14 @@
 
 //For use by Crystal Applications
 
-#include "Crystal/Application.h"
-#include "Crystal/Layer.h"
-#include "Crystal/Log.h"
+#include "Crystal/Core/Application.h"
+#include "Crystal/Core/Layer.h"
+#include "Crystal/Core/Log.h"
 
 //Input
-#include "Crystal/Input.h"
-#include "Crystal/KeyCodes.h"
-#include "Crystal/MouseButtonCodes.h"
+#include "Crystal/Input/Input.h"
+#include "Crystal/Input/KeyCodes.h"
+#include "Crystal/Input/MouseButtonCodes.h"
 
 //Entry Point
-#include "Crystal/EntryPoint.h"
+#include "Crystal/Core/EntryPoint.h"

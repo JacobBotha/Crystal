@@ -52,6 +52,8 @@ namespace Crystal {
 				m_Event.Handled = func(*(T*)&m_Event);
 				return true;
 			}
+
+			return false;
 		}
 	private:
 		Event& m_Event;
