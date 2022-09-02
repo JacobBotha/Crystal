@@ -20,8 +20,10 @@ VulkanSDK = os.getenv("VULKAN_SDK")
 IncludeDir = {}
 IncludeDir["GLFW"] = "Crystal/vendor/GLFW/include"
 IncludeDir["glm"] = "Crystal/vendor/glm"
+IncludeDir["ImGui"] = "Crystal/vendor/ImGui"
 
 include "Crystal/vendor/GLFW"
+include "Crystal/vendor/ImGui"
 
 project "Crystal"
 	location "Crystal"
@@ -46,17 +48,21 @@ project "Crystal"
         "%{prj.name}/src",
         "%{IncludeDir.GLFW}",
         "%{VulkanSDK}/Include",
-        "%{IncludeDir.glm}"
+        "%{IncludeDir.glm}",
+		"%{IncludeDir.ImGui}"
 	}
 
     links
     {
         "GLFW",
-        "%{VulkanSDK}/Lib/vulkan-1.lib"
+        "%{VulkanSDK}/Lib/vulkan-1.lib",
+		"ImGui"
     }
 
 	defines
 	{
+		"CL_PLATFORM_WINDOWS",
+		"CL_BUILD_DLL",
 		"GLFW_INCLUDE_VULKAN"
 	}
 
@@ -64,12 +70,6 @@ project "Crystal"
 		cppdialect "C++17"
 		staticruntime "On"
 		systemversion "latest"
-
-		defines
-		{
-			"CL_PLATFORM_WINDOWS",
-			"CL_BUILD_DLL"
-		}
 
 		postbuildcommands
 		{

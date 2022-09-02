@@ -4,6 +4,7 @@
 #include "Window.h"
 #include "LayerStack.h"
 #include "Crystal/Events/ApplicationEvent.h"
+#include "Crystal/ImGui/ImGuiLayer.h"
 
 namespace Crystal {
 	class CRYSTAL_API Application
@@ -26,6 +27,7 @@ namespace Crystal {
 
 		LayerStack m_LayerStack;
 		std::unique_ptr<Window> m_Window;
+		ImGuiLayer* m_ImGuiLayer;
 		bool m_Running;
 
 		static Application* s_Instance;

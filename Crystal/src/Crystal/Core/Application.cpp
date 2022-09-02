@@ -18,6 +18,9 @@ namespace Crystal {
 		m_Window = std::unique_ptr<Window>(Window::Create());
 		m_Window->SetEventCallBack(BIND_EVENT_FN(OnEvent));
 		m_Running = true;
+
+		m_ImGuiLayer = new ImGuiLayer();
+		PushLayer(m_ImGuiLayer);
 	}
 
 	Application::~Application() {}
@@ -39,6 +42,7 @@ namespace Crystal {
 	void Application::PushLayer(Layer* layer)
 	{
 		m_LayerStack.PushLayer(layer);
+		layer->OnAttach();
 	}
 	
 	void Application::PushOverlay(Layer* overlay)
