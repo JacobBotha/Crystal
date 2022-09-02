@@ -4,8 +4,17 @@
     <Filter Include="Crystal">
       <UniqueIdentifier>{873AF83B-F319-77D7-FC31-02AE6890DD38}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Crystal\Core">
+      <UniqueIdentifier>{3F0B8E00-2B6E-1DA5-D4F3-555BC035E927}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Crystal\Events">
       <UniqueIdentifier>{8BE85F61-77B6-5367-604A-C48D4CB72FCC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Crystal\ImGui">
+      <UniqueIdentifier>{F138BA12-5DF9-3549-2634-7FC692B37A25}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Crystal\Input">
+      <UniqueIdentifier>{C673BB12-3234-3749-FB6E-80C667EE7B25}</UniqueIdentifier>
     </Filter>
     <Filter Include="Platform">
       <UniqueIdentifier>{2AC788B4-1694-E3BF-3FAD-D1672BD9184E}</UniqueIdentifier>
@@ -20,13 +29,25 @@
   <ItemGroup>
     <ClInclude Include="src\Crystal.h" />
     <ClInclude Include="src\Crystal\Core\Application.h">
-      <Filter>Crystal</Filter>
+      <Filter>Crystal\Core</Filter>
     </ClInclude>
     <ClInclude Include="src\Crystal\Core\Core.h">
-      <Filter>Crystal</Filter>
+      <Filter>Crystal\Core</Filter>
     </ClInclude>
     <ClInclude Include="src\Crystal\Core\EntryPoint.h">
-      <Filter>Crystal</Filter>
+      <Filter>Crystal\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Crystal\Core\Layer.h">
+      <Filter>Crystal\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Crystal\Core\LayerStack.h">
+      <Filter>Crystal\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Crystal\Core\Log.h">
+      <Filter>Crystal\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Crystal\Core\Window.h">
+      <Filter>Crystal\Core</Filter>
     </ClInclude>
     <ClInclude Include="src\Crystal\Events\ApplicationEvent.h">
       <Filter>Crystal\Events</Filter>
@@ -43,26 +64,17 @@
     <ClInclude Include="src\Crystal\GraphicsContext.h">
       <Filter>Crystal</Filter>
     </ClInclude>
+    <ClInclude Include="src\Crystal\ImGui\ImGuiLayer.h">
+      <Filter>Crystal\ImGui</Filter>
+    </ClInclude>
     <ClInclude Include="src\Crystal\Input\Input.h">
-      <Filter>Crystal</Filter>
+      <Filter>Crystal\Input</Filter>
     </ClInclude>
     <ClInclude Include="src\Crystal\Input\KeyCodes.h">
-      <Filter>Crystal</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Crystal\Core\Layer.h">
-      <Filter>Crystal</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Crystal\Core\LayerStack.h">
-      <Filter>Crystal</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Crystal\Core\Log.h">
-      <Filter>Crystal</Filter>
+      <Filter>Crystal\Input</Filter>
     </ClInclude>
     <ClInclude Include="src\Crystal\Input\MouseButtonCodes.h">
-      <Filter>Crystal</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Crystal\Core\Window.h">
-      <Filter>Crystal</Filter>
+      <Filter>Crystal\Input</Filter>
     </ClInclude>
     <ClInclude Include="src\Platform\Vulkan\VKGraphicsContext.h">
       <Filter>Platform\Vulkan</Filter>
@@ -74,19 +86,28 @@
       <Filter>Platform\Windows</Filter>
     </ClInclude>
     <ClInclude Include="src\clpch.h" />
+    <ClInclude Include="src\Crystal\Renderer\Renderer.h" />
+    <ClInclude Include="src\Crystal\Renderer\RendererAPI.h" />
+    <ClInclude Include="src\Platform\Vulkan\VulkanRendererAPI.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Crystal\Core\Application.cpp">
-      <Filter>Crystal</Filter>
+      <Filter>Crystal\Core</Filter>
     </ClCompile>
     <ClCompile Include="src\Crystal\Core\Layer.cpp">
-      <Filter>Crystal</Filter>
+      <Filter>Crystal\Core</Filter>
     </ClCompile>
     <ClCompile Include="src\Crystal\Core\LayerStack.cpp">
-      <Filter>Crystal</Filter>
+      <Filter>Crystal\Core</Filter>
     </ClCompile>
     <ClCompile Include="src\Crystal\Core\Log.cpp">
-      <Filter>Crystal</Filter>
+      <Filter>Crystal\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Crystal\ImGui\ImGuiBuild.cpp">
+      <Filter>Crystal\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Crystal\ImGui\ImGuiLayer.cpp">
+      <Filter>Crystal\ImGui</Filter>
     </ClCompile>
     <ClCompile Include="src\Platform\Vulkan\VKGraphicsContext.cpp">
       <Filter>Platform\Vulkan</Filter>
@@ -98,5 +119,8 @@
       <Filter>Platform\Windows</Filter>
     </ClCompile>
     <ClCompile Include="src\clpch.cpp" />
+    <ClCompile Include="src\Crystal\Renderer\Renderer.cpp" />
+    <ClCompile Include="src\Crystal\Renderer\RendererAPI.cpp" />
+    <ClCompile Include="src\Platform\Vulkan\VulkanRendererAPI.cpp" />
   </ItemGroup>
 </Project>
