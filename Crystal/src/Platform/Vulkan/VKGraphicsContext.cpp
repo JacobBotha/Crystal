@@ -10,15 +10,9 @@ namespace Crystal {
 		: m_WindowHandle(windowHandle) {}
 
 	void VKGraphicsContext::Init() {
-		//Code required for initialising Vulkan
 		if (glfwVulkanSupported()) {
 			CL_CORE_INFO("Vulkan is supported!");
 		}
-		/*glfwCreateWindowSurface	(	VkInstance 	instance,
-		GLFWwindow* window,
-			const VkAllocationCallbacks* allocator,
-			VkSurfaceKHR* surface
-			)*/
 		glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
 	}
 

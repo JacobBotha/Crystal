@@ -16,6 +16,9 @@
     <Filter Include="Crystal\Input">
       <UniqueIdentifier>{C673BB12-3234-3749-FB6E-80C667EE7B25}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Crystal\Renderer">
+      <UniqueIdentifier>{0D46F72F-F93E-1682-2271-FB060EC9F58D}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Platform">
       <UniqueIdentifier>{2AC788B4-1694-E3BF-3FAD-D1672BD9184E}</UniqueIdentifier>
     </Filter>
@@ -76,7 +79,19 @@
     <ClInclude Include="src\Crystal\Input\MouseButtonCodes.h">
       <Filter>Crystal\Input</Filter>
     </ClInclude>
+    <ClInclude Include="src\Crystal\Renderer\Renderer.h">
+      <Filter>Crystal\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Crystal\Renderer\RendererAPI.h">
+      <Filter>Crystal\Renderer</Filter>
+    </ClInclude>
     <ClInclude Include="src\Platform\Vulkan\VKGraphicsContext.h">
+      <Filter>Platform\Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\Vulkan\VulkanInstance.h">
+      <Filter>Platform\Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\Vulkan\VulkanRendererAPI.h">
       <Filter>Platform\Vulkan</Filter>
     </ClInclude>
     <ClInclude Include="src\Platform\Windows\WindowsInput.h">
@@ -86,9 +101,6 @@
       <Filter>Platform\Windows</Filter>
     </ClInclude>
     <ClInclude Include="src\clpch.h" />
-    <ClInclude Include="src\Crystal\Renderer\Renderer.h" />
-    <ClInclude Include="src\Crystal\Renderer\RendererAPI.h" />
-    <ClInclude Include="src\Platform\Vulkan\VulkanRendererAPI.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Crystal\Core\Application.cpp">
@@ -109,7 +121,19 @@
     <ClCompile Include="src\Crystal\ImGui\ImGuiLayer.cpp">
       <Filter>Crystal\ImGui</Filter>
     </ClCompile>
+    <ClCompile Include="src\Crystal\Renderer\Renderer.cpp">
+      <Filter>Crystal\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Crystal\Renderer\RendererAPI.cpp">
+      <Filter>Crystal\Renderer</Filter>
+    </ClCompile>
     <ClCompile Include="src\Platform\Vulkan\VKGraphicsContext.cpp">
+      <Filter>Platform\Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Platform\Vulkan\VulkanInstance.cpp">
+      <Filter>Platform\Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Platform\Vulkan\VulkanRendererAPI.cpp">
       <Filter>Platform\Vulkan</Filter>
     </ClCompile>
     <ClCompile Include="src\Platform\Windows\WindowsInput.cpp">
@@ -119,8 +143,5 @@
       <Filter>Platform\Windows</Filter>
     </ClCompile>
     <ClCompile Include="src\clpch.cpp" />
-    <ClCompile Include="src\Crystal\Renderer\Renderer.cpp" />
-    <ClCompile Include="src\Crystal\Renderer\RendererAPI.cpp" />
-    <ClCompile Include="src\Platform\Vulkan\VulkanRendererAPI.cpp" />
   </ItemGroup>
 </Project>

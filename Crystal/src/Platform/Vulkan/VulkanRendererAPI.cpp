@@ -2,8 +2,12 @@
 #include "VulkanRendererAPI.h"
 
 namespace Crystal {
-	void Crystal::VulkanRendererAPI::Init()
-	{
+	VulkanRendererAPI::VulkanRendererAPI() {}
+
+	VulkanRendererAPI::~VulkanRendererAPI() {}
+
+	void Crystal::VulkanRendererAPI::Init() {
+		m_VulkanInstance = std::unique_ptr<VulkanInstance>(new VulkanInstance());
 	}
 
 	void Crystal::VulkanRendererAPI::SetViewPort(uint32_t x, uint32_t y, uint32_t width, uint32_t height)

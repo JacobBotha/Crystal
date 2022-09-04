@@ -24,11 +24,11 @@ namespace Crystal {
 #define CL_CORE_INFO(...)     ::Crystal::Log::GetCoreLogger()->info(__VA_ARGS__)
 #define CL_CORE_WARN(...)     ::Crystal::Log::GetCoreLogger()->warn(__VA_ARGS__)
 #define CL_CORE_ERROR(...)    ::Crystal::Log::GetCoreLogger()->error(__VA_ARGS__)
-#define CL_CORE_FATAL(...)    ::Crystal::Log::GetCoreLogger()->fatal(__VA_ARGS__)
+#define CL_CORE_CRITICAL(...) ::Crystal::Log::GetCoreLogger()->critical(__VA_ARGS__)
 
 // Client log macros
 #define CL_TRACE(...)	      ::Crystal::Log::GetClientLogger()->trace(__VA_ARGS__)
 #define CL_INFO(...)	      ::Crystal::Log::GetClientLogger()->info(__VA_ARGS__)
 #define CL_WARN(...)	      ::Crystal::Log::GetClientLogger()->warn(__VA_ARGS__)
 #define CL_ERROR(...)	      ::Crystal::Log::GetClientLogger()->error(__VA_ARGS__)
-#define CL_FATAL(...)	      ::Crystal::Log::GetClientLogger()->fatal(__VA_ARGS__) 
+#define CL_CRITICAL(...)	  ::Crystal::Log::GetClientLogger()->critical(__VA_ARGS__) 

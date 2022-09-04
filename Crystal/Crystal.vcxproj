@@ -176,6 +176,7 @@
     <ClInclude Include="src\Crystal\Renderer\Renderer.h" />
     <ClInclude Include="src\Crystal\Renderer\RendererAPI.h" />
     <ClInclude Include="src\Platform\Vulkan\VKGraphicsContext.h" />
+    <ClInclude Include="src\Platform\Vulkan\VulkanInstance.h" />
     <ClInclude Include="src\Platform\Vulkan\VulkanRendererAPI.h" />
     <ClInclude Include="src\Platform\Windows\WindowsInput.h" />
     <ClInclude Include="src\Platform\Windows\WindowsWindow.h" />
@@ -188,9 +189,10 @@
     <ClCompile Include="src\Crystal\Core\Log.cpp" />
     <ClCompile Include="src\Crystal\ImGui\ImGuiBuild.cpp" />
     <ClCompile Include="src\Crystal\ImGui\ImGuiLayer.cpp" />
-    <ClCompile Include="src\Crystal\Renderer\RendererAPI.cpp" />
     <ClCompile Include="src\Crystal\Renderer\Renderer.cpp" />
+    <ClCompile Include="src\Crystal\Renderer\RendererAPI.cpp" />
     <ClCompile Include="src\Platform\Vulkan\VKGraphicsContext.cpp" />
+    <ClCompile Include="src\Platform\Vulkan\VulkanInstance.cpp" />
     <ClCompile Include="src\Platform\Vulkan\VulkanRendererAPI.cpp" />
     <ClCompile Include="src\Platform\Windows\WindowsInput.cpp" />
     <ClCompile Include="src\Platform\Windows\WindowsWindow.cpp" />

@@ -18,6 +18,7 @@ namespace Crystal {
 
 		//TODO: Add	draw functions
 
+		//Renderer API impl details
 		static API GetApi() { return s_API; }
 		static RendererAPI* Create();
 	private: 

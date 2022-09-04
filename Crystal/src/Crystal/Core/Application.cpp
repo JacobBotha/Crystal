@@ -3,7 +3,7 @@
 #include "Application.h"
 #include "Crystal/Events/Event.h"
 #include "Crystal/Events/ApplicationEvent.h"
-//#include "Platform/Windows/WindowsWindow.h"
+#include "Crystal/Renderer/Renderer.h"
 
 namespace Crystal {
 
@@ -19,8 +19,10 @@ namespace Crystal {
 		m_Window->SetEventCallBack(BIND_EVENT_FN(OnEvent));
 		m_Running = true;
 
-		m_ImGuiLayer = new ImGuiLayer();
-		PushLayer(m_ImGuiLayer);
+		//m_ImGuiLayer = new ImGuiLayer();
+		//PushLayer(m_ImGuiLayer);
+
+		Renderer::Init();
 	}
 
 	Application::~Application() {}
