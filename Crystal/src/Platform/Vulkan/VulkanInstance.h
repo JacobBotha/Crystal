@@ -8,7 +8,10 @@ namespace Crystal {
 		VulkanInstance();
 		~VulkanInstance();
 
-		VkInstance* GetInstance() { return &m_VkInstance; }
+		bool IsExtensionAvailable(const char* layer);
+		bool IsLayerAvailable(const char* extension);
+
+		VkInstance& GetInstance() { return m_VkInstance; }
 		
 	private:
 		static VKAPI_ATTR VkBool32 VKAPI_CALL debugCallback(
@@ -37,6 +40,7 @@ namespace Crystal {
 		std::vector<const char*> getRequiredExtensions();
 	
 		VkInstance m_VkInstance;
+		std::vector<const char*> m_Extensions;
 		VkDebugUtilsMessengerEXT m_DebugMessenger;
 	};
 }

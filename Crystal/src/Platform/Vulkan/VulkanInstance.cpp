@@ -53,9 +53,10 @@ namespace Crystal {
         createInfo.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
         createInfo.pApplicationInfo = &appInfo;
 
-        auto extensions = getRequiredExtensions();
-        createInfo.enabledExtensionCount = static_cast<uint32_t>(extensions.size());
-        createInfo.ppEnabledExtensionNames = extensions.data();
+        //Future - insert optional layers and extensions
+        m_Extensions = getRequiredExtensions();
+        createInfo.enabledExtensionCount = static_cast<uint32_t>(m_Extensions.size());
+        createInfo.ppEnabledExtensionNames = m_Extensions.data();
 
         //Enable validation layers if applicable
         VkDebugUtilsMessengerCreateInfoEXT debugCreateInfo{};
@@ -85,6 +86,27 @@ namespace Crystal {
         }
 
         vkDestroyInstance(m_VkInstance, nullptr);
+    }
+
+    bool VulkanInstance::IsLayerAvailable(const char* layer) {
+        //Future check for more than just validation layers
+        for (const char* layerName : s_validationLayers) {
+            if (strcmp(layerName, layer) == 0) {
+                return true;
+            }
+
+            return false;
+        }
+    }
+
+    bool VulkanInstance::IsExtensionAvailable(const char* extension) {
+        for (const char* extensionName : m_Extensions) {
+            if (strcmp(extensionName, extension) == 0) {
+                return true;
+            }
+
+            return false;
+        }
     }
 
     void VulkanInstance::setupDebugMessenger() {

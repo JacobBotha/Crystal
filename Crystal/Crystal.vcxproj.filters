@@ -101,6 +101,8 @@
       <Filter>Platform\Windows</Filter>
     </ClInclude>
     <ClInclude Include="src\clpch.h" />
+    <ClInclude Include="src\Platform\Vulkan\VulkanPhysicalDevice.h" />
+    <ClInclude Include="src\Platform\Vulkan\VulkanLogicalDevice.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Crystal\Core\Application.cpp">
@@ -143,5 +145,7 @@
       <Filter>Platform\Windows</Filter>
     </ClCompile>
     <ClCompile Include="src\clpch.cpp" />
+    <ClCompile Include="src\Platform\Vulkan\VulkanPhysicalDevice.cpp" />
+    <ClCompile Include="src\Platform\Vulkan\VulkanLogicalDevice.cpp" />
   </ItemGroup>
 </Project>

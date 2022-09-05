@@ -2,6 +2,7 @@
 
 #include "Crystal/Renderer/RendererAPI.h"
 #include "VulkanInstance.h"
+#include "VulkanPhysicalDevice.h"
 
 namespace Crystal {
 	class CRYSTAL_API VulkanRendererAPI : RendererAPI {
@@ -15,5 +16,6 @@ namespace Crystal {
 		virtual void Clear() override;
 	private:
 		std::unique_ptr<VulkanInstance> m_VulkanInstance;
+		std::unique_ptr<VulkanPhysicalDevice> m_VulkanPhysicalDevice;
 	};
 }
