@@ -11,7 +11,8 @@ namespace Crystal {
 		bool IsExtensionAvailable(const char* layer);
 		bool IsLayerAvailable(const char* extension);
 
-		VkInstance& GetInstance() { return m_VkInstance; }
+		inline std::vector<const char*> GetEnabledLayers() { return s_validationLayers;  }
+		inline VkInstance GetInstance() { return m_VkInstance; }
 		
 	private:
 		static VKAPI_ATTR VkBool32 VKAPI_CALL debugCallback(

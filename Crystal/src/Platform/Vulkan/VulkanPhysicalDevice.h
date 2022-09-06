@@ -14,10 +14,11 @@ namespace Crystal {
 			}
 		};
 		
-		VulkanPhysicalDevice(const VkInstance& instance);
+		VulkanPhysicalDevice(VkInstance instance);
 		~VulkanPhysicalDevice();
 
-		QueueFamilyIndices GetQueueFamilies() { return FindQueueFamilies(m_PhysicalDevice); }
+		inline VkPhysicalDevice GetVkPhysicalDevice() { return m_PhysicalDevice; }
+		inline QueueFamilyIndices GetQueueFamilies() { return FindQueueFamilies(m_PhysicalDevice); }
 		
 	private:
 		QueueFamilyIndices FindQueueFamilies(VkPhysicalDevice);

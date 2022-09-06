@@ -3,7 +3,7 @@
 #include "VulkanPhysicalDevice.h"
 
 namespace Crystal {
-	VulkanPhysicalDevice::VulkanPhysicalDevice(const VkInstance& instance) {
+	VulkanPhysicalDevice::VulkanPhysicalDevice(VkInstance instance) {
 		m_Instance = instance;
 		m_PhysicalDevice = VK_NULL_HANDLE;
 
