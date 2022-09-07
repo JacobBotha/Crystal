@@ -24,15 +24,15 @@ namespace Crystal {
         }
     }
 
-    void VulkanInstance::DestroyDebugUtilsMessengerEXT(VkInstance instance, 
-        VkDebugUtilsMessengerEXT debugMessenger, 
-        const VkAllocationCallbacks* pAllocator) {
-        auto func = (PFN_vkDestroyDebugUtilsMessengerEXT)vkGetInstanceProcAddr(instance, 
-            "vkDestroyDebugUtilsMessengerEXT");
-
+    void VulkanInstance::DestroyDebugUtilsMessengerEXT(
+        VkInstance instance, VkDebugUtilsMessengerEXT debugMessenger, const VkAllocationCallbacks* pAllocator) {
+        auto func = (PFN_vkDestroyDebugUtilsMessengerEXT)vkGetInstanceProcAddr(instance, "vkDestroyDebugUtilsMessengerEXT");
+        CL_CORE_INFO("Ready to destroy debug messenger!");
         if (func != nullptr) {
             func(instance, debugMessenger, pAllocator);
         }
+
+        CL_CORE_INFO("Destroyed debug messenger!");
     }
 
     //Declare the required vulkan validation layers
@@ -40,52 +40,72 @@ namespace Crystal {
 	    "VK_LAYER_KHRONOS_validation"
 	};
 
-	VulkanInstance::VulkanInstance() {
-        VkApplicationInfo appInfo{};
-        appInfo.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
-        appInfo.pApplicationName = "Crystal Engine";
-        appInfo.applicationVersion = VK_MAKE_API_VERSION(0, 1, 0, 0);
-        appInfo.pEngineName = "Crystal";
-        appInfo.engineVersion = VK_MAKE_API_VERSION(0, 1, 0, 0);
-        appInfo.apiVersion = VK_API_VERSION_1_3;
+    static VKAPI_ATTR VkBool32 VKAPI_CALL debug_report(VkDebugReportFlagsEXT flags, VkDebugReportObjectTypeEXT objectType, uint64_t object, size_t location, int32_t messageCode, const char* pLayerPrefix, const char* pMessage, void* pUserData)
+    {
+        (void)flags; (void)object; (void)location; (void)messageCode; (void)pUserData; (void)pLayerPrefix; // Unused arguments
+        CL_CORE_TRACE("[vulkan] Debug report from ObjectType: %i\nMessage: %s\n\n", objectType, pMessage);
+        return VK_FALSE;
+    }
 
-        VkInstanceCreateInfo createInfo{};
-        createInfo.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
-        createInfo.pApplicationInfo = &appInfo;
+	VulkanInstance::VulkanInstance() 
+        : m_Allocator(NULL), m_DebugMessenger(VK_NULL_HANDLE), m_DebugReport(VK_NULL_HANDLE) {
+        uint32_t extensions_count = 0;
+        const char** extensions = glfwGetRequiredInstanceExtensions(&extensions_count);
+        // Create Vulkan Instance
+		VkInstanceCreateInfo create_info = {};
+		create_info.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
+		create_info.enabledExtensionCount = extensions_count;
+		create_info.ppEnabledExtensionNames = extensions;
 
-        //Future - insert optional layers and extensions
-        m_Extensions = getRequiredExtensions();
-        createInfo.enabledExtensionCount = static_cast<uint32_t>(m_Extensions.size());
-        createInfo.ppEnabledExtensionNames = m_Extensions.data();
-
-        //Enable validation layers if applicable
-        VkDebugUtilsMessengerCreateInfoEXT debugCreateInfo{};
         if (s_enableValidationLayers) {
-            CL_CORE_ASSERT(checkValidationLayerSupport(), 
-                "Validation layers requested but not supported!");
-            createInfo.enabledLayerCount = static_cast<uint32_t>(s_validationLayers.size());
-            createInfo.ppEnabledLayerNames = s_validationLayers.data();
+            // Enabling validation layers
+            const char* layers[] = { "VK_LAYER_KHRONOS_validation" };
+            create_info.enabledLayerCount = 1;
+            create_info.ppEnabledLayerNames = layers;
 
-            populateDebugMessengerCreateInfo(debugCreateInfo);
-            createInfo.pNext = (VkDebugUtilsMessengerCreateInfoEXT*)&debugCreateInfo;
-        }
+            // Enable debug report extension (we need additional storage, so we duplicate the user array to add our new extension to it)
+            const char** extensions_ext = (const char**)malloc(sizeof(const char*) * (extensions_count + 1));
+            memcpy(extensions_ext, extensions, extensions_count * sizeof(const char*));
+            extensions_ext[extensions_count] = "VK_EXT_debug_report";
+            create_info.enabledExtensionCount = extensions_count + 1;
+            create_info.ppEnabledExtensionNames = extensions_ext;
+
+            // Create Vulkan Instance
+            VkResult err = vkCreateInstance(&create_info, m_Allocator, &m_VkInstance);
+
+            //check_vk_result(err);
+            free(extensions_ext);
+
+            // Get the function pointer (required for any extensions)
+            auto vkCreateDebugReportCallbackEXT = (PFN_vkCreateDebugReportCallbackEXT)vkGetInstanceProcAddr(m_VkInstance, "vkCreateDebugReportCallbackEXT");
+            CL_CORE_ASSERT(vkCreateDebugReportCallbackEXT != NULL, "Debug callback is null");
+
+            // Setup the debug report callback
+            VkDebugReportCallbackCreateInfoEXT debug_report_ci = {};
+            debug_report_ci.sType = VK_STRUCTURE_TYPE_DEBUG_REPORT_CALLBACK_CREATE_INFO_EXT;
+            debug_report_ci.flags = VK_DEBUG_REPORT_ERROR_BIT_EXT | VK_DEBUG_REPORT_WARNING_BIT_EXT | VK_DEBUG_REPORT_PERFORMANCE_WARNING_BIT_EXT;
+            debug_report_ci.pfnCallback = debug_report;
+            debug_report_ci.pUserData = NULL;
+            err = vkCreateDebugReportCallbackEXT(m_VkInstance, &debug_report_ci, m_Allocator, &m_DebugReport);
+            //check_vk_result(err);
+        } 
         else {
-            createInfo.enabledLayerCount = 0;
-            createInfo.pNext = nullptr;
+            // Create Vulkan Instance without any debug feature
+            VkResult err = vkCreateInstance(&create_info, m_Allocator, &m_VkInstance);
+            //check_vk_result(err);
+            //IM_UNUSED(g_DebugReport);
         }
-        
-        //Create the instance
-        if (vkCreateInstance(&createInfo, nullptr, &m_VkInstance) != VK_SUCCESS)
-            CL_CORE_CRITICAL("Failed to create vulkan instance!");
 
 	}
 
     VulkanInstance::~VulkanInstance() {
         if (s_enableValidationLayers) {
-            DestroyDebugUtilsMessengerEXT(m_VkInstance, m_DebugMessenger, nullptr);
+            // Remove the debug report callback
+            auto vkDestroyDebugReportCallbackEXT = (PFN_vkDestroyDebugReportCallbackEXT)vkGetInstanceProcAddr(m_VkInstance, "vkDestroyDebugReportCallbackEXT");
+            vkDestroyDebugReportCallbackEXT(m_VkInstance, m_DebugReport, m_Allocator);
         }
 
-        vkDestroyInstance(m_VkInstance, nullptr);
+        vkDestroyInstance(m_VkInstance, m_Allocator);
     }
 
     bool VulkanInstance::IsLayerAvailable(const char* layer) {
@@ -115,9 +135,8 @@ namespace Crystal {
         VkDebugUtilsMessengerCreateInfoEXT createInfo{};
         populateDebugMessengerCreateInfo(createInfo);
 
-        if (CreateDebugUtilsMessengerEXT(m_VkInstance, &createInfo, nullptr, &m_DebugMessenger) != VK_SUCCESS) {
-            throw std::runtime_error("failed to set up debug messenger!");
-        }
+        VkResult result = CreateDebugUtilsMessengerEXT(m_VkInstance, &createInfo, nullptr, &m_DebugMessenger);
+        CL_CORE_ASSERT(result == VK_SUCCESS, "failed to set up debug messenger!");
     }
     
     void VulkanInstance::populateDebugMessengerCreateInfo(
@@ -204,10 +223,10 @@ namespace Crystal {
         switch (messageSeverity)
         {
         case VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT:
-            //CL_CORE_TRACE("{0}", pCallbackData->pMessage);
+            CL_CORE_TRACE("{0}", pCallbackData->pMessage);
             break;
         case VK_DEBUG_UTILS_MESSAGE_SEVERITY_INFO_BIT_EXT:
-            //CL_CORE_INFO("{0}", pCallbackData->pMessage);
+            CL_CORE_INFO("{0}", pCallbackData->pMessage);
             break;
         case VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT:
             CL_CORE_WARN("Vulkan Callback: {0}", pCallbackData->pMessage);

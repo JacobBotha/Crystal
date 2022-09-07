@@ -3,6 +3,7 @@
 #include "Crystal/Renderer/RendererAPI.h"
 #include "VulkanInstance.h"
 #include "VulkanPhysicalDevice.h"
+#include "VulkanLogicalDevice.h"
 
 namespace Crystal {
 	class CRYSTAL_API VulkanRendererAPI : RendererAPI {
@@ -15,7 +16,8 @@ namespace Crystal {
 		virtual void SetClearColor(const glm::vec4& color) override;
 		virtual void Clear() override;
 	private:
-		std::unique_ptr<VulkanInstance> m_VulkanInstance;
-		std::unique_ptr<VulkanPhysicalDevice> m_VulkanPhysicalDevice;
+		std::unique_ptr<VulkanInstance> m_Instance;
+		std::unique_ptr<VulkanPhysicalDevice> m_PhysicalDevice;
+		std::unique_ptr<VulkanLogicalDevice> m_LogicalDevice;
 	};
 }

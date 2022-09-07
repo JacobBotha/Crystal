@@ -40,7 +40,7 @@ namespace Crystal {
 		}
 	}
 
-	VulkanPhysicalDevice::QueueFamilyIndices VulkanPhysicalDevice::FindQueueFamilies(VkPhysicalDevice device) {
+	QueueFamilyIndices VulkanPhysicalDevice::FindQueueFamilies(VkPhysicalDevice device) {
 		QueueFamilyIndices indices;
 
 		uint32_t queueFamilyCount = 0;

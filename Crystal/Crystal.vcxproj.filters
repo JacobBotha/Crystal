@@ -103,6 +103,7 @@
     <ClInclude Include="src\clpch.h" />
     <ClInclude Include="src\Platform\Vulkan\VulkanPhysicalDevice.h" />
     <ClInclude Include="src\Platform\Vulkan\VulkanLogicalDevice.h" />
+    <ClInclude Include="src\Platform\Vulkan\VulkanSurface.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Crystal\Core\Application.cpp">
@@ -147,5 +148,6 @@
     <ClCompile Include="src\clpch.cpp" />
     <ClCompile Include="src\Platform\Vulkan\VulkanPhysicalDevice.cpp" />
     <ClCompile Include="src\Platform\Vulkan\VulkanLogicalDevice.cpp" />
+    <ClCompile Include="src\Platform\Vulkan\VulkanSurface.cpp" />
   </ItemGroup>
 </Project>

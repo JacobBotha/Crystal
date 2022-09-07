@@ -19,13 +19,15 @@ namespace Crystal {
 		m_Window->SetEventCallBack(BIND_EVENT_FN(OnEvent));
 		m_Running = true;
 
-		//m_ImGuiLayer = new ImGuiLayer();
-		//PushLayer(m_ImGuiLayer);
+		m_ImGuiLayer = new ImGuiLayer();
+		PushLayer(m_ImGuiLayer);
 
 		Renderer::Init();
 	}
 
-	Application::~Application() {}
+	Application::~Application() {
+		Renderer::Shutdown();
+	}
 
 	void Application::OnEvent(Event& e) {
 		//Check if window was closed

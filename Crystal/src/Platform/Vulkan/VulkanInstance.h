@@ -41,7 +41,9 @@ namespace Crystal {
 		std::vector<const char*> getRequiredExtensions();
 	
 		VkInstance m_VkInstance;
+		VkAllocationCallbacks* m_Allocator;
 		std::vector<const char*> m_Extensions;
 		VkDebugUtilsMessengerEXT m_DebugMessenger;
+		VkDebugReportCallbackEXT m_DebugReport;
 	};
 }

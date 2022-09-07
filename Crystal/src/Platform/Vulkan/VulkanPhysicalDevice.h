@@ -4,16 +4,17 @@
 #include "VulkanPhysicalDevice.h"
 
 namespace Crystal {
+	struct QueueFamilyIndices {
+		std::optional<uint32_t> GraphicsFamily;
+		std::optional<uint32_t> PresentFamily;
+
+		bool IsComplete() {
+			return GraphicsFamily.has_value();
+		}
+	};
+
 	class CRYSTAL_API VulkanPhysicalDevice {
 	public:
-		struct QueueFamilyIndices {
-			std::optional<uint32_t> GraphicsFamily;
-
-			bool IsComplete() {
-				return GraphicsFamily.has_value();
-			}
-		};
-		
 		VulkanPhysicalDevice(VkInstance instance);
 		~VulkanPhysicalDevice();
 

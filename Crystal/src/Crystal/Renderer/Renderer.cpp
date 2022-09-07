@@ -10,6 +10,6 @@ namespace Crystal {
 	}
 
 	void Renderer::Shutdown() {
-
+		s_RendererAPI.reset();
 	}
 }

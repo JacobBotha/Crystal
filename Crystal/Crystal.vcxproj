@@ -27,6 +27,7 @@
     <UseDebugLibraries>true</UseDebugLibraries>
     <CharacterSet>Unicode</CharacterSet>
     <PlatformToolset>v143</PlatformToolset>
+    <EnableASAN>false</EnableASAN>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
@@ -177,12 +178,13 @@
     <ClInclude Include="src\Crystal\Renderer\RendererAPI.h" />
     <ClInclude Include="src\Platform\Vulkan\VKGraphicsContext.h" />
     <ClInclude Include="src\Platform\Vulkan\VulkanInstance.h" />
+    <ClInclude Include="src\Platform\Vulkan\VulkanLogicalDevice.h" />
     <ClInclude Include="src\Platform\Vulkan\VulkanPhysicalDevice.h" />
     <ClInclude Include="src\Platform\Vulkan\VulkanRendererAPI.h" />
+    <ClInclude Include="src\Platform\Vulkan\VulkanSurface.h" />
     <ClInclude Include="src\Platform\Windows\WindowsInput.h" />
     <ClInclude Include="src\Platform\Windows\WindowsWindow.h" />
     <ClInclude Include="src\clpch.h" />
-    <ClInclude Include="src\Platform\Vulkan\VulkanLogicalDevice.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Crystal\Core\Application.cpp" />
@@ -198,6 +200,7 @@
     <ClCompile Include="src\Platform\Vulkan\VulkanLogicalDevice.cpp" />
     <ClCompile Include="src\Platform\Vulkan\VulkanPhysicalDevice.cpp" />
     <ClCompile Include="src\Platform\Vulkan\VulkanRendererAPI.cpp" />
+    <ClCompile Include="src\Platform\Vulkan\VulkanSurface.cpp" />
     <ClCompile Include="src\Platform\Windows\WindowsInput.cpp" />
     <ClCompile Include="src\Platform\Windows\WindowsWindow.cpp" />
     <ClCompile Include="src\clpch.cpp">
