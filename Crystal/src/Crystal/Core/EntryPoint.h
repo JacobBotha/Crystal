@@ -6,8 +6,7 @@ extern Crystal::Application* Crystal::CreateApplication();
 
 int main(int argc, char** argv) {
 	Crystal::Log::Init();
-	CL_CORE_WARN("Initialise Logger!");
-	CL_INFO("Hello!");
+	CL_CORE_INFO("Initialise Logger!");
 
 	auto app = Crystal::CreateApplication();
 	app->Run();

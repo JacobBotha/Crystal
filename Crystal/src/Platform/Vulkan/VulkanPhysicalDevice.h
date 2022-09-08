@@ -18,15 +18,25 @@ namespace Crystal {
 		VulkanPhysicalDevice(VkInstance instance);
 		~VulkanPhysicalDevice();
 
-		inline VkPhysicalDevice GetVkPhysicalDevice() { return m_PhysicalDevice; }
-		inline QueueFamilyIndices GetQueueFamilies() { return FindQueueFamilies(m_PhysicalDevice); }
+		inline VkPhysicalDevice GetVkPhysicalDevice() const { return m_PhysicalDevice; }
+		inline QueueFamilyIndices GetQueueFamilies() const { return m_QueueFamilyIndices;  }
+		bool CheckPresentSupport(uint32_t queueFamilyIndex, VkSurfaceKHR surface) const;
+		
+		void AssignQueueFamilyIndicesWithPresent(VkSurfaceKHR surface);
+
+		QueueFamilyIndices GetQueueFamilyWithPresent(
+			VkPhysicalDevice device, VkSurfaceKHR surface) const {
+			return FindQueueFamiliesWithPresent(device, surface);
+		}
 		
 	private:
-		QueueFamilyIndices FindQueueFamilies(VkPhysicalDevice);
+		static QueueFamilyIndices FindQueueFamilies(VkPhysicalDevice device);
+		static QueueFamilyIndices FindQueueFamiliesWithPresent(VkPhysicalDevice device, VkSurfaceKHR surface);
 		bool IsDeviceSuitable(VkPhysicalDevice device);
 		void SelectPhyiscalDevice();
 
 		VkPhysicalDevice m_PhysicalDevice;
 		VkInstance m_Instance;
+		QueueFamilyIndices m_QueueFamilyIndices;
 	};
 }

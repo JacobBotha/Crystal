@@ -16,5 +16,6 @@ namespace Crystal {
 	private:
 		VkDevice m_Device;
 		VkQueue m_GraphicsQueue;
+		VkQueue m_PresentQueue;
 	};
 }

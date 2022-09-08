@@ -35,9 +35,44 @@ namespace Crystal {
 
 		CL_CORE_INFO("Physical Device Selected: {0}", deviceProperties.deviceName);
 
-		if (m_PhysicalDevice == VK_NULL_HANDLE) {
-			throw std::runtime_error("failed to find a suitable GPU!");
+		CL_CORE_ASSERT(m_PhysicalDevice != VK_NULL_HANDLE, "failed to find a suitable GPU!");
+	}
+	
+	bool VulkanPhysicalDevice::CheckPresentSupport(uint32_t queueFamilyIndex, VkSurfaceKHR surface) const {
+		VkBool32 presentSupport = VK_FALSE;
+		vkGetPhysicalDeviceSurfaceSupportKHR(m_PhysicalDevice, queueFamilyIndex, surface, &presentSupport);
+		return presentSupport == VK_TRUE;
+	}
+
+	void VulkanPhysicalDevice::AssignQueueFamilyIndicesWithPresent(VkSurfaceKHR surface) {
+		m_QueueFamilyIndices = FindQueueFamiliesWithPresent(m_PhysicalDevice, surface);
+	}
+	
+	QueueFamilyIndices VulkanPhysicalDevice::FindQueueFamiliesWithPresent(VkPhysicalDevice device, VkSurfaceKHR surface) {
+		QueueFamilyIndices indices;
+
+		uint32_t queueFamilyCount = 0;
+		vkGetPhysicalDeviceQueueFamilyProperties(device, &queueFamilyCount, nullptr);
+
+		std::vector<VkQueueFamilyProperties> queueFamilies(queueFamilyCount);
+		vkGetPhysicalDeviceQueueFamilyProperties(device, &queueFamilyCount, queueFamilies.data());
+
+		int i = 0;
+		for (const auto& queueFamily : queueFamilies) {
+			if (queueFamily.queueFlags & VK_QUEUE_GRAPHICS_BIT)
+				indices.GraphicsFamily = i;
+
+			VkBool32 presentSupport = false;
+			vkGetPhysicalDeviceSurfaceSupportKHR(device, i, surface, &presentSupport);
+			if (presentSupport)
+				indices.PresentFamily = i;
+
+			if (indices.IsComplete()) break;
+
+			i++;
 		}
+
+		return indices;
 	}
 
 	QueueFamilyIndices VulkanPhysicalDevice::FindQueueFamilies(VkPhysicalDevice device) {
@@ -63,8 +98,8 @@ namespace Crystal {
 	}
 	
 	bool VulkanPhysicalDevice::IsDeviceSuitable(VkPhysicalDevice device) {
-		QueueFamilyIndices indices = FindQueueFamilies(device);
+		m_QueueFamilyIndices = FindQueueFamilies(device);
 
-		return indices.IsComplete();
+		return m_QueueFamilyIndices.IsComplete();
 	}
 }

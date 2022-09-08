@@ -55,8 +55,6 @@ namespace Crystal {
 	}
 
 	void Application::Run() {
-		WindowResizeEvent e(1200, 950);
-		CL_TRACE(e);
 		while (m_Running) {
 			for (Layer* layer : m_LayerStack)
 				layer->OnUpdate();
