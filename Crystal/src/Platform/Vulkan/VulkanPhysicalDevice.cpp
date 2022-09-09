@@ -3,18 +3,18 @@
 #include "VulkanPhysicalDevice.h"
 
 namespace Crystal {
-	VulkanPhysicalDevice::VulkanPhysicalDevice(VkInstance instance) {
-		m_Instance = instance;
+	const std::vector<const char*> VulkanPhysicalDevice	::s_DeviceExtentions = { VK_KHR_SWAPCHAIN_EXTENSION_NAME };
+
+	VulkanPhysicalDevice::VulkanPhysicalDevice(VulkanInstance* instance, VulkanSurface* surface) {
+		m_Instance = instance->GetInstance();
 		m_PhysicalDevice = VK_NULL_HANDLE;
 
-		SelectPhyiscalDevice();
+		SelectPhyiscalDevice(surface->GetVkSurface());
 	}
 
-	VulkanPhysicalDevice::~VulkanPhysicalDevice() {
-		
-	}
+	VulkanPhysicalDevice::~VulkanPhysicalDevice() {}
 
-	void VulkanPhysicalDevice::SelectPhyiscalDevice() {
+	void VulkanPhysicalDevice::SelectPhyiscalDevice(VkSurfaceKHR surface) {
 		uint32_t deviceCount = 0;
 		vkEnumeratePhysicalDevices(m_Instance, &deviceCount, nullptr);
 
@@ -24,7 +24,7 @@ namespace Crystal {
 		vkEnumeratePhysicalDevices(m_Instance, &deviceCount, devices.data());
 
 		for (const auto& device : devices) {
-			if (IsDeviceSuitable(device)) {
+			if (IsDeviceSuitable(device, surface)) {
 				m_PhysicalDevice = device;
 				break;
 			}
@@ -44,11 +44,7 @@ namespace Crystal {
 		return presentSupport == VK_TRUE;
 	}
 
-	void VulkanPhysicalDevice::AssignQueueFamilyIndicesWithPresent(VkSurfaceKHR surface) {
-		m_QueueFamilyIndices = FindQueueFamiliesWithPresent(m_PhysicalDevice, surface);
-	}
-	
-	QueueFamilyIndices VulkanPhysicalDevice::FindQueueFamiliesWithPresent(VkPhysicalDevice device, VkSurfaceKHR surface) {
+	QueueFamilyIndices VulkanPhysicalDevice::FindQueueFamilies(VkPhysicalDevice device, VkSurfaceKHR surface) {
 		QueueFamilyIndices indices;
 
 		uint32_t queueFamilyCount = 0;
@@ -75,31 +71,27 @@ namespace Crystal {
 		return indices;
 	}
 
-	QueueFamilyIndices VulkanPhysicalDevice::FindQueueFamilies(VkPhysicalDevice device) {
-		QueueFamilyIndices indices;
+	bool VulkanPhysicalDevice::IsDeviceSuitable(VkPhysicalDevice device, VkSurfaceKHR surface) {
+		m_QueueFamilyIndices = FindQueueFamilies(device, surface);
+ 
+		bool extensionsSupported = CheckDeviceExtensionSupport(device);
 
-		uint32_t queueFamilyCount = 0;
-		vkGetPhysicalDeviceQueueFamilyProperties(device, &queueFamilyCount, nullptr);
+		return m_QueueFamilyIndices.IsComplete() && extensionsSupported;
+	}
 
-		std::vector<VkQueueFamilyProperties> queueFamilies(queueFamilyCount);
-		vkGetPhysicalDeviceQueueFamilyProperties(device, &queueFamilyCount, queueFamilies.data());
+	bool VulkanPhysicalDevice::CheckDeviceExtensionSupport(VkPhysicalDevice device) {
+		uint32_t extensionCount;
+		vkEnumerateDeviceExtensionProperties(device, nullptr, &extensionCount, nullptr);
 
-		int i = 0;
-		for (const auto& queueFamily : queueFamilies) {
-			if (queueFamily.queueFlags & VK_QUEUE_GRAPHICS_BIT)
-				indices.GraphicsFamily = i;
+		std::vector<VkExtensionProperties> availableExtensions(extensionCount);
+		vkEnumerateDeviceExtensionProperties(device, nullptr, &extensionCount, availableExtensions.data());
 
-			if (indices.IsComplete()) break;
+		std::set<std::string> requiredExtensions(s_DeviceExtentions.begin(), s_DeviceExtentions.end());
 
-			i++;
+		for (const auto& extension : availableExtensions) {
+			requiredExtensions.erase(extension.extensionName);
 		}
 
-		return indices;
-	}
-	
-	bool VulkanPhysicalDevice::IsDeviceSuitable(VkPhysicalDevice device) {
-		m_QueueFamilyIndices = FindQueueFamilies(device);
-
-		return m_QueueFamilyIndices.IsComplete();
+		return requiredExtensions.empty();
 	}
 }

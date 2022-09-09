@@ -2,14 +2,13 @@
 
 #include "Crystal/Core/Window.h"
 #include "VulkanInstance.h"
-#include "VulkanPhysicalDevice.h"
 
 #include <vulkan/vulkan.h>
 
 namespace Crystal {
 	class CRYSTAL_API VulkanSurface {
 	public:
-		VulkanSurface(Window* window, VulkanInstance* instance, VulkanPhysicalDevice* physicalDevice);
+		VulkanSurface(Window* window, VulkanInstance* instance);
 		~VulkanSurface();
 
 		VkSurfaceKHR GetVkSurface() const { return m_Surface; }

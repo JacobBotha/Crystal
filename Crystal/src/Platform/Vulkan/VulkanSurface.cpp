@@ -4,8 +4,7 @@
 #include <GLFW/glfw3.h>
 
 namespace Crystal {
-	VulkanSurface::VulkanSurface(Window* window, VulkanInstance* instance, 
-		VulkanPhysicalDevice* physicalDevice) 
+	VulkanSurface::VulkanSurface(Window* window, VulkanInstance* instance) 
 		: m_Window(window), m_Instance(instance) {
 
 		VkResult result = glfwCreateWindowSurface(
@@ -15,20 +14,6 @@ namespace Crystal {
 		
 		CL_CORE_ASSERT(result == VK_SUCCESS, 
 			"Could not create Vulkan surface");
-
-		QueueFamilyIndices indices = physicalDevice->GetQueueFamilies();
-
-		if (!indices.PresentFamily.has_value()) {
-			physicalDevice->AssignQueueFamilyIndicesWithPresent(m_Surface);
-		}
-
-		bool presentSupport = physicalDevice->CheckPresentSupport(
-			physicalDevice->GetQueueFamilies().PresentFamily.value(), 
-			m_Surface);
-
-		CL_CORE_ASSERT(presentSupport, 
-			"Physical device does not support the present queue!");
-
 	}
 
 	VulkanSurface::~VulkanSurface() {

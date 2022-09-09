@@ -32,8 +32,10 @@ namespace Crystal {
 		VkPhysicalDeviceFeatures deviceFeatures{};
 		createInfo.pEnabledFeatures = &deviceFeatures;
 
-		//No device specific extensions required for now
-		createInfo.enabledExtensionCount = 0;
+		//Only required extensions for now are device extensions
+		std::vector extensions = physicalDevice->GetDeviceExtensions();
+		createInfo.enabledExtensionCount = static_cast<uint32_t>(extensions.size());
+		createInfo.ppEnabledExtensionNames = extensions.data();
 
 		//Current version of vulkan does not require enabled layers for logical 
 		//device - here for legacy support
