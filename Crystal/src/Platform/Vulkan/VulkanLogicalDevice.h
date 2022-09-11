@@ -1,21 +1,26 @@
 #pragma once
 
 #include "VulkanPhysicalDevice.h"
+#include "VulkanSurface.h"
 
 namespace Crystal {
 	class CRYSTAL_API VulkanLogicalDevice {
 	public:
-		VulkanLogicalDevice(
-			std::unique_ptr<VulkanPhysicalDevice>& physicalDevice, 
-			std::unique_ptr<VulkanInstance>& instance);
+		VulkanLogicalDevice(VulkanPhysicalDevice* physicalDevice, VulkanSurface* surface);
 		~VulkanLogicalDevice();
 
-		VkDevice GetDevice() { return m_Device; }
-		VkQueue GetGraphicsQueue() { return m_GraphicsQueue; }
+		VkDevice GetDevice() const{ return m_Device; }
+		//VkQueue GetGraphicsQueue() const { return m_GraphicsQueue; }
+		VkQueue GetQueue(QueueFlags flag);
+		unsigned int GetQueueIndex(QueueFlags flag);
 
 	private:
+		using Queues = std::array<VkQueue, sizeof(QueueFlags)>;
+
+		VulkanPhysicalDevice* m_PhysicalDevice;
+
+		QueueFamilyIndices m_QueueFamilyIndices;
 		VkDevice m_Device;
-		VkQueue m_GraphicsQueue;
-		VkQueue m_PresentQueue;
+		Queues m_Queues;
 	};
 }

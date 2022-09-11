@@ -5,18 +5,20 @@
 
 namespace Crystal {
 	VulkanSurface::VulkanSurface(Window* window, VulkanInstance* instance) 
-		: m_Window(window), m_Instance(instance) {
+		: m_Window(window), m_Instance(instance), m_Surface(VK_NULL_HANDLE) {
 
-		VkResult result = glfwCreateWindowSurface(
-			m_Instance->GetInstance(), 
-			(GLFWwindow*)m_Window->GetNativeWindow(), 
-			nullptr, &m_Surface);
+		VkResult result = glfwCreateWindowSurface(m_Instance->GetVkInstance(), 
+			(GLFWwindow*)m_Window->GetNativeWindow(), nullptr, &m_Surface);
 		
-		CL_CORE_ASSERT(result == VK_SUCCESS, 
-			"Could not create Vulkan surface");
+		CL_CORE_ASSERT(result == VK_SUCCESS, "Could not create Vulkan surface!");
+
+	}
+
+	bool VulkanSurface::CanPresent(VulkanPhysicalDevice* physicalDevice, QueueFamilyIndex index) {
+		return physicalDevice->CheckPresentSupport(index, m_Surface);
 	}
 
 	VulkanSurface::~VulkanSurface() {
-		vkDestroySurfaceKHR(m_Instance->GetInstance(), m_Surface, nullptr);
+		vkDestroySurfaceKHR(m_Instance->GetVkInstance(), m_Surface, nullptr);
 	}
 }

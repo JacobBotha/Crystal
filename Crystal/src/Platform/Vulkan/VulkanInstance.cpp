@@ -108,7 +108,7 @@ namespace Crystal {
         vkDestroyInstance(m_VkInstance, m_Allocator);
     }
 
-    bool VulkanInstance::IsLayerAvailable(const char* layer) {
+    bool VulkanInstance::IsLayerAvailable(const char* layer) const {
         //Future check for more than just validation layers
         for (const char* layerName : s_validationLayers) {
             if (strcmp(layerName, layer) == 0) {

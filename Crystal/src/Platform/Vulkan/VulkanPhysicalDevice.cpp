@@ -5,27 +5,22 @@
 namespace Crystal {
 	const std::vector<const char*> VulkanPhysicalDevice	::s_DeviceExtentions = { VK_KHR_SWAPCHAIN_EXTENSION_NAME };
 
-	VulkanPhysicalDevice::VulkanPhysicalDevice(VulkanInstance* instance, VulkanSurface* surface) {
-		m_Instance = instance->GetInstance();
+	VulkanPhysicalDevice::VulkanPhysicalDevice(VulkanInstance* instance) {
+		m_Instance = instance;
 		m_PhysicalDevice = VK_NULL_HANDLE;
 
-		SelectPhyiscalDevice(surface->GetVkSurface());
-	}
-
-	VulkanPhysicalDevice::~VulkanPhysicalDevice() {}
-
-	void VulkanPhysicalDevice::SelectPhyiscalDevice(VkSurfaceKHR surface) {
 		uint32_t deviceCount = 0;
-		vkEnumeratePhysicalDevices(m_Instance, &deviceCount, nullptr);
+		vkEnumeratePhysicalDevices(m_Instance->GetVkInstance(), &deviceCount, nullptr);
 
 		CL_CORE_ASSERT(deviceCount, "Failed to find GPU with vulkan support!")
 
 		std::vector<VkPhysicalDevice> devices(deviceCount);
-		vkEnumeratePhysicalDevices(m_Instance, &deviceCount, devices.data());
+		vkEnumeratePhysicalDevices(m_Instance->GetVkInstance(), &deviceCount, devices.data());
 
 		for (const auto& device : devices) {
-			if (IsDeviceSuitable(device, surface)) {
+			if (IsDeviceSuitable(device)) {
 				m_PhysicalDevice = device;
+				CL_CORE_INFO("Found suitable physical device!");
 				break;
 			}
 		}
@@ -33,37 +28,73 @@ namespace Crystal {
 		VkPhysicalDeviceProperties deviceProperties;
 		vkGetPhysicalDeviceProperties(m_PhysicalDevice, &deviceProperties);
 
-		CL_CORE_INFO("Physical Device Selected: {0}", deviceProperties.deviceName);
-
 		CL_CORE_ASSERT(m_PhysicalDevice != VK_NULL_HANDLE, "failed to find a suitable GPU!");
+
+		CL_CORE_INFO("Physical Device Selected: {0}", deviceProperties.deviceName);
 	}
-	
-	bool VulkanPhysicalDevice::CheckPresentSupport(uint32_t queueFamilyIndex, VkSurfaceKHR surface) const {
+
+	VulkanPhysicalDevice::~VulkanPhysicalDevice() {}
+
+	bool VulkanPhysicalDevice::CheckPresentSupport(QueueFamilyIndex queueFamilyIndex, VkSurfaceKHR surface) const {
 		VkBool32 presentSupport = VK_FALSE;
 		vkGetPhysicalDeviceSurfaceSupportKHR(m_PhysicalDevice, queueFamilyIndex, surface, &presentSupport);
 		return presentSupport == VK_TRUE;
 	}
 
-	QueueFamilyIndices VulkanPhysicalDevice::FindQueueFamilies(VkPhysicalDevice device, VkSurfaceKHR surface) {
-		QueueFamilyIndices indices;
-
+	QueueFamilyIndices VulkanPhysicalDevice::CheckDeviceQueueSupport(VkPhysicalDevice device, QueueFlagBits requiredQueues, VkSurfaceKHR surface) {
 		uint32_t queueFamilyCount = 0;
 		vkGetPhysicalDeviceQueueFamilyProperties(device, &queueFamilyCount, nullptr);
 
 		std::vector<VkQueueFamilyProperties> queueFamilies(queueFamilyCount);
 		vkGetPhysicalDeviceQueueFamilyProperties(device, &queueFamilyCount, queueFamilies.data());
 
+		VkQueueFlags requiredVulkanQueues = 0;
+		if (requiredQueues[QueueFlags::Graphics]) {
+			requiredVulkanQueues |= VK_QUEUE_GRAPHICS_BIT;
+		}
+		if (requiredQueues[QueueFlags::Compute]) {
+			requiredVulkanQueues |= VK_QUEUE_COMPUTE_BIT;
+		}
+		if (requiredQueues[QueueFlags::Transfer]) {
+			requiredVulkanQueues |= VK_QUEUE_TRANSFER_BIT;
+		}
+
+		QueueFamilyIndices indices = {};
+		indices.fill(-1);
+		VkQueueFlags supportedQueues = 0;
+		bool needsPresent = requiredQueues[QueueFlags::Present];
+		bool presentSupported = false;
+
 		int i = 0;
 		for (const auto& queueFamily : queueFamilies) {
-			if (queueFamily.queueFlags & VK_QUEUE_GRAPHICS_BIT)
-				indices.GraphicsFamily = i;
+			if (queueFamily.queueCount > 0) {
+				supportedQueues |= queueFamily.queueFlags;
+			}
 
-			VkBool32 presentSupport = false;
-			vkGetPhysicalDeviceSurfaceSupportKHR(device, i, surface, &presentSupport);
-			if (presentSupport)
-				indices.PresentFamily = i;
+			if (queueFamily.queueCount > 0 && queueFamily.queueFlags & VK_QUEUE_GRAPHICS_BIT) {
+				indices[QueueFlags::Graphics] = i;
+			}
 
-			if (indices.IsComplete()) break;
+			if (queueFamily.queueCount > 0 && queueFamily.queueFlags & VK_QUEUE_COMPUTE_BIT) {
+				indices[QueueFlags::Compute] = i;
+			}
+
+			if (queueFamily.queueCount > 0 && queueFamily.queueFlags & VK_QUEUE_TRANSFER_BIT) {
+				indices[QueueFlags::Transfer] = i;
+			}
+
+			if (needsPresent) {
+				VkBool32 presentSupport = false;
+				vkGetPhysicalDeviceSurfaceSupportKHR(device, i, surface, &presentSupport);
+				if (queueFamily.queueCount > 0 && presentSupport) {
+					presentSupported = true;
+					indices[QueueFlags::Present] = i;
+				}
+			}
+
+			if ((requiredVulkanQueues & supportedQueues) == requiredVulkanQueues && (!needsPresent || presentSupported)) {
+				break;
+			}
 
 			i++;
 		}
@@ -71,12 +102,23 @@ namespace Crystal {
 		return indices;
 	}
 
-	bool VulkanPhysicalDevice::IsDeviceSuitable(VkPhysicalDevice device, VkSurfaceKHR surface) {
-		m_QueueFamilyIndices = FindQueueFamilies(device, surface);
+	bool VulkanPhysicalDevice::IsDeviceSuitable(VkPhysicalDevice device) {
+		//m_QueueFamilyIndices = FindQueueFamilies(device);
+
+		//Check that the graphics, compute, and trasfer queues are supported
+		const QueueFlagBits requiredQueues = QueueFlagBit::ComputeBit | QueueFlagBit::GraphicsBit | QueueFlagBit::TransferBit;
+		QueueFamilyIndices indices = CheckDeviceQueueSupport(device, requiredQueues);
+ 
+		bool queueSupport = true;
+		for (unsigned int i = 0; i < requiredQueues.size(); ++i) {
+			if (requiredQueues[i]) {
+				queueSupport &= (indices[i] >= 0);
+			}
+		}
  
 		bool extensionsSupported = CheckDeviceExtensionSupport(device);
 
-		return m_QueueFamilyIndices.IsComplete() && extensionsSupported;
+		return queueSupport && extensionsSupported;
 	}
 
 	bool VulkanPhysicalDevice::CheckDeviceExtensionSupport(VkPhysicalDevice device) {
@@ -93,5 +135,29 @@ namespace Crystal {
 		}
 
 		return requiredExtensions.empty();
+	}
+
+	SwapChainSupportDetails VulkanPhysicalDevice::QuerySwapChainSupport(VkPhysicalDevice device, VkSurfaceKHR surface) const {
+		SwapChainSupportDetails details;
+		
+		vkGetPhysicalDeviceSurfaceCapabilitiesKHR(device, surface, &details.capabilities);
+
+		uint32_t formatCount;
+		vkGetPhysicalDeviceSurfaceFormatsKHR(device, surface, &formatCount, nullptr);
+
+		if (formatCount != 0) {
+			details.formats.resize(formatCount);
+			vkGetPhysicalDeviceSurfaceFormatsKHR(device, surface, &formatCount, details.formats.data());
+		}
+
+		uint32_t presentModeCount;
+		vkGetPhysicalDeviceSurfacePresentModesKHR(device, surface, &presentModeCount, nullptr);
+
+		if (presentModeCount != 0) {
+			details.presentModes.resize(presentModeCount);
+			vkGetPhysicalDeviceSurfacePresentModesKHR(device, surface, &presentModeCount, details.presentModes.data());
+		}
+
+		return details;
 	}
 }

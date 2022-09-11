@@ -1,19 +1,29 @@
 #include "clpch.h"
 
+#include "Crystal/Renderer/QueueFlags.h"
 #include "VulkanLogicalDevice.h"
 
 namespace Crystal {
-	VulkanLogicalDevice::VulkanLogicalDevice(
-		std::unique_ptr<VulkanPhysicalDevice>& physicalDevice, 
-		std::unique_ptr<VulkanInstance>& instance) {
-
-		QueueFamilyIndices indices = physicalDevice->GetQueueFamilies();
+	VulkanLogicalDevice::VulkanLogicalDevice(VulkanPhysicalDevice* physicalDevice, VulkanSurface* surface) 
+	: m_PhysicalDevice(physicalDevice) {
+		const QueueFlagBits requiredQueues = QueueFlagBit::ComputeBit | QueueFlagBit::GraphicsBit | QueueFlagBit::TransferBit | QueueFlagBit::PresentBit;
+		m_QueueFamilyIndices = m_PhysicalDevice->GetQueueFamilyIndices(surface->GetVkSurface(), requiredQueues);
 
 		std::vector<VkDeviceQueueCreateInfo> queueCreateInfos;
-		std::set<uint32_t> uniqueQueueFamilies = { indices.GraphicsFamily.value(), indices.PresentFamily.value() };
+
+		
+		std::set<int> uniqueQueueFamilies;
+		bool queueSupport = true;
+		for (unsigned int i = 0; i < requiredQueues.size(); ++i) {
+			if (requiredQueues[i]) {
+				queueSupport &= (m_QueueFamilyIndices[i] >= 0);
+				uniqueQueueFamilies.insert(m_QueueFamilyIndices[i]);
+			}
+		}
+
 
 		float queuePriority = 1.0f;
-		for (uint32_t queueFamily : uniqueQueueFamilies) {
+		for (int queueFamily : uniqueQueueFamilies) {
 			VkDeviceQueueCreateInfo queueCreateInfo{};
 			queueCreateInfo.sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
 			queueCreateInfo.queueFamilyIndex = queueFamily;
@@ -33,27 +43,37 @@ namespace Crystal {
 		createInfo.pEnabledFeatures = &deviceFeatures;
 
 		//Only required extensions for now are device extensions
-		std::vector extensions = physicalDevice->GetDeviceExtensions();
+		std::vector extensions = m_PhysicalDevice->GetDeviceExtensions();
 		createInfo.enabledExtensionCount = static_cast<uint32_t>(extensions.size());
 		createInfo.ppEnabledExtensionNames = extensions.data();
 
 		//Current version of vulkan does not require enabled layers for logical 
 		//device - here for legacy support
-		std::vector<const char*> enabledLayers = instance->GetEnabledLayers();
+		std::vector<const char*> enabledLayers = m_PhysicalDevice->GetInstance()->GetEnabledLayers();
 		createInfo.enabledLayerCount = static_cast<uint32_t>(enabledLayers.size());
 		createInfo.ppEnabledLayerNames = enabledLayers.data();
 		
-		VkResult result = vkCreateDevice(physicalDevice->GetVkPhysicalDevice(), &createInfo, nullptr, &m_Device);
+		VkResult result = vkCreateDevice(m_PhysicalDevice->GetVkPhysicalDevice(), &createInfo, nullptr, &m_Device);
 		CL_CORE_ASSERT(result == VK_SUCCESS, "Could not create logical device!");
 
-		vkGetDeviceQueue(m_Device, indices.GraphicsFamily.value(), 0, &m_GraphicsQueue);
-		vkGetDeviceQueue(m_Device, indices.PresentFamily.value(), 0, &m_PresentQueue);
+		for (unsigned int i = 0; i < requiredQueues.size(); ++i) {
+			if (requiredQueues[i]) {
+				vkGetDeviceQueue(m_Device, m_QueueFamilyIndices[i], 0, &m_Queues[i]);
+			}
+		}
 	}
 
 	VulkanLogicalDevice::~VulkanLogicalDevice() {
 		CL_CORE_INFO("Destroying device.");
 		vkDestroyDevice(m_Device, nullptr);
-		CL_CORE_INFO("Device is destroyed!");
 	}
 
+	VkQueue VulkanLogicalDevice::GetQueue(QueueFlags flag) {
+		return m_Queues[flag];
+	}
+
+
+	QueueFamilyIndex VulkanLogicalDevice::GetQueueIndex(QueueFlags flag) {
+		return m_QueueFamilyIndices[flag];
+	}
 }

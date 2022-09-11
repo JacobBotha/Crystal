@@ -105,6 +105,7 @@
     <ClInclude Include="src\Platform\Vulkan\VulkanLogicalDevice.h" />
     <ClInclude Include="src\Platform\Vulkan\VulkanSurface.h" />
     <ClInclude Include="src\Platform\Vulkan\VulkanSwapChain.h" />
+    <ClInclude Include="src\Crystal\Renderer\QueueFlags.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Crystal\Core\Application.cpp">
