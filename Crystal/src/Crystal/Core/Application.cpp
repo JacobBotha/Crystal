@@ -19,8 +19,8 @@ namespace Crystal {
 		m_Window->SetEventCallBack(BIND_EVENT_FN(OnEvent));
 		m_Running = true;
 
-		m_ImGuiLayer = new ImGuiLayer();
-		PushLayer(m_ImGuiLayer);
+		//m_ImGuiLayer = new ImGuiLayer();
+		//PushLayer(m_ImGuiLayer);
 
 		Renderer::Init();
 	}

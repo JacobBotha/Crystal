@@ -43,7 +43,7 @@ namespace Crystal {
     static VKAPI_ATTR VkBool32 VKAPI_CALL debug_report(VkDebugReportFlagsEXT flags, VkDebugReportObjectTypeEXT objectType, uint64_t object, size_t location, int32_t messageCode, const char* pLayerPrefix, const char* pMessage, void* pUserData)
     {
         (void)flags; (void)object; (void)location; (void)messageCode; (void)pUserData; (void)pLayerPrefix; // Unused arguments
-        CL_CORE_TRACE("[vulkan] Debug report from ObjectType: %i\nMessage: %s\n\n", objectType, pMessage);
+        CL_CORE_TRACE("[vulkan] Debug report from ObjectType: {0}\nMessage: {1}\n\n", objectType, pMessage);
         return VK_FALSE;
     }
 
@@ -136,7 +136,7 @@ namespace Crystal {
         populateDebugMessengerCreateInfo(createInfo);
 
         VkResult result = CreateDebugUtilsMessengerEXT(m_VkInstance, &createInfo, nullptr, &m_DebugMessenger);
-        CL_CORE_ASSERT(result == VK_SUCCESS, "failed to set up debug messenger!");
+        CL_CORE_ASSERT(result == VK_SUCCESS, "Failed to set up debug messenger!");
     }
     
     void VulkanInstance::populateDebugMessengerCreateInfo(

@@ -6,12 +6,6 @@
 #include <vulkan/vulkan.h>
 
 namespace Crystal {
-	struct SwapChainSupportDetails {
-		VkSurfaceCapabilitiesKHR capabilities;
-		std::vector<VkSurfaceFormatKHR> formats;
-		std::vector<VkPresentModeKHR> presentModes;
-	};
-
 	class CRYSTAL_API VulkanPhysicalDevice {
 	public:
 		VulkanPhysicalDevice(VulkanInstance* instance);
@@ -23,7 +17,6 @@ namespace Crystal {
 			return CheckDeviceQueueSupport(m_PhysicalDevice, requiredQueues, surface); 
 		}
 		const std::vector<const char*> GetDeviceExtensions() const { return s_DeviceExtentions; }
-		//const SwapChainSupportDetails& GetSwapChainSupportDetails() const { return m_SwapChainSupportDetails; }
 
 		bool CheckPresentSupport(QueueFamilyIndex queueFamilyIndex, VkSurfaceKHR surface) const;
 		
@@ -33,13 +26,11 @@ namespace Crystal {
 		bool IsDeviceSuitable(VkPhysicalDevice device);
 		bool CheckDeviceExtensionSupport(VkPhysicalDevice device);
 
-		SwapChainSupportDetails QuerySwapChainSupport(VkPhysicalDevice device, VkSurfaceKHR surface) const;
 
 		static const std::vector<const char*> s_DeviceExtentions;
 
 		VulkanInstance* m_Instance;
 
 		VkPhysicalDevice m_PhysicalDevice;
-		SwapChainSupportDetails m_SwapChainSupportDetails;
 	};
 }

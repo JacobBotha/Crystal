@@ -68,12 +68,12 @@ namespace Crystal {
 		vkDestroyDevice(m_Device, nullptr);
 	}
 
-	VkQueue VulkanLogicalDevice::GetQueue(QueueFlags flag) {
+	VkQueue VulkanLogicalDevice::GetQueue(QueueFlags flag) const {
 		return m_Queues[flag];
 	}
 
 
-	QueueFamilyIndex VulkanLogicalDevice::GetQueueIndex(QueueFlags flag) {
+	QueueFamilyIndex VulkanLogicalDevice::GetQueueIndex(QueueFlags flag) const {
 		return m_QueueFamilyIndices[flag];
 	}
 }

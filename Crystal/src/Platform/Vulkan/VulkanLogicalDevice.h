@@ -9,10 +9,11 @@ namespace Crystal {
 		VulkanLogicalDevice(VulkanPhysicalDevice* physicalDevice, VulkanSurface* surface);
 		~VulkanLogicalDevice();
 
-		VkDevice GetDevice() const{ return m_Device; }
-		//VkQueue GetGraphicsQueue() const { return m_GraphicsQueue; }
-		VkQueue GetQueue(QueueFlags flag);
-		unsigned int GetQueueIndex(QueueFlags flag);
+		VkDevice GetVkDevice() const { return m_Device; }
+		VulkanPhysicalDevice* GetPhysicalDevice() const { return m_PhysicalDevice; }
+		VkQueue GetQueue(QueueFlags flag) const;
+		QueueFamilyIndex GetQueueIndex(QueueFlags flag) const;
+		QueueFamilyIndices GetQueueFamilyIndices() const { return m_QueueFamilyIndices; }
 
 	private:
 		using Queues = std::array<VkQueue, sizeof(QueueFlags)>;
@@ -22,5 +23,6 @@ namespace Crystal {
 		QueueFamilyIndices m_QueueFamilyIndices;
 		VkDevice m_Device;
 		Queues m_Queues;
+
 	};
 }

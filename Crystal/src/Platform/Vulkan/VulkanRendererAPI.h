@@ -5,6 +5,7 @@
 #include "VulkanPhysicalDevice.h"
 #include "VulkanLogicalDevice.h"
 #include "VulkanSurface.h"
+#include "VulkanSwapChain.h"
 
 namespace Crystal {
 	class CRYSTAL_API VulkanRendererAPI : RendererAPI {
@@ -22,5 +23,6 @@ namespace Crystal {
 		std::unique_ptr<VulkanSurface> m_Surface;
 
 		std::unique_ptr<VulkanLogicalDevice> m_LogicalDevice;
+		std::unique_ptr<VulkanSwapChain> m_SwapChain;
 	};
 }

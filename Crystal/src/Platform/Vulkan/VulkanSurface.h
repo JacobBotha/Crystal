@@ -14,12 +14,17 @@ namespace Crystal {
 		VulkanSurface(Window* window, VulkanInstance* instance);
 		~VulkanSurface();
 
-		bool CanPresent(VulkanPhysicalDevice* physicalDevice, QueueFamilyIndex index);
+		bool CanPresent(VulkanPhysicalDevice* physicalDevice, QueueFamilyIndex index) const;
 		VkSurfaceKHR GetVkSurface() const { return m_Surface; }
+		//Get the width and height (in that order) of the frame buffer in pixels.
+		std::pair<int, int> GetFrameBufferSize() const { return std::pair<int, int>(m_Width, m_Height); }
 	private:
-		VkSurfaceKHR m_Surface;
-
 		Window* m_Window;
 		VulkanInstance* m_Instance;
+
+		VkSurfaceKHR m_Surface;
+
+		int m_Width;
+		int m_Height;
 	};
 }
