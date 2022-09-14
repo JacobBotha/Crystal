@@ -94,23 +94,54 @@ namespace Crystal {
 		createInfo.clipped = VK_TRUE;
 		createInfo.oldSwapchain = VK_NULL_HANDLE;
 
-
+		//Create swap chain
 		VkResult res;
-		res= vkCreateSwapchainKHR(m_Device->GetVkDevice(), &createInfo, nullptr, &m_SwapChain);
+		res = vkCreateSwapchainKHR(m_Device->GetVkDevice(), &createInfo, nullptr, &m_SwapChain);
 		CL_CORE_ASSERT(res == VK_SUCCESS, "Swap chain creation failed!");
 
-		res = vkGetSwapchainImagesKHR(m_Device->GetVkDevice(), m_SwapChain, &imageCount, nullptr);
+		//Sreate swap chain images
+		res = vkGetSwapchainImagesKHR(m_Device->GetVkDevice(), m_SwapChain, &m_ImageCount, nullptr);
 		CL_CORE_ASSERT(res == VK_SUCCESS, "Failed to get swapchain images!");
-		m_SwapChainImages.resize(imageCount);
-		res = vkGetSwapchainImagesKHR(m_Device->GetVkDevice(), m_SwapChain, &imageCount, m_SwapChainImages.data());
+		m_SwapChainImages.resize(m_ImageCount);
+		res = vkGetSwapchainImagesKHR(m_Device->GetVkDevice(), m_SwapChain, &m_ImageCount, m_SwapChainImages.data());
 		CL_CORE_ASSERT(res == VK_SUCCESS, "Failed to get swapchain images!");
-
-		(void)res;
 
 		m_ImageFormat = m_SurfaceFormat.format;
+
+		CL_CORE_INFO("Created swap chain with {0} images.", m_ImageCount);
+
+		//Create swap chain image views
+		m_SwapChainImageViews.resize(m_SwapChainImages.size());
+		for (size_t i = 0; i < m_SwapChainImages.size(); i++) {
+			VkImageViewCreateInfo createInfo{};
+			createInfo.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
+			createInfo.image = m_SwapChainImages[i];
+			createInfo.viewType = VK_IMAGE_VIEW_TYPE_2D;
+			createInfo.format = m_ImageFormat;
+
+			createInfo.components.r = VK_COMPONENT_SWIZZLE_IDENTITY;
+			createInfo.components.g = VK_COMPONENT_SWIZZLE_IDENTITY;
+			createInfo.components.b = VK_COMPONENT_SWIZZLE_IDENTITY;
+			createInfo.components.a = VK_COMPONENT_SWIZZLE_IDENTITY;
+
+			createInfo.subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+			createInfo.subresourceRange.baseMipLevel = 0;
+			createInfo.subresourceRange.levelCount = 1;
+			createInfo.subresourceRange.baseArrayLayer = 0;
+			createInfo.subresourceRange.layerCount = 1;
+
+			res = vkCreateImageView(m_Device->GetVkDevice(), &createInfo, nullptr, &m_SwapChainImageViews[i]);
+			CL_CORE_ASSERT(res == VK_SUCCESS, "Failed to create swap chain image view.");
+		}
+
+		(void)res;
 	}
 
 	VulkanSwapChain::~VulkanSwapChain() {
+		for (auto imageView : m_SwapChainImageViews) {
+			vkDestroyImageView(m_Device->GetVkDevice(), imageView, nullptr);
+		}
+
 		vkDestroySwapchainKHR(m_Device->GetVkDevice(), m_SwapChain, nullptr);
 	}
 

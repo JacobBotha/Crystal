@@ -28,6 +28,9 @@ namespace Crystal {
 		VkFormat m_ImageFormat;
 
 		VkSwapchainKHR m_SwapChain;
+
+		uint32_t m_ImageCount;
 		std::vector<VkImage> m_SwapChainImages;
+		std::vector<VkImageView> m_SwapChainImageViews;
 	};
 }

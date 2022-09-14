@@ -9,6 +9,8 @@ namespace Crystal {
 		static void Init();
 		static void Shutdown();
 		
+		static RendererAPI* GetRenderAPI() { return s_RendererAPI.get(); }
+		static RendererAPI::API GetAPI() { return s_RendererAPI->GetAPI(); }
 		//TODO: Functions for handling scene and submitting vertex/shader data
 	private:
 
