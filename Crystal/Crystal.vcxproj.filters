@@ -79,19 +79,43 @@
     <ClInclude Include="src\Crystal\Input\MouseButtonCodes.h">
       <Filter>Crystal\Input</Filter>
     </ClInclude>
+    <ClInclude Include="src\Crystal\Renderer\QueueFlags.h">
+      <Filter>Crystal\Renderer</Filter>
+    </ClInclude>
     <ClInclude Include="src\Crystal\Renderer\Renderer.h">
       <Filter>Crystal\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="src\Crystal\Renderer\RendererAPI.h">
       <Filter>Crystal\Renderer</Filter>
     </ClInclude>
+    <ClInclude Include="src\Crystal\Renderer\Shader.h">
+      <Filter>Crystal\Renderer</Filter>
+    </ClInclude>
     <ClInclude Include="src\Platform\Vulkan\VKGraphicsContext.h">
+      <Filter>Platform\Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\Vulkan\VulkanImage.h">
       <Filter>Platform\Vulkan</Filter>
     </ClInclude>
     <ClInclude Include="src\Platform\Vulkan\VulkanInstance.h">
       <Filter>Platform\Vulkan</Filter>
     </ClInclude>
+    <ClInclude Include="src\Platform\Vulkan\VulkanLogicalDevice.h">
+      <Filter>Platform\Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\Vulkan\VulkanPhysicalDevice.h">
+      <Filter>Platform\Vulkan</Filter>
+    </ClInclude>
     <ClInclude Include="src\Platform\Vulkan\VulkanRendererAPI.h">
+      <Filter>Platform\Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\Vulkan\VulkanShader.h">
+      <Filter>Platform\Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\Vulkan\VulkanSurface.h">
+      <Filter>Platform\Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\Vulkan\VulkanSwapChain.h">
       <Filter>Platform\Vulkan</Filter>
     </ClInclude>
     <ClInclude Include="src\Platform\Windows\WindowsInput.h">
@@ -101,14 +125,6 @@
       <Filter>Platform\Windows</Filter>
     </ClInclude>
     <ClInclude Include="src\clpch.h" />
-    <ClInclude Include="src\Platform\Vulkan\VulkanPhysicalDevice.h" />
-    <ClInclude Include="src\Platform\Vulkan\VulkanLogicalDevice.h" />
-    <ClInclude Include="src\Platform\Vulkan\VulkanSurface.h" />
-    <ClInclude Include="src\Platform\Vulkan\VulkanSwapChain.h" />
-    <ClInclude Include="src\Crystal\Renderer\QueueFlags.h" />
-    <ClInclude Include="src\Platform\Vulkan\VulkanImage.h" />
-    <ClInclude Include="src\Crystal\Renderer\Shader.h" />
-    <ClInclude Include="src\Platform\Vulkan\VulkanShader.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Crystal\Core\Application.cpp">
@@ -135,13 +151,34 @@
     <ClCompile Include="src\Crystal\Renderer\RendererAPI.cpp">
       <Filter>Crystal\Renderer</Filter>
     </ClCompile>
+    <ClCompile Include="src\Crystal\Renderer\Shader.cpp">
+      <Filter>Crystal\Renderer</Filter>
+    </ClCompile>
     <ClCompile Include="src\Platform\Vulkan\VKGraphicsContext.cpp">
+      <Filter>Platform\Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Platform\Vulkan\VulkanImage.cpp">
       <Filter>Platform\Vulkan</Filter>
     </ClCompile>
     <ClCompile Include="src\Platform\Vulkan\VulkanInstance.cpp">
       <Filter>Platform\Vulkan</Filter>
     </ClCompile>
+    <ClCompile Include="src\Platform\Vulkan\VulkanLogicalDevice.cpp">
+      <Filter>Platform\Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Platform\Vulkan\VulkanPhysicalDevice.cpp">
+      <Filter>Platform\Vulkan</Filter>
+    </ClCompile>
     <ClCompile Include="src\Platform\Vulkan\VulkanRendererAPI.cpp">
+      <Filter>Platform\Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Platform\Vulkan\VulkanShader.cpp">
+      <Filter>Platform\Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Platform\Vulkan\VulkanSurface.cpp">
+      <Filter>Platform\Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Platform\Vulkan\VulkanSwapChain.cpp">
       <Filter>Platform\Vulkan</Filter>
     </ClCompile>
     <ClCompile Include="src\Platform\Windows\WindowsInput.cpp">
@@ -151,12 +188,5 @@
       <Filter>Platform\Windows</Filter>
     </ClCompile>
     <ClCompile Include="src\clpch.cpp" />
-    <ClCompile Include="src\Platform\Vulkan\VulkanPhysicalDevice.cpp" />
-    <ClCompile Include="src\Platform\Vulkan\VulkanLogicalDevice.cpp" />
-    <ClCompile Include="src\Platform\Vulkan\VulkanSurface.cpp" />
-    <ClCompile Include="src\Platform\Vulkan\VulkanSwapChain.cpp" />
-    <ClCompile Include="src\Platform\Vulkan\VulkanImage.cpp" />
-    <ClCompile Include="src\Crystal\Renderer\Shader.cpp" />
-    <ClCompile Include="src\Platform\Vulkan\VulkanShader.cpp" />
   </ItemGroup>
 </Project>

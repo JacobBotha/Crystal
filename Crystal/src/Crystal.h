@@ -13,3 +13,6 @@
 
 //Entry Point
 #include "Crystal/Core/EntryPoint.h"
+
+//Rendering
+#include "Crystal/Renderer/Renderer.h"

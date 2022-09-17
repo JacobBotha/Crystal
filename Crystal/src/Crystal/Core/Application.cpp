@@ -26,6 +26,8 @@ namespace Crystal {
 	}
 
 	Application::~Application() {
+		for (Layer* layer : m_LayerStack)
+			layer->OnDetach();
 		Renderer::Shutdown();
 	}
 

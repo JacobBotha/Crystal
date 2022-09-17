@@ -20,12 +20,18 @@ public:
 	}
 
 	void OnAttach() override {
-
+		m_VertShader = Crystal::Renderer::CreateShader("assets/shaders/shader.vert");
+		m_FragShader = Crystal::Renderer::CreateShader("assets/shaders/shader.frag");
+		
 	}
 
 	void OnDetach() override {
-
+		m_VertShader.reset();
+		m_FragShader.reset();
 	}
+
+	std::shared_ptr<Crystal::Shader> m_VertShader;
+	std::shared_ptr<Crystal::Shader> m_FragShader;
 
 };
 

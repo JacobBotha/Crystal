@@ -114,9 +114,9 @@ namespace Crystal {
             if (strcmp(layerName, layer) == 0) {
                 return true;
             }
-
-            return false;
         }
+
+        return false;
     }
 
     bool VulkanInstance::IsExtensionAvailable(const char* extension) {
@@ -124,9 +124,9 @@ namespace Crystal {
             if (strcmp(extensionName, extension) == 0) {
                 return true;
             }
-
-            return false;
         }
+
+        return false;
     }
 
     void VulkanInstance::setupDebugMessenger() {

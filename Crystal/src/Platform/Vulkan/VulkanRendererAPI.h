@@ -17,6 +17,8 @@ namespace Crystal {
 		virtual void SetViewPort(uint32_t x, uint32_t y, uint32_t width, uint32_t height) override;
 		virtual void SetClearColor(const glm::vec4& color) override;
 		virtual void Clear() override;
+
+		VulkanLogicalDevice* GetLogicalDevice() const { return m_LogicalDevice.get(); }
 	private:
 		std::unique_ptr<VulkanInstance> m_Instance;
 		std::unique_ptr<VulkanPhysicalDevice> m_PhysicalDevice;

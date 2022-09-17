@@ -27,8 +27,10 @@ include "Crystal/vendor/ImGui"
 
 project "Crystal"
 	location "Crystal"
-	kind "SharedLib"
+	kind "StaticLib"
 	language "C++"
+	cppdialect "C++17"
+	staticruntime "off"
 
 	targetdir ("bin/" .. outputdir .. "/%{prj.name}")
 	objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
@@ -62,13 +64,12 @@ project "Crystal"
 	defines
 	{
 		"CL_PLATFORM_WINDOWS",
-		"CL_BUILD_DLL",
+		"_CRT_SECURE_NO_WARNINGS",
+		"GLFW_INCLUDE_NONE",
 		"GLFW_INCLUDE_VULKAN"
 	}
 
 	filter "system:windows"
-		cppdialect "C++17"
-		staticruntime "On"
 		systemversion "latest"
 
 		postbuildcommands
@@ -78,23 +79,36 @@ project "Crystal"
 
 	filter "configurations:Debug"
 		defines "CL_DEBUG"
+		runtime "Debug"
 		symbols "On"
-		buildoptions "/MDd"
+		-- buildoptions "/MDd"
+
+		links 
+		{
+        	"%{VulkanSDK}/Lib/shaderc_combinedd.lib",
+        	-- "%{VulkanSDK}/Lib/spirv-cross-cored.lib",
+        	-- "%{VulkanSDK}/Lib/spirv-cross-glsld.lib",
+        	-- "%{VulkanSDK}/Lib/SPIRV-Toolsd.lib",
+		}
 
 	filter "configurations:Release"
 		defines "CL_RELEASE"
+		runtime "Release"
 		optimize "On"
-		buildoptions "/MDd"
+		-- buildoptions "/MDd"
 
 	filter "configurations:Dist"
 		defines "CL_DIST"
+		runtime "Release"
 		optimize "On"
-		buildoptions "/MDd"
+		-- buildoptions "/MDd"
 
 project "Sandbox"
 	location "Sandbox"
 	kind "ConsoleApp"
 	language "C++"
+	cppdialect "C++17"
+	staticruntime "off"
 
 	targetdir ("bin/" .. outputdir .. "/%{prj.name}")
 	objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
@@ -118,8 +132,6 @@ project "Sandbox"
 	}
 
 	filter "system:windows"
-		cppdialect "C++17"
-		staticruntime "On"
 		systemversion "latest"
 
 		defines
@@ -129,15 +141,18 @@ project "Sandbox"
 
 	filter "configurations:Debug"
 		defines "CL_DEBUG"
-		symbols "On"
-		buildoptions "/MDd"
+		symbols "on"
+		runtime "Debug"
+		-- buildoptions "/MDd"
 
 	filter "configurations:Release"
 		defines "CL_RELEASE"
-		optimize "On"
-		buildoptions "/MDd"
+		optimize "on"
+		runtime "Release"
+		-- buildoptions "/MDd"
 
 	filter "configurations:Dist"
 		defines "CL_DIST"
-		optimize "On" 
-		buildoptions "/MDd"
+		optimize "on" 
+		runtime "Release"
+		-- buildoptions "/MDd"
