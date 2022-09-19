@@ -10,13 +10,24 @@ public:
 
 	void OnUpdate() override
 	{
-		if (Crystal::Input::IsKeyPressed(CL_KEY_TAB))
-			CL_TRACE("Tab key is pressed!");
 		Crystal::Renderer::DrawFrame();
 	}
 
 	void OnEvent(Crystal::Event& event) override
 	{
+		if(event.GetEventType() == Crystal::EventType::KeyPressed) {
+			//Convert event to key event
+			Crystal::KeyPressedEvent* kEvent = (Crystal::KeyPressedEvent*) &event;
+			//Check if Tab key is pressed and reload shaders/graphics pipeline
+			if (kEvent->GetKeyCode() == Crystal::Key::Tab) {
+				m_VertShader = Crystal::Shader::Create("assets/shaders/shader.vert");
+				m_FragShader = Crystal::Shader::Create("assets/shaders/shader.frag");
+				Crystal::GraphicsPipelineCreateInfo graphicsPipelineCreateInfo{};
+				graphicsPipelineCreateInfo.vertexShader = m_VertShader.get();
+				graphicsPipelineCreateInfo.fragmentShader = m_FragShader.get();
+				Crystal::Renderer::CreateGraphicsPipeline(graphicsPipelineCreateInfo);
+			}
+		}
 		CL_TRACE("{0}", event);
 	}
 

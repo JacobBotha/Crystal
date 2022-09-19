@@ -13,7 +13,6 @@ namespace Crystal {
     {}
 
 	VulkanRendererAPI::~VulkanRendererAPI() {
-        m_LogicalDevice->WaitGPU();
         DestroyGraphicsPipeline();
         DestroySyncObjects();
     }
@@ -60,7 +59,12 @@ namespace Crystal {
 	}
 
 	void VulkanRendererAPI::CreateGraphicsPipeline(GraphicsPipelineCreateInfo createInfo) {
-        CL_CORE_ASSERT(m_GraphicsPipeline == VK_NULL_HANDLE, "Graphics pipeline already exists! Renderer Currently only supprots one pipeline.");
+        if (m_GraphicsPipeline != VK_NULL_HANDLE) {
+            DestroyGraphicsPipeline();
+        }
+
+        CL_CORE_INFO("Building Graphics Pipeline.");
+
 		VulkanShader* vertexShader = (VulkanShader*) createInfo.vertexShader;
 		VulkanShader* fragmentShader = (VulkanShader*) createInfo.fragmentShader;
 
@@ -248,11 +252,13 @@ namespace Crystal {
 
     void VulkanRendererAPI::DestroySyncObjects()
     {
+        m_LogicalDevice->WaitGPU();
         vkDestroySemaphore(m_LogicalDevice->GetVkDevice(), m_RenderFinishedSemaphore, nullptr);
         vkDestroyFence(m_LogicalDevice->GetVkDevice(), m_InFlightFence, nullptr);
     }
 
     void VulkanRendererAPI::DestroyGraphicsPipeline() {
+        m_LogicalDevice->WaitGPU();
         vkDestroyPipeline(m_LogicalDevice->GetVkDevice(), m_GraphicsPipeline, nullptr);
         vkDestroyPipelineLayout(m_LogicalDevice->GetVkDevice(), m_GraphicsPipelineLayout, nullptr);
         m_GraphicsPipelineLayout = VK_NULL_HANDLE;
