@@ -79,6 +79,9 @@
     <ClInclude Include="src\Crystal\Input\MouseButtonCodes.h">
       <Filter>Crystal\Input</Filter>
     </ClInclude>
+    <ClInclude Include="src\Crystal\Renderer\Pipeline.h">
+      <Filter>Crystal\Renderer</Filter>
+    </ClInclude>
     <ClInclude Include="src\Crystal\Renderer\QueueFlags.h">
       <Filter>Crystal\Renderer</Filter>
     </ClInclude>
@@ -94,6 +97,15 @@
     <ClInclude Include="src\Platform\Vulkan\VKGraphicsContext.h">
       <Filter>Platform\Vulkan</Filter>
     </ClInclude>
+    <ClInclude Include="src\Platform\Vulkan\VulkanCommandBuffer.h">
+      <Filter>Platform\Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\Vulkan\VulkanCommandPool.h">
+      <Filter>Platform\Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\Vulkan\VulkanFramebuffer.h">
+      <Filter>Platform\Vulkan</Filter>
+    </ClInclude>
     <ClInclude Include="src\Platform\Vulkan\VulkanImage.h">
       <Filter>Platform\Vulkan</Filter>
     </ClInclude>
@@ -106,10 +118,16 @@
     <ClInclude Include="src\Platform\Vulkan\VulkanPhysicalDevice.h">
       <Filter>Platform\Vulkan</Filter>
     </ClInclude>
+    <ClInclude Include="src\Platform\Vulkan\VulkanRenderPass.h">
+      <Filter>Platform\Vulkan</Filter>
+    </ClInclude>
     <ClInclude Include="src\Platform\Vulkan\VulkanRendererAPI.h">
       <Filter>Platform\Vulkan</Filter>
     </ClInclude>
     <ClInclude Include="src\Platform\Vulkan\VulkanShader.h">
+      <Filter>Platform\Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\Vulkan\VulkanShaderModule.h">
       <Filter>Platform\Vulkan</Filter>
     </ClInclude>
     <ClInclude Include="src\Platform\Vulkan\VulkanSurface.h">
@@ -157,6 +175,15 @@
     <ClCompile Include="src\Platform\Vulkan\VKGraphicsContext.cpp">
       <Filter>Platform\Vulkan</Filter>
     </ClCompile>
+    <ClCompile Include="src\Platform\Vulkan\VulkanCommandBuffer.cpp">
+      <Filter>Platform\Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Platform\Vulkan\VulkanCommandPool.cpp">
+      <Filter>Platform\Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Platform\Vulkan\VulkanFramebuffer.cpp">
+      <Filter>Platform\Vulkan</Filter>
+    </ClCompile>
     <ClCompile Include="src\Platform\Vulkan\VulkanImage.cpp">
       <Filter>Platform\Vulkan</Filter>
     </ClCompile>
@@ -169,10 +196,16 @@
     <ClCompile Include="src\Platform\Vulkan\VulkanPhysicalDevice.cpp">
       <Filter>Platform\Vulkan</Filter>
     </ClCompile>
+    <ClCompile Include="src\Platform\Vulkan\VulkanRenderPass.cpp">
+      <Filter>Platform\Vulkan</Filter>
+    </ClCompile>
     <ClCompile Include="src\Platform\Vulkan\VulkanRendererAPI.cpp">
       <Filter>Platform\Vulkan</Filter>
     </ClCompile>
     <ClCompile Include="src\Platform\Vulkan\VulkanShader.cpp">
+      <Filter>Platform\Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Platform\Vulkan\VulkanShaderModule.cpp">
       <Filter>Platform\Vulkan</Filter>
     </ClCompile>
     <ClCompile Include="src\Platform\Vulkan\VulkanSurface.cpp">

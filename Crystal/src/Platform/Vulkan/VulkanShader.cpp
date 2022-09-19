@@ -81,17 +81,17 @@ namespace Crystal {
 		}
 	}
 
-	VulkanShader::VulkanShader(const std::string fileName, RendererAPI* rAPI) 
-		: Shader(fileName),
-		m_Device(((VulkanRendererAPI*)rAPI)->GetLogicalDevice()), 
-		m_ShaderModule(VK_NULL_HANDLE) 
+	VulkanShader::VulkanShader(const std::string fileName) 
+		: Shader(fileName)
+		//m_Device(((VulkanRendererAPI*)rAPI)->GetLogicalDevice()), 
+		//m_ShaderModule(VK_NULL_HANDLE) 
 	{
 
 		Utils::CreateCacheDirectory();
 
 		//Setup compiler environment
-		m_CompileOptions.SetSourceLanguage(shaderc_source_language_glsl);
-		m_CompileOptions.SetOptimizationLevel(shaderc_optimization_level_performance);
+		//m_CompileOptions.SetSourceLanguage(shaderc_source_language_glsl);
+		m_CompileOptions.SetOptimizationLevel(shaderc_optimization_level_size);
 		
 		if (!Utils::IsSPIRV(m_FileName))
 		{
@@ -99,32 +99,25 @@ namespace Crystal {
 			t = clock();
 			CompileOrGetBinaries();
 			t = clock() - t;
-			CL_CORE_WARN("Shader creation took {0} seconds", ((float)t) / CLOCKS_PER_SEC);
+			CL_CORE_WARN("Shader ({0}) creation took {1} seconds", GetName(), ((float)t) / CLOCKS_PER_SEC);
 
 
-			VkShaderModuleCreateInfo createInfo = {};
-			createInfo.sType = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO;
-			createInfo.codeSize = m_SPIRV.size() * sizeof(unsigned int);
-			createInfo.pCode = m_SPIRV.data();
-			VkResult err = vkCreateShaderModule(m_Device->GetVkDevice(), &createInfo, nullptr, &m_ShaderModule);
-			CL_CORE_ASSERT(err == VK_SUCCESS, "Could not create vulkan shader module!");
 		}
 		else {
 			const std::vector<char> code = Utils::ReadFile(m_FileName);
-			m_SPIRV = std::vector<uint32_t>();
+			m_SPIRV = ReadFile(m_FileName);
 
-			VkShaderModuleCreateInfo createInfo{};
-			createInfo.sType = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO;
-			createInfo.codeSize = code.size();
-			createInfo.pCode = reinterpret_cast<const uint32_t*>(code.data());
+			//VkShaderModuleCreateInfo createInfo{};
+			//createInfo.sType = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO;
+			//createInfo.codeSize = code.size();
+			//createInfo.pCode = reinterpret_cast<const uint32_t*>(code.data());
 
-			VkResult err = vkCreateShaderModule(m_Device->GetVkDevice(), &createInfo, nullptr, &m_ShaderModule);
-			CL_CORE_ASSERT(err != VK_SUCCESS, "Failed to create shader module!");
+			//VkResult err = vkCreateShaderModule(m_Device->GetVkDevice(), &createInfo, nullptr, &m_ShaderModule);
+			//CL_CORE_ASSERT(err != VK_SUCCESS, "Failed to create shader module!");
 		}
 	}
 
 	VulkanShader::~VulkanShader() {
-		vkDestroyShaderModule(m_Device->GetVkDevice(), m_ShaderModule, nullptr);
 	}
 
 	std::vector<uint32_t> VulkanShader::ReadFile(const std::string& fileName) const
@@ -172,6 +165,7 @@ namespace Crystal {
 		const shaderc_shader_kind kind = Utils::InferKindFromFileName(m_FileName);				  // Infer shader kind
 		const std::string source = ReadTextFile(m_FileName);
 
+		//CL_CORE_TRACE(source);
 		const std::string result = PreprocessShader(m_FileName, source, kind);
 		shaderc::SpvCompilationResult module = m_Compiler.CompileGlslToSpv(result, kind, m_FileName.c_str(), m_CompileOptions);
 

@@ -11,7 +11,7 @@
 namespace Crystal {
 	class CRYSTAL_API VulkanShader : public Shader {
 	public:
-		VulkanShader(const std::string fileName, RendererAPI* rAPI);
+		VulkanShader(const std::string fileName);
 		~VulkanShader();
 
 		virtual void CompileOrGetBinaries() override;
@@ -19,13 +19,11 @@ namespace Crystal {
 		std::vector<uint32_t> ReadFile(const std::string& fileName) const;
 		std::string ReadTextFile(const std::string_view& fileName);
 		std::string PreprocessShader(const std::string& fileName, const std::string& source, shaderc_shader_kind shaderKind);
+		inline const std::vector<uint32_t>& GetSPIRV() const { return m_SPIRV; }
 	private:
-		VulkanLogicalDevice* m_Device;
-		VkShaderModule m_ShaderModule;
-
-		std::vector<uint32_t> m_SPIRV;
-
 		shaderc::Compiler m_Compiler;
 		shaderc::CompileOptions m_CompileOptions;
+
+		std::vector<uint32_t> m_SPIRV;
 	};
 }

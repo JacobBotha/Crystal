@@ -14,6 +14,7 @@ namespace Crystal {
 		VkQueue GetQueue(QueueFlags flag) const;
 		QueueFamilyIndex GetQueueIndex(QueueFlags flag) const;
 		QueueFamilyIndices GetQueueFamilyIndices() const { return m_QueueFamilyIndices; }
+		void WaitGPU() const { vkDeviceWaitIdle(m_Device); }
 
 	private:
 		using Queues = std::array<VkQueue, sizeof(QueueFlags)>;

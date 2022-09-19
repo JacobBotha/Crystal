@@ -72,10 +72,10 @@ project "Crystal"
 	filter "system:windows"
 		systemversion "latest"
 
-		postbuildcommands
-		{
-			("{COPY} %{cfg.buildtarget.relpath} ../bin/" .. outputdir .. "/Sandbox")
-		}
+		-- postbuildcommands
+		-- {
+		-- 	("{COPY} %{cfg.buildtarget.relpath} ../bin/" .. outputdir .. "/Sandbox")
+		-- }
 
 	filter "configurations:Debug"
 		defines "CL_DEBUG"
@@ -97,11 +97,21 @@ project "Crystal"
 		optimize "On"
 		-- buildoptions "/MDd"
 
+		links 
+		{
+        	"%{VulkanSDK}/Lib/shaderc_combined.lib",
+		}
+
 	filter "configurations:Dist"
 		defines "CL_DIST"
 		runtime "Release"
 		optimize "On"
 		-- buildoptions "/MDd"
+
+		links 
+		{
+        	"%{VulkanSDK}/Lib/shaderc_combined.lib",
+		}
 
 project "Sandbox"
 	location "Sandbox"

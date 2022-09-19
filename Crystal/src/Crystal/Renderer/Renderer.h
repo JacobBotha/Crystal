@@ -1,18 +1,21 @@
 #pragma once
 
 #include "RendererAPI.h"
-#include "Shader.h"
+//#include "Shader.h"
 #include <glm/glm.hpp>
 
-class Shader;
+//class Shader;
 namespace Crystal {
 	class CRYSTAL_API Renderer {
 	public:
 		static void Init();
 		static void Shutdown();
+
+		static void CreateGraphicsPipeline(GraphicsPipelineCreateInfo createInfo) { return s_RendererAPI->CreateGraphicsPipeline(createInfo); };
+
+		static void DrawFrame() { return s_RendererAPI->DrawFrame(); }
 		
-		static std::shared_ptr<Shader> CreateShader(std::string fileName);
-		static RendererAPI::API GetAPI() { return s_RendererAPI->GetAPI(); }
+		static RendererAPI::API GetAPI() { return RendererAPI::GetAPI(); }
 		//TODO: Functions for handling scene and submitting vertex/shader data
 	private:
 

@@ -12,6 +12,7 @@ public:
 	{
 		if (Crystal::Input::IsKeyPressed(CL_KEY_TAB))
 			CL_TRACE("Tab key is pressed!");
+		Crystal::Renderer::DrawFrame();
 	}
 
 	void OnEvent(Crystal::Event& event) override
@@ -20,9 +21,13 @@ public:
 	}
 
 	void OnAttach() override {
-		m_VertShader = Crystal::Renderer::CreateShader("assets/shaders/shader.vert");
-		m_FragShader = Crystal::Renderer::CreateShader("assets/shaders/shader.frag");
+		m_VertShader = Crystal::Shader::Create("assets/shaders/shader.vert");
+		m_FragShader = Crystal::Shader::Create("assets/shaders/shader.frag");
 		
+		Crystal::GraphicsPipelineCreateInfo graphicsPipelineCreateInfo{};
+		graphicsPipelineCreateInfo.vertexShader = m_VertShader.get();
+		graphicsPipelineCreateInfo.fragmentShader = m_FragShader.get();
+		Crystal::Renderer::CreateGraphicsPipeline(graphicsPipelineCreateInfo);
 	}
 
 	void OnDetach() override {

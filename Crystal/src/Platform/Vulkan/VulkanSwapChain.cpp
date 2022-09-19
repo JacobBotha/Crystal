@@ -134,15 +134,38 @@ namespace Crystal {
 			CL_CORE_ASSERT(res == VK_SUCCESS, "Failed to create swap chain image view.");
 		}
 
+		VkSemaphoreCreateInfo semaphoreInfo{};
+		semaphoreInfo.sType = VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO;
+		vkCreateSemaphore(device->GetVkDevice(), &semaphoreInfo, nullptr, &m_ImageAvailableSemaphore);
+
 		(void)res;
 	}
 
 	VulkanSwapChain::~VulkanSwapChain() {
+		vkDestroySemaphore(m_Device->GetVkDevice(), m_ImageAvailableSemaphore, nullptr);
 		for (auto imageView : m_SwapChainImageViews) {
 			vkDestroyImageView(m_Device->GetVkDevice(), imageView, nullptr);
 		}
 
 		vkDestroySwapchainKHR(m_Device->GetVkDevice(), m_SwapChain, nullptr);
+	}
+
+	uint32_t VulkanSwapChain::GetNextImageIndex(uint64_t timeout) const
+	{
+		uint32_t imageIndex;
+		VkResult err = vkAcquireNextImageKHR(m_Device->GetVkDevice(), m_SwapChain, timeout, m_ImageAvailableSemaphore, VK_NULL_HANDLE, &imageIndex);
+		CL_CORE_ASSERT(err == VK_SUCCESS, "Failed to aquire next swap chain image");
+		return imageIndex;
+	}
+
+	VkImage VulkanSwapChain::GetNextImage(uint64_t timeout) const
+	{
+		return m_SwapChainImages[GetNextImageIndex()];
+	}
+
+	VkImageView VulkanSwapChain::GetNextImageView(uint64_t timeout) const
+	{
+		return m_SwapChainImageViews[GetNextImageIndex()];
 	}
 
 	VulkanSwapChain::SwapChainSupportDetails VulkanSwapChain::QuerySwapChainSupport() {
