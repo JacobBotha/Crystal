@@ -134,15 +134,10 @@ namespace Crystal {
 			CL_CORE_ASSERT(res == VK_SUCCESS, "Failed to create swap chain image view.");
 		}
 
-		VkSemaphoreCreateInfo semaphoreInfo{};
-		semaphoreInfo.sType = VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO;
-		vkCreateSemaphore(device->GetVkDevice(), &semaphoreInfo, nullptr, &m_ImageAvailableSemaphore);
-
 		(void)res;
 	}
 
 	VulkanSwapChain::~VulkanSwapChain() {
-		vkDestroySemaphore(m_Device->GetVkDevice(), m_ImageAvailableSemaphore, nullptr);
 		for (auto imageView : m_SwapChainImageViews) {
 			vkDestroyImageView(m_Device->GetVkDevice(), imageView, nullptr);
 		}
@@ -150,22 +145,22 @@ namespace Crystal {
 		vkDestroySwapchainKHR(m_Device->GetVkDevice(), m_SwapChain, nullptr);
 	}
 
-	uint32_t VulkanSwapChain::GetNextImageIndex(uint64_t timeout) const
+	uint32_t VulkanSwapChain::GetNextImageIndex(VkSemaphore imageAvailableSemaphore, uint64_t timeout) const
 	{
 		uint32_t imageIndex;
-		VkResult err = vkAcquireNextImageKHR(m_Device->GetVkDevice(), m_SwapChain, timeout, m_ImageAvailableSemaphore, VK_NULL_HANDLE, &imageIndex);
+		VkResult err = vkAcquireNextImageKHR(m_Device->GetVkDevice(), m_SwapChain, timeout, imageAvailableSemaphore, VK_NULL_HANDLE, &imageIndex);
 		CL_CORE_ASSERT(err == VK_SUCCESS, "Failed to aquire next swap chain image");
 		return imageIndex;
 	}
 
-	VkImage VulkanSwapChain::GetNextImage(uint64_t timeout) const
+	VkImage VulkanSwapChain::GetNextImage(VkSemaphore imageAvailableSemaphore, uint64_t timeout) const
 	{
-		return m_SwapChainImages[GetNextImageIndex()];
+		return m_SwapChainImages[GetNextImageIndex(imageAvailableSemaphore, timeout)];
 	}
 
-	VkImageView VulkanSwapChain::GetNextImageView(uint64_t timeout) const
+	VkImageView VulkanSwapChain::GetNextImageView(VkSemaphore imageAvailableSemaphore, uint64_t timeout) const
 	{
-		return m_SwapChainImageViews[GetNextImageIndex()];
+		return m_SwapChainImageViews[GetNextImageIndex(imageAvailableSemaphore, timeout)];
 	}
 
 	VulkanSwapChain::SwapChainSupportDetails VulkanSwapChain::QuerySwapChainSupport() {

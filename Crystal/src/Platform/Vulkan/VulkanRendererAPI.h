@@ -10,6 +10,7 @@
 #include "VulkanFramebuffer.h"
 #include "VulkanCommandBuffer.h"
 #include "VulkanCommandPool.h"
+#include "VulkanFramesHandler.h"
 
 namespace Crystal {
 	class CRYSTAL_API VulkanRendererAPI : RendererAPI {
@@ -31,9 +32,6 @@ namespace Crystal {
 		//void CreateGraphicsPipeline
 
 	private:
-		void CreateSyncObjects();
-		void DestroySyncObjects();
-
 		std::unique_ptr<VulkanInstance> m_Instance;
 		std::unique_ptr<VulkanPhysicalDevice> m_PhysicalDevice;
 		std::unique_ptr<VulkanSurface> m_Surface;
@@ -43,10 +41,7 @@ namespace Crystal {
 		std::shared_ptr<VulkanRenderPass> m_RenderPass;
 		std::vector<std::unique_ptr<VulkanFramebuffer>> m_Framebuffers;
 		std::unique_ptr<VulkanCommandPool> m_CommandPool;
-		std::unique_ptr<VulkanCommandBuffer> m_CommandBuffer;
-
-		VkFence m_InFlightFence;
-		VkSemaphore m_RenderFinishedSemaphore;
+		std::unique_ptr<VulkanFramesHandler> m_Frames;
 
 		VkPipelineLayout m_GraphicsPipelineLayout;
 		VkPipeline m_GraphicsPipeline;

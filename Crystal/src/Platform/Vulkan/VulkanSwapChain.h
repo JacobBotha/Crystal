@@ -13,12 +13,12 @@ namespace Crystal {
 		VkExtent2D GetVkExtent2D() const { return m_Extent; }
 		VkFormat GetVkImageFormat() const { return m_ImageFormat; }
 		const std::vector<VkImageView>& GetImageViews() const { return m_SwapChainImageViews; }
+		const uint32_t GetImageCount() { return m_ImageCount; }
 
 		//Retrieve next swap chain image info
-		uint32_t GetNextImageIndex(uint64_t timeout = UINT64_MAX) const;
-		VkImage GetNextImage(uint64_t timeout = UINT64_MAX) const;
-		VkImageView GetNextImageView(uint64_t timeout = UINT64_MAX) const;
-		VkSemaphore GetImageAvailableSemaphore() const { return m_ImageAvailableSemaphore; }
+		uint32_t GetNextImageIndex(VkSemaphore imageAvailableSemaphore, uint64_t timeout = UINT64_MAX) const;
+		VkImage GetNextImage(VkSemaphore imageAvailableSemaphore, uint64_t timeout = UINT64_MAX) const;
+		VkImageView GetNextImageView(VkSemaphore imageAvailableSemaphore, uint64_t timeout = UINT64_MAX) const;
 
 	private:
 		struct SwapChainSupportDetails {
@@ -43,7 +43,5 @@ namespace Crystal {
 		uint32_t m_ImageCount;
 		std::vector<VkImage> m_SwapChainImages;
 		std::vector<VkImageView> m_SwapChainImageViews;
-
-		VkSemaphore m_ImageAvailableSemaphore;
 	};
 }

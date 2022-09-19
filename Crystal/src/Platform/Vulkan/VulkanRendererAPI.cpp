@@ -7,14 +7,11 @@
 namespace Crystal {
 	VulkanRendererAPI::VulkanRendererAPI() 
         : m_GraphicsPipelineLayout(VK_NULL_HANDLE),
-        m_GraphicsPipeline(VK_NULL_HANDLE),
-        m_InFlightFence(VK_NULL_HANDLE),
-        m_RenderFinishedSemaphore(VK_NULL_HANDLE)
+        m_GraphicsPipeline(VK_NULL_HANDLE)
     {}
 
 	VulkanRendererAPI::~VulkanRendererAPI() {
         DestroyGraphicsPipeline();
-        DestroySyncObjects();
     }
 
 	void Crystal::VulkanRendererAPI::Init() {
@@ -40,10 +37,7 @@ namespace Crystal {
         }
 
         m_CommandPool = std::make_unique<VulkanCommandPool>(m_LogicalDevice.get());
-        m_CommandBuffer = std::make_unique<VulkanCommandBuffer>(m_CommandPool.get());
-
-        //Initialise in flight fence
-        CreateSyncObjects();
+        m_Frames = std::make_unique<VulkanFramesHandler>(m_LogicalDevice.get(), m_CommandPool.get(), 2);
 	}
 
 	void Crystal::VulkanRendererAPI::SetViewPort(uint32_t x, uint32_t y, uint32_t width, uint32_t height)
@@ -63,7 +57,7 @@ namespace Crystal {
             DestroyGraphicsPipeline();
         }
 
-        CL_CORE_INFO("Building Graphics Pipeline.");
+        CL_CORE_INFO("Creating Graphics Pipeline.");
 
 		VulkanShader* vertexShader = (VulkanShader*) createInfo.vertexShader;
 		VulkanShader* fragmentShader = (VulkanShader*) createInfo.fragmentShader;
@@ -194,30 +188,34 @@ namespace Crystal {
 
     void VulkanRendererAPI::DrawFrame()
     {
-        vkWaitForFences(m_LogicalDevice->GetVkDevice(), 1, &m_InFlightFence, VK_TRUE, UINT64_MAX);
-        vkResetFences(m_LogicalDevice->GetVkDevice(), 1, &m_InFlightFence);
+        VkFence inFrameFence = m_Frames->GetCurrentInFlightFence();
+        VkSemaphore imageAvailableSemaphore = m_Frames->GetCurrentImageAvailableSemaphore();
+        VkSemaphore renderFinishedSemaphore = m_Frames->GetCurrentRenderFinishedSemaphore();
 
-        uint32_t imageIndex = m_SwapChain->GetNextImageIndex();
-        m_CommandBuffer->Reset();
-        m_CommandBuffer->Record(m_Framebuffers[imageIndex].get(), m_GraphicsPipeline, VulkanRenderPass::RenderPassPipeline::Graphics, true);
+        vkWaitForFences(m_LogicalDevice->GetVkDevice(), 1, &inFrameFence, VK_TRUE, UINT64_MAX);
+        vkResetFences(m_LogicalDevice->GetVkDevice(), 1, &inFrameFence);
+
+        uint32_t imageIndex = m_SwapChain->GetNextImageIndex(imageAvailableSemaphore);
+        m_Frames->ResetCurrent();
+        m_Frames->RecordCurrent(m_Framebuffers[imageIndex].get(), m_GraphicsPipeline, VulkanRenderPass::RenderPassPipeline::Graphics, true);
         
         VkSubmitInfo submitInfo{};
         submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
 
-        VkSemaphore waitSemaphores[] = { m_SwapChain->GetImageAvailableSemaphore() };
+        VkSemaphore waitSemaphores[] = { imageAvailableSemaphore };
         VkPipelineStageFlags waitStages[] = { VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT };
-        VkCommandBuffer commandBuffers[] = { m_CommandBuffer->GetVkCommandBuffer() };
+        VkCommandBuffer commandBuffers[] = { m_Frames->GetCurrentCommandBuffer()->GetVkCommandBuffer() };
         submitInfo.waitSemaphoreCount = 1;
         submitInfo.pWaitSemaphores = waitSemaphores;
         submitInfo.pWaitDstStageMask = waitStages;
         submitInfo.commandBufferCount = 1;
         submitInfo.pCommandBuffers = commandBuffers;
 
-        VkSemaphore signalSemaphores[] = { m_RenderFinishedSemaphore };
+        VkSemaphore signalSemaphores[] = { m_Frames->GetCurrentRenderFinishedSemaphore()};
         submitInfo.signalSemaphoreCount = 1;
         submitInfo.pSignalSemaphores = signalSemaphores;
 
-        vkQueueSubmit(m_LogicalDevice->GetQueue(QueueFlags::Graphics), 1, &submitInfo, m_InFlightFence);
+        vkQueueSubmit(m_LogicalDevice->GetQueue(QueueFlags::Graphics), 1, &submitInfo, inFrameFence);
 
         VkPresentInfoKHR presentInfo{};
         presentInfo.sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;
@@ -233,28 +231,7 @@ namespace Crystal {
         presentInfo.pResults = nullptr;
 
         vkQueuePresentKHR(m_LogicalDevice->GetQueue(QueueFlags::Present), &presentInfo);
-    }
-
-    void VulkanRendererAPI::CreateSyncObjects()
-	{
-		VkFenceCreateInfo fenceInfo{};
-		fenceInfo.sType = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;
-		fenceInfo.flags = VK_FENCE_CREATE_SIGNALED_BIT;
-		VkResult err = vkCreateFence(m_LogicalDevice->GetVkDevice(), &fenceInfo, nullptr, &m_InFlightFence);
-		CL_CORE_ASSERT(err == VK_SUCCESS, "Could not create in flight fence!");
-
-		VkSemaphoreCreateInfo semaphoreInfo{};
-		semaphoreInfo.sType = VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO;
-		err = vkCreateSemaphore(m_LogicalDevice->GetVkDevice(), &semaphoreInfo, nullptr, &m_RenderFinishedSemaphore);
-		CL_CORE_ASSERT(err == VK_SUCCESS, "Could not create render finished semaphore!");
-		(void)err;
-	}
-
-    void VulkanRendererAPI::DestroySyncObjects()
-    {
-        m_LogicalDevice->WaitGPU();
-        vkDestroySemaphore(m_LogicalDevice->GetVkDevice(), m_RenderFinishedSemaphore, nullptr);
-        vkDestroyFence(m_LogicalDevice->GetVkDevice(), m_InFlightFence, nullptr);
+        m_Frames->IterFrame();
     }
 
     void VulkanRendererAPI::DestroyGraphicsPipeline() {
@@ -263,5 +240,6 @@ namespace Crystal {
         vkDestroyPipelineLayout(m_LogicalDevice->GetVkDevice(), m_GraphicsPipelineLayout, nullptr);
         m_GraphicsPipelineLayout = VK_NULL_HANDLE;
         m_GraphicsPipeline = VK_NULL_HANDLE;
+        CL_CORE_INFO("Destroyed Graphics Pipeline!");
     }
 }

@@ -170,6 +170,7 @@
     <ClInclude Include="src\Platform\Vulkan\VulkanCommandBuffer.h" />
     <ClInclude Include="src\Platform\Vulkan\VulkanCommandPool.h" />
     <ClInclude Include="src\Platform\Vulkan\VulkanFramebuffer.h" />
+    <ClInclude Include="src\Platform\Vulkan\VulkanFramesHandler.h" />
     <ClInclude Include="src\Platform\Vulkan\VulkanImage.h" />
     <ClInclude Include="src\Platform\Vulkan\VulkanInstance.h" />
     <ClInclude Include="src\Platform\Vulkan\VulkanLogicalDevice.h" />
@@ -198,6 +199,7 @@
     <ClCompile Include="src\Platform\Vulkan\VulkanCommandBuffer.cpp" />
     <ClCompile Include="src\Platform\Vulkan\VulkanCommandPool.cpp" />
     <ClCompile Include="src\Platform\Vulkan\VulkanFramebuffer.cpp" />
+    <ClCompile Include="src\Platform\Vulkan\VulkanFramesHandler.cpp" />
     <ClCompile Include="src\Platform\Vulkan\VulkanImage.cpp" />
     <ClCompile Include="src\Platform\Vulkan\VulkanInstance.cpp" />
     <ClCompile Include="src\Platform\Vulkan\VulkanLogicalDevice.cpp" />
