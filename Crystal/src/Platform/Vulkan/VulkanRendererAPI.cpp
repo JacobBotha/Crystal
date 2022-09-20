@@ -47,6 +47,8 @@ namespace Crystal {
 
 	void Crystal::VulkanRendererAPI::SetClearColor(const glm::vec4& color)
 	{
+        VkClearValue clearValue = { {color.r, color.g, color.b, color.a} };
+        m_RecordInfo.clearColor = clearValue;
 	}
 
 	void VulkanRendererAPI::Clear()

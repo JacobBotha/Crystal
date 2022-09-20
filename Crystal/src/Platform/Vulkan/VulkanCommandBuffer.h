@@ -17,8 +17,8 @@ namespace Crystal {
 			VulkanRenderPass::RenderPassPipeline pipelineType;
 			bool dynamicState = true;
 			VkClearValue clearColor = { {{0.0f, 0.0f, 0.0f, 1.0f}} };
-			VkViewport viewport;
-			VkRect2D scissor;
+			VkViewport viewport{};
+			VkRect2D scissor{};
 		};
 	public:
 		VulkanCommandBuffer(VulkanCommandPool* commandPool);

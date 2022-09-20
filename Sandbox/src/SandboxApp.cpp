@@ -39,6 +39,13 @@ public:
 		graphicsPipelineCreateInfo.vertexShader = m_VertShader.get();
 		graphicsPipelineCreateInfo.fragmentShader = m_FragShader.get();
 		Crystal::Renderer::CreateGraphicsPipeline(graphicsPipelineCreateInfo);
+
+		glm::vec4 color{};
+		color.r = 0.3f;
+		color.g = 0.3f;
+		color.b = 0.3f;
+		color.a = 1.0f;
+		Crystal::Renderer::SetClearColor(color);
 	}
 
 	void OnDetach() override {
