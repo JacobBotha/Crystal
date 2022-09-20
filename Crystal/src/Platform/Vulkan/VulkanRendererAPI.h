@@ -41,6 +41,9 @@ namespace Crystal {
 		void DestroyGraphicsPipeline();
 		void RecreateSwapChain();
 		void CreateFramebuffers();
+		VkViewport CreateViewport(float x, float y, float width, float height);
+		VkRect2D CreateScissor(VkOffset2D offset, VkExtent2D extent);
+		void InitRecordInfo();
 
 		std::unique_ptr<VulkanInstance> m_Instance;
 		std::unique_ptr<VulkanPhysicalDevice> m_PhysicalDevice;
@@ -55,6 +58,8 @@ namespace Crystal {
 
 		VkPipelineLayout m_GraphicsPipelineLayout;
 		VkPipeline m_GraphicsPipeline;
+
+		VulkanCommandBuffer::RecordInfo m_RecordInfo;
 		
 		bool m_FramebufferResized;
 	};

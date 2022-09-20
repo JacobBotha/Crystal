@@ -31,10 +31,18 @@ namespace Crystal {
         CreateFramebuffers();
         m_CommandPool = std::make_unique<VulkanCommandPool>(m_LogicalDevice.get());
         m_Frames = std::make_unique<VulkanFramesHandler>(m_LogicalDevice.get(), m_CommandPool.get(), 2);
+
+        InitRecordInfo();
 	}
 
 	void Crystal::VulkanRendererAPI::SetViewPort(uint32_t x, uint32_t y, uint32_t width, uint32_t height)
 	{
+        float fX = static_cast<float>(x);
+        float fY = static_cast<float>(y);
+        float fWidth = static_cast<float>(width);
+        float fHeight = static_cast<float>(height);
+
+        m_RecordInfo.viewport = CreateViewport(fX, fY, fWidth, fHeight);
 	}
 
 	void Crystal::VulkanRendererAPI::SetClearColor(const glm::vec4& color)
@@ -131,20 +139,8 @@ namespace Crystal {
 			dynamicState.pDynamicStates = dynamicStates.data();
         }
         else {
-        VkViewport viewport{};
-        VkRect2D scissor{};
-            viewport.x = 0.0f;
-            viewport.y = 0.0f;
-            viewport.width = (float)m_SwapChain->GetVkExtent2D().width;
-            viewport.height = (float)m_SwapChain->GetVkExtent2D().height;
-            viewport.minDepth = 0.0f;
-            viewport.maxDepth = 1.0f;
-
-            scissor.offset = { 0, 0 };
-            scissor.extent = m_SwapChain->GetVkExtent2D();
-
-            viewportState.pViewports = &viewport;
-            viewportState.pScissors = &scissor;
+            viewportState.pViewports = &m_RecordInfo.viewport;
+            viewportState.pScissors = &m_RecordInfo.scissor;
         }
 
         VkPipelineLayoutCreateInfo pipelineLayoutInfo{};
@@ -198,15 +194,17 @@ namespace Crystal {
 
         vkResetFences(m_LogicalDevice->GetVkDevice(), 1, &inFlightFence);
 
-        m_Frames->ResetCurrent();
-        m_Frames->RecordCurrent(m_Framebuffers[imageIndex].get(), m_GraphicsPipeline, VulkanRenderPass::RenderPassPipeline::Graphics, true);
+        VulkanCommandBuffer* commandBuffer = m_Frames->GetCurrentCommandBuffer();
+        commandBuffer->Reset();
+
+        commandBuffer->Record(m_Framebuffers[imageIndex].get(), m_GraphicsPipeline, m_RecordInfo);
         
         VkSubmitInfo submitInfo{};
         submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
 
         VkSemaphore waitSemaphores[] = { imageAvailableSemaphore };
         VkPipelineStageFlags waitStages[] = { VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT };
-        VkCommandBuffer commandBuffers[] = { m_Frames->GetCurrentCommandBuffer()->GetVkCommandBuffer() };
+        VkCommandBuffer commandBuffers[] = { commandBuffer->GetVkCommandBuffer() };
         submitInfo.waitSemaphoreCount = 1;
         submitInfo.pWaitSemaphores = waitSemaphores;
         submitInfo.pWaitDstStageMask = waitStages;
@@ -266,6 +264,7 @@ namespace Crystal {
             m_SwapChain.get(), 
             VulkanRenderPass::RenderPassPipeline::Graphics);
         CreateFramebuffers();
+        InitRecordInfo();
     }
 
     void VulkanRendererAPI::CreateFramebuffers() {
@@ -277,5 +276,41 @@ namespace Crystal {
                 imageView);
             m_Framebuffers.push_back(std::move(frameBuffer));
         }
+    }
+
+    VkViewport VulkanRendererAPI::CreateViewport(float x, float y, float width, float height) {
+        VkViewport viewport {};
+		viewport.x = x;
+		viewport.y = y;
+		viewport.width = width;
+        viewport.height = height;
+        viewport.minDepth = 0.0f;
+		viewport.maxDepth = 1.0f;
+
+        return viewport;
+    }
+
+    VkRect2D VulkanRendererAPI::CreateScissor(VkOffset2D offset, VkExtent2D extent) {
+		VkRect2D scissor{};
+		scissor.offset = offset;
+		scissor.extent = extent;
+        
+        return scissor;
+    }
+
+    void VulkanRendererAPI::InitRecordInfo() {
+        VkExtent2D extent = m_SwapChain->GetVkExtent2D();
+        float width = static_cast<float>(extent.width);
+        float height = static_cast<float>(extent.height);
+        VkViewport viewport = CreateViewport(0.0f, 0.0f, width, height);
+        VkRect2D scissor = CreateScissor({0, 0}, extent);
+        
+        VulkanCommandBuffer::RecordInfo recordInfo{};
+        recordInfo.pipelineType = VulkanRenderPass::RenderPassPipeline::Graphics;
+        recordInfo.dynamicState = true;
+        recordInfo.viewport = viewport;
+        recordInfo.scissor = scissor;
+
+        m_RecordInfo = recordInfo;
     }
 }

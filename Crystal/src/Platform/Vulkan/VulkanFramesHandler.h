@@ -8,15 +8,6 @@ namespace Crystal {
 		VulkanFramesHandler(VulkanLogicalDevice* device, VulkanCommandPool* commandPool, uint16_t maxFrames);
 		~VulkanFramesHandler();
 
-		void ResetCurrent() { m_CommandBuffers[m_FrameIndex]->Reset(); }
-		void RecordCurrent(VulkanFramebuffer* framebuffer, 
-		VkPipeline pipeline, 
-		VulkanRenderPass::RenderPassPipeline pipelineType, 
-		bool dynamicState) 
-		{ 
-			m_CommandBuffers[m_FrameIndex]->Record(framebuffer, pipeline, pipelineType, dynamicState);
-		}
-
 		VulkanCommandBuffer* GetCurrentCommandBuffer() { return m_CommandBuffers[m_FrameIndex].get(); }
 		VkSemaphore GetCurrentRenderFinishedSemaphore() { return m_RenderFinishedSemaphores[m_FrameIndex]; }
 		VkSemaphore GetCurrentImageAvailableSemaphore() { return m_ImageAvailableSemaphores[m_FrameIndex]; }

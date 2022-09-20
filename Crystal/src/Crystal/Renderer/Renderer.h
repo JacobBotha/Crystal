@@ -12,11 +12,13 @@ namespace Crystal {
 		static void Init();
 		static void Shutdown();
 
-		static void CreateGraphicsPipeline(GraphicsPipelineCreateInfo createInfo) { return s_RendererAPI->CreateGraphicsPipeline(createInfo); };
+		static void CreateGraphicsPipeline(GraphicsPipelineCreateInfo createInfo) { return s_RendererAPI->CreateGraphicsPipeline(createInfo); }
 
 		static void DrawFrame() { return s_RendererAPI->DrawFrame(); }
 
 		static void WindowResized(WindowResizeEvent& e) { s_RendererAPI->WindowResized(e); }
+
+		static void SetViewPort(uint32_t x, uint32_t y, uint32_t width, uint32_t height) { s_RendererAPI->SetViewPort(x, y, width, height); }
 		
 		static RendererAPI::API GetAPI() { return RendererAPI::GetAPI(); }
 		//TODO: Functions for handling scene and submitting vertex/shader data
