@@ -17,8 +17,11 @@ namespace Crystal {
 		bool CanPresent(VulkanPhysicalDevice* physicalDevice, QueueFamilyIndex index) const;
 		VkSurfaceKHR GetVkSurface() const { return m_Surface; }
 		//Get the width and height (in that order) of the frame buffer in pixels.
-		std::pair<int, int> GetFrameBufferSize() const { return std::pair<int, int>(m_Width, m_Height); }
+		std::pair<int, int> GetFramebufferSize() const { return std::pair<int, int>(m_Width, m_Height); }
+		//Update dimension if window is resized
+		void UpdateFramebufferSize() { GetNativeFramebufferSize(); }
 	private:
+		void GetNativeFramebufferSize();
 		Window* m_Window;
 		VulkanInstance* m_Instance;
 

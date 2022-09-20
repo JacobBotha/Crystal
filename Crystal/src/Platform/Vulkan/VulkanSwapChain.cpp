@@ -30,9 +30,6 @@ namespace Crystal {
 			return capabilities.currentExtent;
 		}
 		else {
-			//int width, height;
-			//glfwGetFramebufferSize(window, &width, &height);
-
 			VkExtent2D actualExtent = {
 				static_cast<uint32_t>(width),
 				static_cast<uint32_t>(height)
@@ -51,7 +48,7 @@ namespace Crystal {
 		m_SupportDetails = QuerySwapChainSupport();
 		m_SurfaceFormat = chooseSwapSurfaceFormat(m_SupportDetails.formats);
 		m_PresentMode = chooseSwapPresentMode(m_SupportDetails.presentModes);
-		auto [width, height] = m_Surface->GetFrameBufferSize();
+		auto [width, height] = m_Surface->GetFramebufferSize();
 		m_Extent = chooseSwapExtent(m_SupportDetails.capabilities, width, height);
 
 		uint32_t imageCount = m_SupportDetails.capabilities.minImageCount + 1;
@@ -145,23 +142,21 @@ namespace Crystal {
 		vkDestroySwapchainKHR(m_Device->GetVkDevice(), m_SwapChain, nullptr);
 	}
 
-	uint32_t VulkanSwapChain::GetNextImageIndex(VkSemaphore imageAvailableSemaphore, uint64_t timeout) const
+	VkResult VulkanSwapChain::GetNextImageIndex(VkSemaphore imageAvailableSemaphore, uint32_t* imageIndex, uint64_t timeout) const
 	{
-		uint32_t imageIndex;
-		VkResult err = vkAcquireNextImageKHR(m_Device->GetVkDevice(), m_SwapChain, timeout, imageAvailableSemaphore, VK_NULL_HANDLE, &imageIndex);
-		CL_CORE_ASSERT(err == VK_SUCCESS, "Failed to aquire next swap chain image");
-		return imageIndex;
+		VkResult err = vkAcquireNextImageKHR(m_Device->GetVkDevice(), m_SwapChain, timeout, imageAvailableSemaphore, VK_NULL_HANDLE, imageIndex);
+		return err;
 	}
 
-	VkImage VulkanSwapChain::GetNextImage(VkSemaphore imageAvailableSemaphore, uint64_t timeout) const
-	{
-		return m_SwapChainImages[GetNextImageIndex(imageAvailableSemaphore, timeout)];
-	}
+	//VkResult VulkanSwapChain::GetNextImage(VkSemaphore imageAvailableSemaphore, VkImage* image, uint64_t timeout) const
+	//{
+	//	m_SwapChainImages[GetNextImageIndex(imageAvailableSemaphore, timeout)];
+	//}
 
-	VkImageView VulkanSwapChain::GetNextImageView(VkSemaphore imageAvailableSemaphore, uint64_t timeout) const
-	{
-		return m_SwapChainImageViews[GetNextImageIndex(imageAvailableSemaphore, timeout)];
-	}
+	//VkImageView VulkanSwapChain::GetNextImageView(VkSemaphore imageAvailableSemaphore, uint64_t timeout) const
+	//{
+	//	return m_SwapChainImageViews[GetNextImageIndex(imageAvailableSemaphore, timeout)];
+	//}
 
 	VulkanSwapChain::SwapChainSupportDetails VulkanSwapChain::QuerySwapChainSupport() {
 		SwapChainSupportDetails details;

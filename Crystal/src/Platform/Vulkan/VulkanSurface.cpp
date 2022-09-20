@@ -25,4 +25,10 @@ namespace Crystal {
 	VulkanSurface::~VulkanSurface() {
 		vkDestroySurfaceKHR(m_Instance->GetVkInstance(), m_Surface, nullptr);
 	}
+	
+	void VulkanSurface::GetNativeFramebufferSize() {
+		GLFWwindow* wd = (GLFWwindow*)m_Window->GetNativeWindow();
+
+		glfwGetFramebufferSize(wd, &m_Width, &m_Height);
+	}
 }

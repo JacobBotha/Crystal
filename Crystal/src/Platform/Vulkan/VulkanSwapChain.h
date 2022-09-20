@@ -16,9 +16,9 @@ namespace Crystal {
 		const uint32_t GetImageCount() { return m_ImageCount; }
 
 		//Retrieve next swap chain image info
-		uint32_t GetNextImageIndex(VkSemaphore imageAvailableSemaphore, uint64_t timeout = UINT64_MAX) const;
-		VkImage GetNextImage(VkSemaphore imageAvailableSemaphore, uint64_t timeout = UINT64_MAX) const;
-		VkImageView GetNextImageView(VkSemaphore imageAvailableSemaphore, uint64_t timeout = UINT64_MAX) const;
+		VkResult GetNextImageIndex(VkSemaphore imageAvailableSemaphore, uint32_t* imageIndex, uint64_t timeout = UINT64_MAX) const;
+		//VkResult GetNextImage(VkSemaphore imageAvailableSemaphore, VkImage* image, uint64_t timeout = UINT64_MAX) const;
+		//VkResult GetNextImageView(VkSemaphore imageAvailableSemaphore, VkImageView* imageView, uint64_t timeout = UINT64_MAX) const;
 
 	private:
 		struct SwapChainSupportDetails {

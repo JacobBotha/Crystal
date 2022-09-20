@@ -1,6 +1,8 @@
 #pragma once
 
 #include "Crystal/Renderer/RendererAPI.h"
+#include "Crystal/Events/ApplicationEvent.h"
+
 #include "VulkanInstance.h"
 #include "VulkanPhysicalDevice.h"
 #include "VulkanLogicalDevice.h"
@@ -22,16 +24,24 @@ namespace Crystal {
 		virtual void SetViewPort(uint32_t x, uint32_t y, uint32_t width, uint32_t height) override;
 		virtual void SetClearColor(const glm::vec4& color) override;
 		virtual void Clear() override;
+		virtual void WindowResized(WindowResizeEvent& e) override 
+		{
+			m_Surface->UpdateFramebufferSize();
+			m_FramebufferResized = true;
+		}
 
 		virtual void CreateGraphicsPipeline(GraphicsPipelineCreateInfo createInfo) override;
 		virtual void DrawFrame();
-		void DestroyGraphicsPipeline();
 
 		VulkanLogicalDevice* GetLogicalDevice() const { return m_LogicalDevice.get(); }
 
 		//void CreateGraphicsPipeline
 
 	private:
+		void DestroyGraphicsPipeline();
+		void RecreateSwapChain();
+		void CreateFramebuffers();
+
 		std::unique_ptr<VulkanInstance> m_Instance;
 		std::unique_ptr<VulkanPhysicalDevice> m_PhysicalDevice;
 		std::unique_ptr<VulkanSurface> m_Surface;
@@ -46,6 +56,6 @@ namespace Crystal {
 		VkPipelineLayout m_GraphicsPipelineLayout;
 		VkPipeline m_GraphicsPipeline;
 		
-
+		bool m_FramebufferResized;
 	};
 }

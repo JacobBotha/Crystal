@@ -24,6 +24,7 @@ namespace Crystal {
 
 	private:
 		bool OnWindowClose(WindowCloseEvent& e);
+		bool OnWindowResize(WindowResizeEvent& e);
 
 		LayerStack m_LayerStack;
 		std::unique_ptr<Window> m_Window;

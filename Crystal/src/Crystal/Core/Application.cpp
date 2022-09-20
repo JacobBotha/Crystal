@@ -35,6 +35,7 @@ namespace Crystal {
 		//Check if window was closed
 		EventDispatcher dispatcher(e);
 		dispatcher.Dispatch<WindowCloseEvent>(BIND_EVENT_FN(OnWindowClose));
+		dispatcher.Dispatch<WindowResizeEvent>(BIND_EVENT_FN(OnWindowResize));
 
 		//ApplyEvent to all layers in the layer stack
 		for (auto it = m_LayerStack.end(); it != m_LayerStack.begin(); )
@@ -67,6 +68,15 @@ namespace Crystal {
 
 	bool Application::OnWindowClose(WindowCloseEvent& e) {
 		m_Running = false;
+
+		return true;
+	}
+
+	bool Application::OnWindowResize(WindowResizeEvent& e) {
+		//Check if window is minimized
+		m_Window->IsMinimised();
+		
+		Renderer::WindowResized(e);
 
 		return true;
 	}

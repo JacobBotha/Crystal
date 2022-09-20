@@ -5,9 +5,10 @@
 #include "Crystal/Core/Application.h"
 
 namespace Crystal {
-	VulkanRendererAPI::VulkanRendererAPI() 
+    VulkanRendererAPI::VulkanRendererAPI()
         : m_GraphicsPipelineLayout(VK_NULL_HANDLE),
-        m_GraphicsPipeline(VK_NULL_HANDLE)
+        m_GraphicsPipeline(VK_NULL_HANDLE),
+        m_FramebufferResized(false)
     {}
 
 	VulkanRendererAPI::~VulkanRendererAPI() {
@@ -27,15 +28,7 @@ namespace Crystal {
 
         //Create a frame buffer for each swap chain image view. This could be
         //moved to a handler to more cleanly hold/query the framebuffers.
-        for (VkImageView imageView : m_SwapChain->GetImageViews()) {
-            std::unique_ptr<VulkanFramebuffer> frameBuffer = std::make_unique<VulkanFramebuffer>(
-                m_LogicalDevice.get(),
-                m_RenderPass,
-                m_SwapChain->GetVkExtent2D(),
-                imageView);
-            m_Framebuffers.push_back(std::move(frameBuffer));
-        }
-
+        CreateFramebuffers();
         m_CommandPool = std::make_unique<VulkanCommandPool>(m_LogicalDevice.get());
         m_Frames = std::make_unique<VulkanFramesHandler>(m_LogicalDevice.get(), m_CommandPool.get(), 2);
 	}
@@ -188,14 +181,23 @@ namespace Crystal {
 
     void VulkanRendererAPI::DrawFrame()
     {
-        VkFence inFrameFence = m_Frames->GetCurrentInFlightFence();
+        VkFence inFlightFence = m_Frames->GetCurrentInFlightFence();
         VkSemaphore imageAvailableSemaphore = m_Frames->GetCurrentImageAvailableSemaphore();
         VkSemaphore renderFinishedSemaphore = m_Frames->GetCurrentRenderFinishedSemaphore();
 
-        vkWaitForFences(m_LogicalDevice->GetVkDevice(), 1, &inFrameFence, VK_TRUE, UINT64_MAX);
-        vkResetFences(m_LogicalDevice->GetVkDevice(), 1, &inFrameFence);
+        vkWaitForFences(m_LogicalDevice->GetVkDevice(), 1, &inFlightFence, VK_TRUE, UINT64_MAX);
 
-        uint32_t imageIndex = m_SwapChain->GetNextImageIndex(imageAvailableSemaphore);
+        uint32_t imageIndex; 
+        VkResult err = m_SwapChain->GetNextImageIndex(imageAvailableSemaphore, &imageIndex);
+        if (err == VK_ERROR_OUT_OF_DATE_KHR) 
+        {
+            RecreateSwapChain();
+            return;
+        }
+        else CL_CORE_ASSERT(err == VK_SUCCESS || err == VK_SUBOPTIMAL_KHR, "Failed to retrieve next image from swap chain!");
+
+        vkResetFences(m_LogicalDevice->GetVkDevice(), 1, &inFlightFence);
+
         m_Frames->ResetCurrent();
         m_Frames->RecordCurrent(m_Framebuffers[imageIndex].get(), m_GraphicsPipeline, VulkanRenderPass::RenderPassPipeline::Graphics, true);
         
@@ -215,7 +217,8 @@ namespace Crystal {
         submitInfo.signalSemaphoreCount = 1;
         submitInfo.pSignalSemaphores = signalSemaphores;
 
-        vkQueueSubmit(m_LogicalDevice->GetQueue(QueueFlags::Graphics), 1, &submitInfo, inFrameFence);
+        err = vkQueueSubmit(m_LogicalDevice->GetQueue(QueueFlags::Graphics), 1, &submitInfo, inFlightFence);
+        CL_CORE_ASSERT(err == VK_SUCCESS, "Failed to submit to graphics queue!");
 
         VkPresentInfoKHR presentInfo{};
         presentInfo.sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;
@@ -230,7 +233,14 @@ namespace Crystal {
 
         presentInfo.pResults = nullptr;
 
-        vkQueuePresentKHR(m_LogicalDevice->GetQueue(QueueFlags::Present), &presentInfo);
+        err = vkQueuePresentKHR(m_LogicalDevice->GetQueue(QueueFlags::Present), &presentInfo);
+
+        if (err == VK_ERROR_OUT_OF_DATE_KHR || err == VK_SUBOPTIMAL_KHR || m_FramebufferResized) {
+            m_FramebufferResized = false;
+            RecreateSwapChain();
+        }
+        else CL_CORE_ASSERT(err == VK_SUCCESS, "Failed to submit to present queue!");
+
         m_Frames->IterFrame();
     }
 
@@ -241,5 +251,31 @@ namespace Crystal {
         m_GraphicsPipelineLayout = VK_NULL_HANDLE;
         m_GraphicsPipeline = VK_NULL_HANDLE;
         CL_CORE_INFO("Destroyed Graphics Pipeline!");
+    }
+
+    void VulkanRendererAPI::RecreateSwapChain() {
+        m_LogicalDevice->WaitGPU();
+
+        m_SwapChain.reset();
+        m_RenderPass.reset();
+        m_Framebuffers.clear();
+
+        m_SwapChain = std::make_unique<VulkanSwapChain>(m_LogicalDevice.get(), m_Surface.get());
+        m_RenderPass = std::make_shared<VulkanRenderPass>(
+            m_LogicalDevice.get(), 
+            m_SwapChain.get(), 
+            VulkanRenderPass::RenderPassPipeline::Graphics);
+        CreateFramebuffers();
+    }
+
+    void VulkanRendererAPI::CreateFramebuffers() {
+        for (VkImageView imageView : m_SwapChain->GetImageViews()) {
+            std::unique_ptr<VulkanFramebuffer> frameBuffer = std::make_unique<VulkanFramebuffer>(
+                m_LogicalDevice.get(),
+                m_RenderPass,
+                m_SwapChain->GetVkExtent2D(),
+                imageView);
+            m_Framebuffers.push_back(std::move(frameBuffer));
+        }
     }
 }

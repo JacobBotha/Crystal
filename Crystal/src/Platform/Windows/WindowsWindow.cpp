@@ -128,6 +128,15 @@ namespace Crystal {
 		glfwPollEvents();
 	}
 
+	void WindowsWindow::IsMinimised() {
+		int width = 0, height = 0;
+		glfwGetFramebufferSize(m_Window, &width, &height);
+		while (width == 0 || height == 0) {
+			glfwGetFramebufferSize(m_Window, &width, &height);
+			glfwWaitEvents();
+		}
+	}
+
 	void WindowsWindow::SetVSync(bool enabled)
 	{
 		if (enabled)

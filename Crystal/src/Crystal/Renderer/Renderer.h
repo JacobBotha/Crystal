@@ -1,6 +1,7 @@
 #pragma once
 
 #include "RendererAPI.h"
+#include "Crystal/Events/ApplicationEvent.h"
 //#include "Shader.h"
 #include <glm/glm.hpp>
 
@@ -14,6 +15,8 @@ namespace Crystal {
 		static void CreateGraphicsPipeline(GraphicsPipelineCreateInfo createInfo) { return s_RendererAPI->CreateGraphicsPipeline(createInfo); };
 
 		static void DrawFrame() { return s_RendererAPI->DrawFrame(); }
+
+		static void WindowResized(WindowResizeEvent& e) { s_RendererAPI->WindowResized(e); }
 		
 		static RendererAPI::API GetAPI() { return RendererAPI::GetAPI(); }
 		//TODO: Functions for handling scene and submitting vertex/shader data

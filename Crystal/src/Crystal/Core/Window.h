@@ -27,6 +27,7 @@ namespace Crystal {
 		virtual void SetEventCallBack(const EventCallBackFn callback) = 0;
 		virtual void SetVSync(bool enabled) = 0;
 		virtual bool IsVSync() = 0;
+		virtual void IsMinimised() = 0;
 
 		virtual void* GetNativeWindow() const = 0;
 		static Window* Create(const WindowProperties& props = WindowProperties());
