@@ -1,5 +1,6 @@
 #include "clpch.h"
 
+#include "Crystal/Core/Application.h"
 #include "Renderer.h"
 
 namespace Crystal {

@@ -133,7 +133,8 @@ project "Sandbox"
 	{
 		"Crystal/vendor/spdlog/include",
 		"Crystal/src",
-        "%{IncludeDir.glm}"
+        "%{IncludeDir.glm}",
+        "%{VulkanSDK}/Include",
 	}
 
 	links

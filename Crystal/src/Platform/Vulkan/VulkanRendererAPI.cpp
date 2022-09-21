@@ -21,7 +21,7 @@ namespace Crystal {
 		m_Surface = std::make_unique<VulkanSurface>(&Application::Get().GetWindow(), m_Instance.get());
 		m_LogicalDevice = std::make_unique<VulkanLogicalDevice>(m_PhysicalDevice.get(), m_Surface.get());
 		m_SwapChain = std::make_unique<VulkanSwapChain>(m_LogicalDevice.get(), m_Surface.get());
-        m_RenderPass = std::make_shared<VulkanRenderPass>(
+        m_RenderPass = std::make_unique<VulkanRenderPass>(
             m_LogicalDevice.get(), 
             m_SwapChain.get(), 
             VulkanRenderPass::RenderPassPipeline::Graphics);
@@ -256,15 +256,14 @@ namespace Crystal {
     void VulkanRendererAPI::RecreateSwapChain() {
         m_LogicalDevice->WaitGPU();
 
+        //Delete existing swap chain, frame buffers, and command buffers.
         m_SwapChain.reset();
-        m_RenderPass.reset();
         m_Framebuffers.clear();
+        m_Frames.reset();
 
         m_SwapChain = std::make_unique<VulkanSwapChain>(m_LogicalDevice.get(), m_Surface.get());
-        m_RenderPass = std::make_shared<VulkanRenderPass>(
-            m_LogicalDevice.get(), 
-            m_SwapChain.get(), 
-            VulkanRenderPass::RenderPassPipeline::Graphics);
+        m_Frames = std::make_unique<VulkanFramesHandler>(m_LogicalDevice.get(), m_CommandPool.get(), 2);
+
         CreateFramebuffers();
         InitRecordInfo();
     }
@@ -273,7 +272,7 @@ namespace Crystal {
         for (VkImageView imageView : m_SwapChain->GetImageViews()) {
             std::unique_ptr<VulkanFramebuffer> frameBuffer = std::make_unique<VulkanFramebuffer>(
                 m_LogicalDevice.get(),
-                m_RenderPass,
+                m_RenderPass.get(),
                 m_SwapChain->GetVkExtent2D(),
                 imageView);
             m_Framebuffers.push_back(std::move(frameBuffer));
@@ -312,6 +311,7 @@ namespace Crystal {
         recordInfo.dynamicState = true;
         recordInfo.viewport = viewport;
         recordInfo.scissor = scissor;
+        recordInfo.extent = extent;
 
         m_RecordInfo = recordInfo;
     }

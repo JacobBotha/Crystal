@@ -25,6 +25,9 @@
     <Filter Include="Platform\Vulkan">
       <UniqueIdentifier>{6AE1DE2D-D66C-4CF2-DF7D-CFE64B88A8F2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Platform\Vulkan\ImGui">
+      <UniqueIdentifier>{143E69DE-80AA-24D9-499E-BC36B5C94641}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Platform\Windows">
       <UniqueIdentifier>{64FBD71A-50F4-F66C-7926-DCF1657ED678}</UniqueIdentifier>
     </Filter>
@@ -70,6 +73,9 @@
     <ClInclude Include="src\Crystal\ImGui\ImGuiLayer.h">
       <Filter>Crystal\ImGui</Filter>
     </ClInclude>
+    <ClInclude Include="src\Crystal\ImGui\ImGuiRenderer.h">
+      <Filter>Crystal\ImGui</Filter>
+    </ClInclude>
     <ClInclude Include="src\Crystal\Input\Input.h">
       <Filter>Crystal\Input</Filter>
     </ClInclude>
@@ -93,6 +99,9 @@
     </ClInclude>
     <ClInclude Include="src\Crystal\Renderer\Shader.h">
       <Filter>Crystal\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\Vulkan\ImGui\VulkanImguiRenderer.h">
+      <Filter>Platform\Vulkan\ImGui</Filter>
     </ClInclude>
     <ClInclude Include="src\Platform\Vulkan\VKGraphicsContext.h">
       <Filter>Platform\Vulkan</Filter>
@@ -166,6 +175,9 @@
     <ClCompile Include="src\Crystal\ImGui\ImGuiLayer.cpp">
       <Filter>Crystal\ImGui</Filter>
     </ClCompile>
+    <ClCompile Include="src\Crystal\ImGui\ImGuiRenderer.cpp">
+      <Filter>Crystal\ImGui</Filter>
+    </ClCompile>
     <ClCompile Include="src\Crystal\Renderer\Renderer.cpp">
       <Filter>Crystal\Renderer</Filter>
     </ClCompile>
@@ -174,6 +186,9 @@
     </ClCompile>
     <ClCompile Include="src\Crystal\Renderer\Shader.cpp">
       <Filter>Crystal\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Platform\Vulkan\ImGui\VulkanImGuiRenderer.cpp">
+      <Filter>Platform\Vulkan\ImGui</Filter>
     </ClCompile>
     <ClCompile Include="src\Platform\Vulkan\VKGraphicsContext.cpp">
       <Filter>Platform\Vulkan</Filter>

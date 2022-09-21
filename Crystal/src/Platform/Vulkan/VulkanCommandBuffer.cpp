@@ -24,7 +24,7 @@ namespace Crystal {
 		CL_CORE_ASSERT(err == VK_SUCCESS, "Could not begine command buffer!");
 
 		VulkanRenderPass* renderPass = framebuffer->GetVulkanRenderPass();
-		VkExtent2D extent = renderPass->GetVulkanSwapChain()->GetVkExtent2D();
+		VkExtent2D extent = recordInfo.extent;
 
 		VkRenderPassBeginInfo renderPassInfo{};
 		renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;

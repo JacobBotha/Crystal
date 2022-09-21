@@ -7,7 +7,8 @@
 
 //class Shader;
 namespace Crystal {
-	class CRYSTAL_API Renderer {
+	class CRYSTAL_API Renderer 
+	{
 	public:
 		static void Init();
 		static void Shutdown();
@@ -19,6 +20,7 @@ namespace Crystal {
 		static void SetClearColor(glm::vec4& color) { s_RendererAPI->SetClearColor(color); }
 
 		static RendererAPI::API GetAPI() { return RendererAPI::GetAPI(); }
+		static RendererAPI* GetRendererAPI() { return s_RendererAPI.get(); }
 		//TODO: Functions for handling scene and submitting vertex/shader data
 	private:
 

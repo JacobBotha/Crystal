@@ -33,7 +33,13 @@ namespace Crystal {
 		virtual void CreateGraphicsPipeline(GraphicsPipelineCreateInfo createInfo) override;
 		virtual void DrawFrame();
 
+		VulkanInstance* GetInstance() const { return m_Instance.get(); }
+		VulkanPhysicalDevice* GetPhysicalDevice () const { return m_PhysicalDevice.get(); }
+		VulkanCommandBuffer* GetCurrentCommandBuffer() const { return m_Frames->GetCurrentCommandBuffer(); }
 		VulkanLogicalDevice* GetLogicalDevice() const { return m_LogicalDevice.get(); }
+		VulkanSwapChain* GetSwapChain() const { return m_SwapChain.get(); }
+		VulkanRenderPass* GetRenderPass() const { return m_RenderPass.get(); }
+		VulkanCommandPool* GetCommandPool() const { return m_CommandPool.get(); }
 
 		//void CreateGraphicsPipeline
 
@@ -51,7 +57,7 @@ namespace Crystal {
 
 		std::unique_ptr<VulkanLogicalDevice> m_LogicalDevice;
 		std::unique_ptr<VulkanSwapChain> m_SwapChain;
-		std::shared_ptr<VulkanRenderPass> m_RenderPass;
+		std::unique_ptr<VulkanRenderPass> m_RenderPass;
 		std::vector<std::unique_ptr<VulkanFramebuffer>> m_Framebuffers;
 		std::unique_ptr<VulkanCommandPool> m_CommandPool;
 		std::unique_ptr<VulkanFramesHandler> m_Frames;

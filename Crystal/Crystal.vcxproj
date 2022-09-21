@@ -158,6 +158,7 @@
     <ClInclude Include="src\Crystal\Events\MouseEvent.h" />
     <ClInclude Include="src\Crystal\GraphicsContext.h" />
     <ClInclude Include="src\Crystal\ImGui\ImGuiLayer.h" />
+    <ClInclude Include="src\Crystal\ImGui\ImGuiRenderer.h" />
     <ClInclude Include="src\Crystal\Input\Input.h" />
     <ClInclude Include="src\Crystal\Input\KeyCodes.h" />
     <ClInclude Include="src\Crystal\Input\MouseButtonCodes.h" />
@@ -166,6 +167,7 @@
     <ClInclude Include="src\Crystal\Renderer\Renderer.h" />
     <ClInclude Include="src\Crystal\Renderer\RendererAPI.h" />
     <ClInclude Include="src\Crystal\Renderer\Shader.h" />
+    <ClInclude Include="src\Platform\Vulkan\ImGui\VulkanImguiRenderer.h" />
     <ClInclude Include="src\Platform\Vulkan\VKGraphicsContext.h" />
     <ClInclude Include="src\Platform\Vulkan\VulkanCommandBuffer.h" />
     <ClInclude Include="src\Platform\Vulkan\VulkanCommandPool.h" />
@@ -192,9 +194,11 @@
     <ClCompile Include="src\Crystal\Core\Log.cpp" />
     <ClCompile Include="src\Crystal\ImGui\ImGuiBuild.cpp" />
     <ClCompile Include="src\Crystal\ImGui\ImGuiLayer.cpp" />
+    <ClCompile Include="src\Crystal\ImGui\ImGuiRenderer.cpp" />
     <ClCompile Include="src\Crystal\Renderer\Renderer.cpp" />
     <ClCompile Include="src\Crystal\Renderer\RendererAPI.cpp" />
     <ClCompile Include="src\Crystal\Renderer\Shader.cpp" />
+    <ClCompile Include="src\Platform\Vulkan\ImGui\VulkanImGuiRenderer.cpp" />
     <ClCompile Include="src\Platform\Vulkan\VKGraphicsContext.cpp" />
     <ClCompile Include="src\Platform\Vulkan\VulkanCommandBuffer.cpp" />
     <ClCompile Include="src\Platform\Vulkan\VulkanCommandPool.cpp" />

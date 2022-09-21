@@ -19,6 +19,7 @@ namespace Crystal {
 			VkClearValue clearColor = { {{0.0f, 0.0f, 0.0f, 1.0f}} };
 			VkViewport viewport{};
 			VkRect2D scissor{};
+			VkExtent2D extent{};
 		};
 	public:
 		VulkanCommandBuffer(VulkanCommandPool* commandPool);

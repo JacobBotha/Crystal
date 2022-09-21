@@ -7,8 +7,8 @@ namespace Crystal {
 		VulkanSwapChain* swapChain, 
 		RenderPassPipeline pipeline) 
 		: m_Device(device), 
-		m_RenderPass(VK_NULL_HANDLE),
-		m_SwapChain(swapChain)
+		m_RenderPass(VK_NULL_HANDLE)
+		//m_SwapChain(swapChain)
 	{
 		VkAttachmentDescription colorAttachment{};
 		colorAttachment.format = swapChain->GetVkImageFormat();

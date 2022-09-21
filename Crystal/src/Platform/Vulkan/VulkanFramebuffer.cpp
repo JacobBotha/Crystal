@@ -4,7 +4,7 @@
 
 namespace Crystal {
 	VulkanFramebuffer::VulkanFramebuffer(VulkanLogicalDevice* device, 
-			std::shared_ptr<VulkanRenderPass> renderPass, 
+			VulkanRenderPass* renderPass, 
 			VkExtent2D swapChainExtent, 
 			VkImageView imageView)
         : m_Device(device),

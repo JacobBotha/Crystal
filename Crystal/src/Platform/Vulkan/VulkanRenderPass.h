@@ -19,11 +19,9 @@ namespace Crystal {
 			RenderPassPipeline pipeline = RenderPassPipeline::Graphics);
 		~VulkanRenderPass();
 
-		VulkanSwapChain* GetVulkanSwapChain() const { return m_SwapChain; }
 		VkRenderPass GetVkRenderPass() const { return m_RenderPass; }
 	private:
-		VulkanLogicalDevice* m_Device;
-		VulkanSwapChain* m_SwapChain;
 		VkRenderPass m_RenderPass;
+		VulkanLogicalDevice* m_Device;
 	};
 }
