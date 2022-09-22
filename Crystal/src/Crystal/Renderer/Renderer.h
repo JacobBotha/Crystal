@@ -13,11 +13,15 @@ namespace Crystal {
 		static void Init();
 		static void Shutdown();
 
-		static void CreateGraphicsPipeline(GraphicsPipelineCreateInfo createInfo) { return s_RendererAPI->CreateGraphicsPipeline(createInfo); }
-		static void DrawFrame() { return s_RendererAPI->DrawFrame(); }
 		static void WindowResized(WindowResizeEvent& e) { s_RendererAPI->WindowResized(e); }
 		static void SetViewPort(uint32_t x, uint32_t y, uint32_t width, uint32_t height) { s_RendererAPI->SetViewPort(x, y, width, height); }
 		static void SetClearColor(glm::vec4& color) { s_RendererAPI->SetClearColor(color); }
+
+		static void CreateGraphicsPipeline(GraphicsPipelineCreateInfo createInfo) { return s_RendererAPI->CreateGraphicsPipeline(createInfo); }
+		static void DrawFrame() { return s_RendererAPI->DrawFrame(); }
+
+		static void PresentFrame() { return s_RendererAPI->PresentFrame(); }
+		//static void Submit()
 
 		static RendererAPI::API GetAPI() { return RendererAPI::GetAPI(); }
 		static RendererAPI* GetRendererAPI() { return s_RendererAPI.get(); }

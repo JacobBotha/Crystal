@@ -1,6 +1,11 @@
 #include "clpch.h"
 
 #include "VulkanCommandBuffer.h"
+#include <imgui.h>
+#include <backends/imgui_impl_glfw.h>
+#include <backends/imgui_impl_vulkan.h>
+
+#include "Crystal/ImGui/ImGuiLayer.h"
 
 namespace Crystal {
 	VulkanCommandBuffer::VulkanCommandBuffer(VulkanCommandPool* commandPool)
@@ -53,6 +58,7 @@ namespace Crystal {
 		}
 
 		vkCmdDraw(m_CommandBuffer, 3, 1, 0, 0);
+		ImGui_ImplVulkan_RenderDrawData((ImDrawData*)ImGuiLayer::GetDrawData(), m_CommandBuffer);
 
 		vkCmdEndRenderPass(m_CommandBuffer);
 

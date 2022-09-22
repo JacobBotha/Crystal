@@ -23,6 +23,7 @@ namespace Crystal {
 
 		virtual void CreateGraphicsPipeline(GraphicsPipelineCreateInfo createInfo) = 0;
 		virtual void DrawFrame() = 0;
+		virtual void PresentFrame() = 0;
 
 		//TODO: Add	draw functions
 

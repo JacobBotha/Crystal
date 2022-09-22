@@ -10,7 +10,7 @@ public:
 
 	void OnUpdate() override
 	{
-		Crystal::Renderer::DrawFrame();
+		//Crystal::Renderer::DrawFrame();
 	}
 
 	void OnEvent(Crystal::Event& event) override

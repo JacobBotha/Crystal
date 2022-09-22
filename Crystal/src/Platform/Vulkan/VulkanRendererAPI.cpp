@@ -8,7 +8,8 @@ namespace Crystal {
     VulkanRendererAPI::VulkanRendererAPI()
         : m_GraphicsPipelineLayout(VK_NULL_HANDLE),
         m_GraphicsPipeline(VK_NULL_HANDLE),
-        m_FramebufferResized(false)
+        m_FramebufferResized(false),
+        m_PresentReady(false)
     {}
 
 	VulkanRendererAPI::~VulkanRendererAPI() {
@@ -180,14 +181,15 @@ namespace Crystal {
     void VulkanRendererAPI::DrawFrame()
     {
         VkFence inFlightFence = m_Frames->GetCurrentInFlightFence();
+        //Image available semaphore should most likely go into swap chain and then check if the image semaphore is available
         VkSemaphore imageAvailableSemaphore = m_Frames->GetCurrentImageAvailableSemaphore();
         VkSemaphore renderFinishedSemaphore = m_Frames->GetCurrentRenderFinishedSemaphore();
 
         vkWaitForFences(m_LogicalDevice->GetVkDevice(), 1, &inFlightFence, VK_TRUE, UINT64_MAX);
 
-        uint32_t imageIndex; 
+        uint32_t imageIndex;
         VkResult err = m_SwapChain->GetNextImageIndex(imageAvailableSemaphore, &imageIndex);
-        if (err == VK_ERROR_OUT_OF_DATE_KHR) 
+        if (err == VK_ERROR_OUT_OF_DATE_KHR)
         {
             RecreateSwapChain();
             return;
@@ -200,10 +202,12 @@ namespace Crystal {
         commandBuffer->Reset();
 
         commandBuffer->Record(m_Framebuffers[imageIndex].get(), m_GraphicsPipeline, m_RecordInfo);
-        
+
+        //Bellow should be seperate function
         VkSubmitInfo submitInfo{};
         submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
 
+        //Additional command buffers and semaphores go here.
         VkSemaphore waitSemaphores[] = { imageAvailableSemaphore };
         VkPipelineStageFlags waitStages[] = { VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT };
         VkCommandBuffer commandBuffers[] = { commandBuffer->GetVkCommandBuffer() };
@@ -213,36 +217,42 @@ namespace Crystal {
         submitInfo.commandBufferCount = 1;
         submitInfo.pCommandBuffers = commandBuffers;
 
-        VkSemaphore signalSemaphores[] = { m_Frames->GetCurrentRenderFinishedSemaphore()};
+        VkSemaphore signalSemaphores[] = { m_Frames->GetCurrentRenderFinishedSemaphore() };
         submitInfo.signalSemaphoreCount = 1;
         submitInfo.pSignalSemaphores = signalSemaphores;
 
         err = vkQueueSubmit(m_LogicalDevice->GetQueue(QueueFlags::Graphics), 1, &submitInfo, inFlightFence);
         CL_CORE_ASSERT(err == VK_SUCCESS, "Failed to submit to graphics queue!");
+        (void)err;
 
-        VkPresentInfoKHR presentInfo{};
-        presentInfo.sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;
-
-        presentInfo.waitSemaphoreCount = 1;
-        presentInfo.pWaitSemaphores = signalSemaphores;
-
-        VkSwapchainKHR swapChains[] = { m_SwapChain->GetVkSwapChain()};
-        presentInfo.swapchainCount = 1;
-        presentInfo.pSwapchains = swapChains;
-        presentInfo.pImageIndices = &imageIndex;
-
-        presentInfo.pResults = nullptr;
-
-        err = vkQueuePresentKHR(m_LogicalDevice->GetQueue(QueueFlags::Present), &presentInfo);
-
-        if (err == VK_ERROR_OUT_OF_DATE_KHR || err == VK_SUBOPTIMAL_KHR || m_FramebufferResized) {
-            m_FramebufferResized = false;
-            RecreateSwapChain();
-        }
-        else CL_CORE_ASSERT(err == VK_SUCCESS, "Failed to submit to present queue!");
-
-        m_Frames->IterFrame();
+        m_CurrentImageIndex = imageIndex;
     }
+        //Bellow is subbmission to pressentation and should wait until the very end of the frame before executing.
+	void VulkanRendererAPI::PresentFrame() {
+		VkPresentInfoKHR presentInfo{};
+		presentInfo.sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;
+
+        VkSemaphore signalSemaphores[] = { m_Frames->GetCurrentRenderFinishedSemaphore() };
+		presentInfo.waitSemaphoreCount = 1;
+		presentInfo.pWaitSemaphores = signalSemaphores;
+
+		VkSwapchainKHR swapChains[] = { m_SwapChain->GetVkSwapChain()};
+		presentInfo.swapchainCount = 1;
+		presentInfo.pSwapchains = swapChains;
+		presentInfo.pImageIndices = &m_CurrentImageIndex;
+
+		presentInfo.pResults = nullptr;
+
+		VkResult err = vkQueuePresentKHR(m_LogicalDevice->GetQueue(QueueFlags::Present), &presentInfo);
+
+		if (err == VK_ERROR_OUT_OF_DATE_KHR || err == VK_SUBOPTIMAL_KHR || m_FramebufferResized) {
+			m_FramebufferResized = false;
+			RecreateSwapChain();
+		}
+		else CL_CORE_ASSERT(err == VK_SUCCESS, "Failed to submit to present queue!");
+
+		m_Frames->IterFrame();
+	}
 
     void VulkanRendererAPI::DestroyGraphicsPipeline() {
         m_LogicalDevice->WaitGPU();

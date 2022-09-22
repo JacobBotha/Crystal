@@ -11,6 +11,7 @@ namespace Crystal {
 		virtual void Init(RendererAPI* rendererAPI, Window* window) = 0;
 		virtual void NewFrame() = 0;
 		virtual void Shutdown() = 0;
+		virtual void FrameRender(void* drawData) = 0;
 
 		static std::unique_ptr<ImGuiRenderer> Create();
 	};

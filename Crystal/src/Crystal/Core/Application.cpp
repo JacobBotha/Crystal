@@ -22,7 +22,7 @@ namespace Crystal {
 		Renderer::Init();
 
 		m_ImGuiLayer = new ImGuiLayer();
-		PushLayer(m_ImGuiLayer);
+		PushOverlay(m_ImGuiLayer);
 	}
 
 	Application::~Application() {
@@ -55,6 +55,7 @@ namespace Crystal {
 	void Application::PushOverlay(Layer* overlay)
 	{
 		m_LayerStack.PushOverlay(overlay);
+		overlay->OnAttach();
 	}
 
 	void Application::Run() {
@@ -62,6 +63,8 @@ namespace Crystal {
 			for (Layer* layer : m_LayerStack)
 				layer->OnUpdate();
 
+			Renderer::DrawFrame();
+			Renderer::PresentFrame();
 			m_Window->OnUpdate();
 		}
 	}

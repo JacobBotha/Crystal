@@ -359,7 +359,7 @@ namespace Crystal {
 
     void ImGuiLayer::OnUpdate() {
         bool show_demo_window = true;
-        bool show_another_window = false;
+        bool show_another_window = true;
         ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
         
         // Resize swap chain?
@@ -427,6 +427,7 @@ namespace Crystal {
         //wd->ClearValue.color.float32[3] = clear_color.w;
         //if (!main_is_minimized)
         //    FrameRender(wd, main_draw_data);
+        //s_ImGuiRenderer->FrameRender(main_draw_data);
 
         // Update and Render additional Platform Windows
         if (ImGuiConfigFlags_ViewportsEnable)
@@ -434,6 +435,7 @@ namespace Crystal {
             ImGui::UpdatePlatformWindows();
             ImGui::RenderPlatformWindowsDefault();
         }
+        s_DrawData = main_draw_data;
 
         // Present Main Platform Window
         //if (!main_is_minimized)

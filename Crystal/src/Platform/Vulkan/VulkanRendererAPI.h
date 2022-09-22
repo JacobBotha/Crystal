@@ -32,14 +32,18 @@ namespace Crystal {
 
 		virtual void CreateGraphicsPipeline(GraphicsPipelineCreateInfo createInfo) override;
 		virtual void DrawFrame();
+		virtual void PresentFrame();
 
 		VulkanInstance* GetInstance() const { return m_Instance.get(); }
 		VulkanPhysicalDevice* GetPhysicalDevice () const { return m_PhysicalDevice.get(); }
-		VulkanCommandBuffer* GetCurrentCommandBuffer() const { return m_Frames->GetCurrentCommandBuffer(); }
+		//VulkanCommandBuffer* GetCurrentCommandBuffer() const { return m_Frames->GetCurrentCommandBuffer(); }
 		VulkanLogicalDevice* GetLogicalDevice() const { return m_LogicalDevice.get(); }
 		VulkanSwapChain* GetSwapChain() const { return m_SwapChain.get(); }
 		VulkanRenderPass* GetRenderPass() const { return m_RenderPass.get(); }
 		VulkanCommandPool* GetCommandPool() const { return m_CommandPool.get(); }
+		VulkanFramebuffer* GetCurrentFramebuffer() const { return m_Framebuffers[m_CurrentImageIndex].get(); }
+		VkSemaphore GetCurrentImageAvailableSemaphore() const { return m_Frames->GetCurrentImageAvailableSemaphore(); }
+		VkFence GetCurrentInFlightFence() const { return m_Frames->GetCurrentInFlightFence(); }
 
 		//void CreateGraphicsPipeline
 
@@ -68,5 +72,9 @@ namespace Crystal {
 		VulkanCommandBuffer::RecordInfo m_RecordInfo;
 		
 		bool m_FramebufferResized;
+		bool m_PresentReady;
+		uint32_t m_CurrentImageIndex;
+
+		VkSemaphore m_SignalSemaphores[];
 	};
 }
