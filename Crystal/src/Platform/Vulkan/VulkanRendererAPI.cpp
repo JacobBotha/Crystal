@@ -322,6 +322,7 @@ namespace Crystal {
         recordInfo.viewport = viewport;
         recordInfo.scissor = scissor;
         recordInfo.extent = extent;
+        recordInfo.clearColor = m_RecordInfo.clearColor;
 
         m_RecordInfo = recordInfo;
     }

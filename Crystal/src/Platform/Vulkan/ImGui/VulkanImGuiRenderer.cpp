@@ -123,7 +123,7 @@ namespace Crystal {
         ImGui_ImplGlfw_NewFrame();
 	}
 
-	void VulkanImGuiRenderer::FrameRender(void* drawData) {
+	void VulkanImGuiRenderer::Render(void* drawData) {
 		
         VkFence inFlightFence = m_RendererAPI->GetCurrentInFlightFence();
         VkSemaphore imageAvailableSemaphore = m_RendererAPI->GetCurrentImageAvailableSemaphore();

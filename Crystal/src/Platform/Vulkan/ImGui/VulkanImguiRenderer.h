@@ -13,7 +13,7 @@ namespace Crystal {
 		virtual void Init(RendererAPI* rendererAPI, Window* window) override;
 		virtual void NewFrame() override;
 		virtual void Shutdown() override;
-		virtual void FrameRender(void* drawData) override;
+		virtual void Render(void* drawData) override;
 	private:
 		VulkanRendererAPI* m_RendererAPI;
 		//std::unique_ptr<VulkanFramesHandler> m_Frames;

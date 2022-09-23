@@ -20,6 +20,8 @@ namespace Crystal {
 		VkResult err = vkAllocateCommandBuffers(m_Device->GetVkDevice(), &allocInfo, &m_CommandBuffer);
 	}
 
+
+
 	void VulkanCommandBuffer::Record(VulkanFramebuffer* framebuffer, VkPipeline pipeline, RecordInfo& recordInfo) 
 	{
 		VkCommandBufferBeginInfo beginInfo{};

@@ -70,11 +70,11 @@ namespace Crystal {
 		VkPipeline m_GraphicsPipeline;
 
 		VulkanCommandBuffer::RecordInfo m_RecordInfo;
+		//VkClearValue m_ClearValue;
 		
 		bool m_FramebufferResized;
 		bool m_PresentReady;
 		uint32_t m_CurrentImageIndex;
 
-		VkSemaphore m_SignalSemaphores[];
 	};
 }
