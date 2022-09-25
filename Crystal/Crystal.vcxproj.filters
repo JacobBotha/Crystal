@@ -43,6 +43,9 @@
     <ClInclude Include="src\Crystal\Core\EntryPoint.h">
       <Filter>Crystal\Core</Filter>
     </ClInclude>
+    <ClInclude Include="src\Crystal\Core\JobManager.h">
+      <Filter>Crystal\Core</Filter>
+    </ClInclude>
     <ClInclude Include="src\Crystal\Core\Layer.h">
       <Filter>Crystal\Core</Filter>
     </ClInclude>
@@ -158,6 +161,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Crystal\Core\Application.cpp">
+      <Filter>Crystal\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Crystal\Core\JobManager.cpp">
       <Filter>Crystal\Core</Filter>
     </ClCompile>
     <ClCompile Include="src\Crystal\Core\Layer.cpp">

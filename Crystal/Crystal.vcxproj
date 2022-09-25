@@ -148,6 +148,7 @@
     <ClInclude Include="src\Crystal\Core\Application.h" />
     <ClInclude Include="src\Crystal\Core\Core.h" />
     <ClInclude Include="src\Crystal\Core\EntryPoint.h" />
+    <ClInclude Include="src\Crystal\Core\JobManager.h" />
     <ClInclude Include="src\Crystal\Core\Layer.h" />
     <ClInclude Include="src\Crystal\Core\LayerStack.h" />
     <ClInclude Include="src\Crystal\Core\Log.h" />
@@ -189,6 +190,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Crystal\Core\Application.cpp" />
+    <ClCompile Include="src\Crystal\Core\JobManager.cpp" />
     <ClCompile Include="src\Crystal\Core\Layer.cpp" />
     <ClCompile Include="src\Crystal\Core\LayerStack.cpp" />
     <ClCompile Include="src\Crystal\Core\Log.cpp" />
