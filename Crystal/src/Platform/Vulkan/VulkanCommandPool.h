@@ -4,13 +4,16 @@
 #include <vulkan/vulkan.h>
 
 namespace Crystal {
-	class VulkanCommandPool {
+	class VulkanCommandPool 
+	{
 	public:
 		VulkanCommandPool(VulkanLogicalDevice* device);
 		~VulkanCommandPool();
 
 		VulkanLogicalDevice* GetDevice() const { return m_Device; }
 		VkCommandPool GetVkCommandPool() const { return m_CommandPool; }
+
+		void Reset();
 	private:
 		VulkanLogicalDevice* m_Device;
 		VkCommandPool m_CommandPool;

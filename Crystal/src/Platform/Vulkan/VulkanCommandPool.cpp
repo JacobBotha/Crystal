@@ -16,7 +16,17 @@ namespace Crystal {
 		(void)err;
 	}
 
-	VulkanCommandPool::~VulkanCommandPool() {
+	VulkanCommandPool::~VulkanCommandPool() 
+	{
 		vkDestroyCommandPool(m_Device->GetVkDevice(), m_CommandPool, nullptr);
 	}
+
+	void VulkanCommandPool::Reset()
+	{
+		VkResult err = vkResetCommandPool(m_Device->GetVkDevice(), 
+			m_CommandPool, VK_COMMAND_POOL_RESET_RELEASE_RESOURCES_BIT);
+
+		CL_CORE_ASSERT(err == VK_SUCCESS, "Could not reset command pool!");
+	}
+
 }

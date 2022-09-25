@@ -8,21 +8,48 @@
 #include "Crystal/ImGui/ImGuiLayer.h"
 
 namespace Crystal {
-	VulkanCommandBuffer::VulkanCommandBuffer(VulkanCommandPool* commandPool)
-		: m_Device(commandPool->GetDevice())
+	VulkanCommandBuffer::VulkanCommandBuffer(VulkanCommandPool* commandPool,
+		bool primary)
+		: m_Device(commandPool->GetDevice()),
+		m_Primary(primary)
 	{
 		VkCommandBufferAllocateInfo allocInfo{};
 		allocInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
 		allocInfo.commandPool = commandPool->GetVkCommandPool();
-		allocInfo.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
 		allocInfo.commandBufferCount = 1;
+		if (m_Primary) 
+		{
+			allocInfo.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
+		}
+		else 
+		{
+			allocInfo.level = VK_COMMAND_BUFFER_LEVEL_SECONDARY;
+		}
 
-		VkResult err = vkAllocateCommandBuffers(m_Device->GetVkDevice(), &allocInfo, &m_CommandBuffer);
+		VkResult err = vkAllocateCommandBuffers(m_Device->GetVkDevice(), 
+			&allocInfo, &m_CommandBuffer);
 	}
 
+	void VulkanCommandBuffer::Begin()
+	{
+		VkCommandBufferBeginInfo beginInfo{};
+		beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
 
+		VkResult err = vkBeginCommandBuffer(m_CommandBuffer, &beginInfo);
+		CL_CORE_ASSERT(err == VK_SUCCESS, "Could not begine command buffer!");
+		(void)err;
+	}
 
-	void VulkanCommandBuffer::Record(VulkanFramebuffer* framebuffer, VkPipeline pipeline, RecordInfo& recordInfo) 
+	void VulkanCommandBuffer::End()
+	{
+		VkResult err = vkEndCommandBuffer(m_CommandBuffer);
+		CL_CORE_ASSERT(err == VK_SUCCESS, "Failed to end command buffer!");
+		(void)err;
+	}
+
+	//This function needs to be removed/split up.
+	void VulkanCommandBuffer::Record(VulkanFramebuffer* framebuffer, 
+		VkPipeline pipeline, RecordInfo& recordInfo) 
 	{
 		VkCommandBufferBeginInfo beginInfo{};
 		beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
@@ -44,7 +71,8 @@ namespace Crystal {
 		renderPassInfo.clearValueCount = 1;
 		renderPassInfo.pClearValues = &clearColor;
 
-		vkCmdBeginRenderPass(m_CommandBuffer, &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);
+		vkCmdBeginRenderPass(m_CommandBuffer, &renderPassInfo, 
+			VK_SUBPASS_CONTENTS_INLINE);
 
 		VkPipelineBindPoint pipelineBindPoint = VK_PIPELINE_BIND_POINT_GRAPHICS;
 		if (recordInfo.pipelineType == VulkanRenderPass::RenderPassPipeline::Graphics)

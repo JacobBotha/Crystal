@@ -28,7 +28,7 @@ namespace Crystal {
 			CL_CORE_ASSERT(err == VK_SUCCESS, "Failed to create semaphore!");
 			err = vkCreateFence(m_Device->GetVkDevice(), &fenceInfo, nullptr, &m_InFlightFences[i]);
 			CL_CORE_ASSERT(err == VK_SUCCESS, "Failed to create fence!");
-			m_CommandBuffers[i] = std::make_unique<VulkanCommandBuffer>(commandPool);
+			m_CommandBuffers[i] = std::make_unique<VulkanCommandBuffer>(commandPool, true);
 		}
 	}
 

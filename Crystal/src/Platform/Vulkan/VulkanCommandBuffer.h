@@ -22,9 +22,11 @@ namespace Crystal {
 			VkExtent2D extent{};
 		};
 	public:
-		VulkanCommandBuffer(VulkanCommandPool* commandPool);
+		VulkanCommandBuffer(VulkanCommandPool* commandPool, bool primary);
 		~VulkanCommandBuffer();
 
+		void Begin();
+		void End();
 		void Record(VulkanFramebuffer* framebuffer, VkPipeline pipeline, RecordInfo& recordInfo);
 		void Reset(ResetFlags flags = ResetFlags::None);
 		VkCommandBuffer GetVkCommandBuffer() const { return m_CommandBuffer; }
@@ -33,5 +35,6 @@ namespace Crystal {
 		VulkanLogicalDevice* m_Device;
 
 		VkCommandBuffer m_CommandBuffer;
+		bool m_Primary;
 	};
 }
