@@ -53,3 +53,6 @@ Thumbs.db
 bin/
 bin-int/
 *.user
+
+#ImGui settings
+*.ini
