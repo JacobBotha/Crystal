@@ -75,13 +75,11 @@ namespace Crystal
 					{
 						if (!jobPool.isEmpty()) 
 						{
-							CL_CORE_INFO("Executing job!");
 							std::function<void()> job = jobPool.Pop();
 							job(); 
 							finishedLabel.fetch_add(1); 
 							continue;
 						}
-						CL_CORE_INFO("No jobs in queue!");
 						std::unique_lock<std::mutex> lock(wakeMutex);
 						wakeCondition.wait(lock);
 					}

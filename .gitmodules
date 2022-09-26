@@ -3,10 +3,12 @@
 	url = https://github.com/gabime/spdlog
 [submodule "Crystal/vendor/GLFW"]
 	path = Crystal/vendor/GLFW
-	url = https://github.com/glfw/glfw
+	url = https://github.com/JacobBotha/glfw
 [submodule "Crystal/vendor/glm"]
 	path = Crystal/vendor/glm
 	url = https://github.com/g-truc/glm
-[submodule "Crystal/vendor/ImGui"]
+[submodule "Crystal/vendor/ImGUI"]
 	path = Crystal/vendor/ImGui
-	url = https://github.com/ocornut/imgui
+	url = https://github.com/JacobBotha/imgui
+[submodule "Crystal/vendor/ImGui"]
+	branch = docking
