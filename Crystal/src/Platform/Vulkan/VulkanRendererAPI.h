@@ -15,7 +15,7 @@
 #include "VulkanFramesHandler.h"
 
 namespace Crystal {
-	class CRYSTAL_API VulkanRendererAPI : RendererAPI {
+	class CRYSTAL_API VulkanRendererAPI : public RendererAPI {
 	public:
 		VulkanRendererAPI();
 		~VulkanRendererAPI();
@@ -33,6 +33,7 @@ namespace Crystal {
 		virtual void CreateGraphicsPipeline(GraphicsPipelineCreateInfo createInfo) override;
 		virtual void DrawFrame();
 		virtual void PresentFrame();
+		virtual void Submit(std::shared_ptr<Buffer> vertexBuffer, uint32_t vertexCount) override;
 
 		VulkanInstance* GetInstance() const { return m_Instance.get(); }
 		VulkanPhysicalDevice* GetPhysicalDevice () const { return m_PhysicalDevice.get(); }
@@ -40,7 +41,7 @@ namespace Crystal {
 		VulkanLogicalDevice* GetLogicalDevice() const { return m_LogicalDevice.get(); }
 		VulkanSwapChain* GetSwapChain() const { return m_SwapChain.get(); }
 		VulkanRenderPass* GetRenderPass() const { return m_RenderPass.get(); }
-		VulkanCommandPool* GetCommandPool() const { return m_CommandPool.get(); }
+		VulkanCommandPool* GetCommandPool() const { return m_TransientCommandPool.get(); }
 		VulkanFramebuffer* GetCurrentFramebuffer() const { return m_Framebuffers[m_CurrentImageIndex].get(); }
 		VkSemaphore GetCurrentImageAvailableSemaphore() const { return m_Frames->GetCurrentImageAvailableSemaphore(); }
 		VkFence GetCurrentInFlightFence() const { return m_Frames->GetCurrentInFlightFence(); }
@@ -65,6 +66,7 @@ namespace Crystal {
 		std::vector<std::unique_ptr<VulkanFramebuffer>> m_Framebuffers;
 		std::unique_ptr<VulkanCommandPool> m_CommandPool;
 		std::unique_ptr<VulkanFramesHandler> m_Frames;
+		std::unique_ptr<VulkanCommandPool> m_TransientCommandPool;
 
 		VkPipelineLayout m_GraphicsPipelineLayout;
 		VkPipeline m_GraphicsPipeline;
@@ -75,6 +77,9 @@ namespace Crystal {
 		bool m_FramebufferResized;
 		bool m_PresentReady;
 		uint32_t m_CurrentImageIndex;
+
+		std::shared_ptr<VulkanBuffer> m_VertexBuffer;
+		uint32_t m_VertexCount;
 
 	};
 }

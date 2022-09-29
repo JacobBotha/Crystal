@@ -163,13 +163,16 @@
     <ClInclude Include="src\Crystal\Input\Input.h" />
     <ClInclude Include="src\Crystal\Input\KeyCodes.h" />
     <ClInclude Include="src\Crystal\Input\MouseButtonCodes.h" />
+    <ClInclude Include="src\Crystal\Renderer\Buffer.h" />
     <ClInclude Include="src\Crystal\Renderer\Pipeline.h" />
     <ClInclude Include="src\Crystal\Renderer\QueueFlags.h" />
     <ClInclude Include="src\Crystal\Renderer\Renderer.h" />
     <ClInclude Include="src\Crystal\Renderer\RendererAPI.h" />
     <ClInclude Include="src\Crystal\Renderer\Shader.h" />
+    <ClInclude Include="src\Crystal\Renderer\Vertex.h" />
     <ClInclude Include="src\Platform\Vulkan\ImGui\VulkanImguiRenderer.h" />
     <ClInclude Include="src\Platform\Vulkan\VKGraphicsContext.h" />
+    <ClInclude Include="src\Platform\Vulkan\VulkanBuffer.h" />
     <ClInclude Include="src\Platform\Vulkan\VulkanCommandBuffer.h" />
     <ClInclude Include="src\Platform\Vulkan\VulkanCommandPool.h" />
     <ClInclude Include="src\Platform\Vulkan\VulkanFramebuffer.h" />
@@ -184,6 +187,7 @@
     <ClInclude Include="src\Platform\Vulkan\VulkanShaderModule.h" />
     <ClInclude Include="src\Platform\Vulkan\VulkanSurface.h" />
     <ClInclude Include="src\Platform\Vulkan\VulkanSwapChain.h" />
+    <ClInclude Include="src\Platform\Vulkan\VulkanVertex.h" />
     <ClInclude Include="src\Platform\Windows\WindowsInput.h" />
     <ClInclude Include="src\Platform\Windows\WindowsWindow.h" />
     <ClInclude Include="src\clpch.h" />
@@ -197,11 +201,13 @@
     <ClCompile Include="src\Crystal\ImGui\ImGuiBuild.cpp" />
     <ClCompile Include="src\Crystal\ImGui\ImGuiLayer.cpp" />
     <ClCompile Include="src\Crystal\ImGui\ImGuiRenderer.cpp" />
+    <ClCompile Include="src\Crystal\Renderer\Buffer.cpp" />
     <ClCompile Include="src\Crystal\Renderer\Renderer.cpp" />
     <ClCompile Include="src\Crystal\Renderer\RendererAPI.cpp" />
     <ClCompile Include="src\Crystal\Renderer\Shader.cpp" />
     <ClCompile Include="src\Platform\Vulkan\ImGui\VulkanImGuiRenderer.cpp" />
     <ClCompile Include="src\Platform\Vulkan\VKGraphicsContext.cpp" />
+    <ClCompile Include="src\Platform\Vulkan\VulkanBuffer.cpp" />
     <ClCompile Include="src\Platform\Vulkan\VulkanCommandBuffer.cpp" />
     <ClCompile Include="src\Platform\Vulkan\VulkanCommandPool.cpp" />
     <ClCompile Include="src\Platform\Vulkan\VulkanFramebuffer.cpp" />
@@ -216,6 +222,7 @@
     <ClCompile Include="src\Platform\Vulkan\VulkanShaderModule.cpp" />
     <ClCompile Include="src\Platform\Vulkan\VulkanSurface.cpp" />
     <ClCompile Include="src\Platform\Vulkan\VulkanSwapChain.cpp" />
+    <ClCompile Include="src\Platform\Vulkan\VulkanVertex.cpp" />
     <ClCompile Include="src\Platform\Windows\WindowsInput.cpp" />
     <ClCompile Include="src\Platform\Windows\WindowsWindow.cpp" />
     <ClCompile Include="src\clpch.cpp">

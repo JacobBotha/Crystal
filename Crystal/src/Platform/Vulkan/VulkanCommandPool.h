@@ -7,7 +7,7 @@ namespace Crystal {
 	class VulkanCommandPool 
 	{
 	public:
-		VulkanCommandPool(VulkanLogicalDevice* device);
+		VulkanCommandPool(VulkanLogicalDevice* device, bool transient = false);
 		~VulkanCommandPool();
 
 		VulkanLogicalDevice* GetDevice() const { return m_Device; }

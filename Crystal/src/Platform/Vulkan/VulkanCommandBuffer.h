@@ -2,6 +2,7 @@
 
 #include "VulkanCommandPool.h"
 #include "VulkanFramebuffer.h"
+#include "VulkanBuffer.h"
 
 #include <vulkan/vulkan.h>
 
@@ -27,7 +28,7 @@ namespace Crystal {
 
 		void Begin();
 		void End();
-		void Record(VulkanFramebuffer* framebuffer, VkPipeline pipeline, RecordInfo& recordInfo);
+		void Record(VulkanFramebuffer* framebuffer, VkPipeline pipeline, RecordInfo& recordInfo, VulkanBuffer* vertexBuffer, uint32_t size);
 		void Reset(ResetFlags flags = ResetFlags::None);
 		VkCommandBuffer GetVkCommandBuffer() const { return m_CommandBuffer; }
 		

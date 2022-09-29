@@ -49,13 +49,14 @@ namespace Crystal {
 
 	//This function needs to be removed/split up.
 	void VulkanCommandBuffer::Record(VulkanFramebuffer* framebuffer, 
-		VkPipeline pipeline, RecordInfo& recordInfo) 
+		VkPipeline pipeline, RecordInfo& recordInfo, VulkanBuffer* vertexBuffer, uint32_t size) 
 	{
-		VkCommandBufferBeginInfo beginInfo{};
-		beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
+		Begin();
+		//VkCommandBufferBeginInfo beginInfo{};
+		//beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
 
-		VkResult err = vkBeginCommandBuffer(m_CommandBuffer, &beginInfo);
-		CL_CORE_ASSERT(err == VK_SUCCESS, "Could not begine command buffer!");
+		//VkResult err = vkBeginCommandBuffer(m_CommandBuffer, &beginInfo);
+		//CL_CORE_ASSERT(err == VK_SUCCESS, "Could not begine command buffer!");
 
 		VulkanRenderPass* renderPass = framebuffer->GetVulkanRenderPass();
 		VkExtent2D extent = recordInfo.extent;
@@ -87,14 +88,23 @@ namespace Crystal {
 			vkCmdSetScissor(m_CommandBuffer, 0, 1, &recordInfo.scissor);
 		}
 
-		vkCmdDraw(m_CommandBuffer, 3, 1, 0, 0);
+		if (vertexBuffer)
+		{
+			VkBuffer vertexBuffers[] = { vertexBuffer->GetVkBuffer() };
+			VkDeviceSize offsets[] = { 0 };
+			vkCmdBindVertexBuffers(m_CommandBuffer, 0, 1, vertexBuffers, offsets);
+			
+			vkCmdDraw(m_CommandBuffer, size, 1, 0, 0);
+		}
+
 		ImGui_ImplVulkan_RenderDrawData((ImDrawData*)ImGuiLayer::GetDrawData(), m_CommandBuffer);
 
 		vkCmdEndRenderPass(m_CommandBuffer);
 
-		err = vkEndCommandBuffer(m_CommandBuffer);
-		CL_CORE_ASSERT(err == VK_SUCCESS, "Failed to end command buffer!");
-		(void)err;
+		End();
+		//err = vkEndCommandBuffer(m_CommandBuffer);
+		//CL_CORE_ASSERT(err == VK_SUCCESS, "Failed to end command buffer!");
+		//(void)err;
 	}
 
 	void VulkanCommandBuffer::Reset(ResetFlags flags)

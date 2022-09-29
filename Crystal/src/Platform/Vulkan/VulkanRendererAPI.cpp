@@ -2,6 +2,7 @@
 #include "VulkanRendererAPI.h"
 #include "VulkanShader.h"
 #include "VulkanShaderModule.h"
+#include "VulkanVertex.h"
 #include "Crystal/Core/Application.h"
 
 namespace Crystal {
@@ -31,6 +32,7 @@ namespace Crystal {
         //moved to a handler to more cleanly hold/query the framebuffers.
         CreateFramebuffers();
         m_CommandPool = std::make_unique<VulkanCommandPool>(m_LogicalDevice.get());
+        m_TransientCommandPool = std::make_unique<VulkanCommandPool>(m_LogicalDevice.get(), true);
         m_Frames = std::make_unique<VulkanFramesHandler>(m_LogicalDevice.get(), m_CommandPool.get(), 2);
 
         InitRecordInfo();
@@ -54,6 +56,8 @@ namespace Crystal {
 
 	void VulkanRendererAPI::Clear()
 	{
+        m_VertexBuffer.reset();
+        m_VertexCount = 0;
 	}
 
 	void VulkanRendererAPI::CreateGraphicsPipeline(GraphicsPipelineCreateInfo createInfo) {
@@ -85,8 +89,13 @@ namespace Crystal {
 
         VkPipelineVertexInputStateCreateInfo vertexInputInfo{};
         vertexInputInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
-        vertexInputInfo.vertexBindingDescriptionCount = 0;
-        vertexInputInfo.vertexAttributeDescriptionCount = 0;
+        auto bindingDescription = VulkanVertex::GetBindingDescription();
+        auto attributeDescriptions = VulkanVertex::GetAttributeDescriptions();
+
+        vertexInputInfo.vertexBindingDescriptionCount = 1;
+        vertexInputInfo.vertexAttributeDescriptionCount = static_cast<uint32_t>(attributeDescriptions.size());
+        vertexInputInfo.pVertexBindingDescriptions = &bindingDescription;
+        vertexInputInfo.pVertexAttributeDescriptions = attributeDescriptions.data();
 
         VkPipelineInputAssemblyStateCreateInfo inputAssembly{};
         inputAssembly.sType = VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO;
@@ -201,7 +210,7 @@ namespace Crystal {
         VulkanCommandBuffer* commandBuffer = m_Frames->GetCurrentCommandBuffer();
         commandBuffer->Reset();
 
-        commandBuffer->Record(m_Framebuffers[imageIndex].get(), m_GraphicsPipeline, m_RecordInfo);
+        commandBuffer->Record(m_Framebuffers[imageIndex].get(), m_GraphicsPipeline, m_RecordInfo, m_VertexBuffer.get(), m_VertexCount);
 
         //Bellow should be seperate function
         VkSubmitInfo submitInfo{};
@@ -325,5 +334,11 @@ namespace Crystal {
         recordInfo.clearColor = m_RecordInfo.clearColor;
 
         m_RecordInfo = recordInfo;
+    }
+
+    void VulkanRendererAPI::Submit(std::shared_ptr<Buffer> vertexBuffer, uint32_t vertexCount)
+    {
+        m_VertexBuffer = std::dynamic_pointer_cast<VulkanBuffer>(vertexBuffer);
+        m_VertexCount = vertexCount;
     }
 }

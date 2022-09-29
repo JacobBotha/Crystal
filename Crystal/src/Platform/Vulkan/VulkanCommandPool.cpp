@@ -3,13 +3,20 @@
 #include "VulkanCommandPool.h"
 
 namespace Crystal {
-	VulkanCommandPool::VulkanCommandPool(VulkanLogicalDevice* device)
+	VulkanCommandPool::VulkanCommandPool(VulkanLogicalDevice* device, bool transient)
 		: m_Device(device) 
 	{
 		VkCommandPoolCreateInfo poolInfo{};
 		poolInfo.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
-		poolInfo.flags = VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT;
 		poolInfo.queueFamilyIndex = device->GetQueueIndex(QueueFlags::Graphics);
+		if (transient)
+		{
+			poolInfo.flags = VK_COMMAND_POOL_CREATE_TRANSIENT_BIT;
+		}
+		else
+		{
+			poolInfo.flags = VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT;
+		}
 
 		VkResult err = vkCreateCommandPool(device->GetVkDevice(), &poolInfo, nullptr, &m_CommandPool);
 		CL_CORE_ASSERT(err == VK_SUCCESS, "Failed to create command pool!");

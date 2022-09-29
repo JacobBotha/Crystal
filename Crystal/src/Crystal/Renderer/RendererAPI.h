@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Pipeline.h"
+#include "Buffer.h"
 #include "Crystal/Events/ApplicationEvent.h"
 
 #include <glm/glm.hpp>
@@ -24,6 +25,7 @@ namespace Crystal {
 		virtual void CreateGraphicsPipeline(GraphicsPipelineCreateInfo createInfo) = 0;
 		virtual void DrawFrame() = 0;
 		virtual void PresentFrame() = 0;
+		virtual void Submit(std::shared_ptr<Buffer> vertexBuffer, uint32_t vertexCount) = 0;
 
 		//TODO: Add	draw functions
 

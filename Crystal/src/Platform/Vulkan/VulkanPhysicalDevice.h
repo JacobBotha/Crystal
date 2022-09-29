@@ -19,6 +19,8 @@ namespace Crystal {
 		const std::vector<const char*> GetDeviceExtensions() const { return s_DeviceExtentions; }
 
 		bool CheckPresentSupport(QueueFamilyIndex queueFamilyIndex, VkSurfaceKHR surface) const;
+
+		uint32_t FindMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties);
 		
 	private:
 		static QueueFamilyIndices CheckDeviceQueueSupport(VkPhysicalDevice device, QueueFlagBits requiredQueues, VkSurfaceKHR surface = VK_NULL_HANDLE);

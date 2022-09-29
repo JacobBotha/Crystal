@@ -1,4 +1,6 @@
 #include <Crystal.h>
+#include <Crystal/Renderer/Buffer.h>
+#include <Crystal/Renderer/Vertex.h>
 
 class ExampleLayer : public Crystal::Layer
 {
@@ -26,9 +28,34 @@ public:
 				graphicsPipelineCreateInfo.vertexShader = m_VertShader.get();
 				graphicsPipelineCreateInfo.fragmentShader = m_FragShader.get();
 				Crystal::Renderer::CreateGraphicsPipeline(graphicsPipelineCreateInfo);
+
+				CL_INFO("Tab key pressed - Reloading shaders!");
 			}
 		}
-		CL_TRACE("{0}", event);
+
+		if (event.GetEventType() == Crystal::EventType::KeyPressed) {
+			//Convert event to key event
+			Crystal::KeyPressedEvent* kEvent = (Crystal::KeyPressedEvent*)&event;
+			//Check if Tab key is pressed and reload shaders/graphics pipeline
+			if (kEvent->GetKeyCode() == Crystal::Key::Space) {
+				m_TriangleVertices = {
+					{{0.0f, -0.5f}, {1.0f, 0.0f, 0.0f}},
+					{{0.5f, 0.5f}, {0.0f, 1.0f, 0.0f}},
+					{{-0.5f, 0.5f}, {0.0f, 0.0f, 1.0f}}
+				};
+				m_TriangleVertexBuffer->BindData(m_TriangleVertices);
+				Crystal::Renderer::Submit(m_TriangleVertexBuffer, m_TriangleVertices.size());
+				CL_INFO("Space key pressed - Updating vertices!");
+			}
+		}
+
+		if (event.GetEventType() == Crystal::EventType::KeyPressed) {
+			Crystal::KeyPressedEvent* kEvent = (Crystal::KeyPressedEvent*)&event;
+			if (kEvent->GetKeyCode() == Crystal::Key::C) {
+				Crystal::Renderer::Clear();
+				CL_INFO("C Key pressed - Clearing renderer!");
+			}
+		}
 	}
 
 	void OnAttach() override {
@@ -46,15 +73,32 @@ public:
 		color.b = 0.3f;
 		color.a = 1.0f;
 		Crystal::Renderer::SetClearColor(color);
+
+		m_TriangleVertices = {
+			{{0.0f, -0.5f}, {1.0f, 1.0f, 1.0f}},
+			{{0.5f, 0.5f}, {0.0f, 1.0f, 0.0f}},
+			{{-0.5f, 0.5f}, {0.0f, 0.0f, 1.0f}}
+		};
+
+		size_t size = sizeof(Crystal::Vertex) * m_TriangleVertices.size();
+		m_TriangleVertexBuffer = Crystal::Buffer::Create(Crystal::Buffer::BufferType::Vertex, size);
+		m_TriangleVertexBuffer->BindData(m_TriangleVertices);
+		Crystal::Renderer::Submit(m_TriangleVertexBuffer, m_TriangleVertices.size());
+		
 	}
 
 	void OnDetach() override {
 		m_VertShader.reset();
 		m_FragShader.reset();
+		m_TriangleVertexBuffer.reset();
 	}
 
 	std::shared_ptr<Crystal::Shader> m_VertShader;
 	std::shared_ptr<Crystal::Shader> m_FragShader;
+
+	std::shared_ptr<Crystal::Buffer> m_TriangleVertexBuffer;
+	std::vector<Crystal::Vertex> m_TriangleVertices;
+
 
 };
 

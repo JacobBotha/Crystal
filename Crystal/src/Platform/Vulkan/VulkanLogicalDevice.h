@@ -24,6 +24,5 @@ namespace Crystal {
 		QueueFamilyIndices m_QueueFamilyIndices;
 		VkDevice m_Device;
 		Queues m_Queues;
-
 	};
 }
