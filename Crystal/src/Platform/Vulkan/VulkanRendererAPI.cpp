@@ -336,6 +336,17 @@ namespace Crystal {
         m_RecordInfo = recordInfo;
     }
 
+    void VulkanRendererAPI::InitAllocator()
+    {
+        VmaAllocatorCreateInfo createInfo{};
+        createInfo.physicalDevice = m_PhysicalDevice->GetVkPhysicalDevice();
+        createInfo.device = m_LogicalDevice->GetVkDevice();
+        createInfo.instance = m_Instance->GetVkInstance();
+        //createInfo.vulkanApiVersion = VK_API_VERSION_1_1;
+
+        vmaCreateAllocator(&createInfo, &m_Allocator);
+    }
+
     void VulkanRendererAPI::Submit(std::shared_ptr<Buffer> vertexBuffer, uint32_t vertexCount)
     {
         m_VertexBuffer = std::dynamic_pointer_cast<VulkanBuffer>(vertexBuffer);

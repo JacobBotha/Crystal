@@ -14,6 +14,9 @@
 #include "VulkanCommandPool.h"
 #include "VulkanFramesHandler.h"
 
+#define VMA_IMPLEMENTATION
+#include "vk_mem_alloc.h"
+
 namespace Crystal {
 	class CRYSTAL_API VulkanRendererAPI : public RendererAPI {
 	public:
@@ -55,6 +58,7 @@ namespace Crystal {
 		VkViewport CreateViewport(float x, float y, float width, float height);
 		VkRect2D CreateScissor(VkOffset2D offset, VkExtent2D extent);
 		void InitRecordInfo();
+		void InitAllocator();
 
 		std::unique_ptr<VulkanInstance> m_Instance;
 		std::unique_ptr<VulkanPhysicalDevice> m_PhysicalDevice;
@@ -67,6 +71,8 @@ namespace Crystal {
 		std::unique_ptr<VulkanCommandPool> m_CommandPool;
 		std::unique_ptr<VulkanFramesHandler> m_Frames;
 		std::unique_ptr<VulkanCommandPool> m_TransientCommandPool;
+
+		VmaAllocator m_Allocator;
 
 		VkPipelineLayout m_GraphicsPipelineLayout;
 		VkPipeline m_GraphicsPipeline;
