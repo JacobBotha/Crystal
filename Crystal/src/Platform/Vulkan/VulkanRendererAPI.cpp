@@ -5,6 +5,8 @@
 #include "VulkanVertex.h"
 #include "Crystal/Core/Application.h"
 
+#include "vma/vk_mem_alloc.h"
+
 namespace Crystal {
     VulkanRendererAPI::VulkanRendererAPI()
         : m_GraphicsPipelineLayout(VK_NULL_HANDLE),
@@ -15,6 +17,8 @@ namespace Crystal {
 
 	VulkanRendererAPI::~VulkanRendererAPI() {
         DestroyGraphicsPipeline();
+        m_VertexBuffer.reset();
+        vmaDestroyAllocator(m_Allocator);
     }
 
 	void Crystal::VulkanRendererAPI::Init() {
@@ -27,6 +31,8 @@ namespace Crystal {
             m_LogicalDevice.get(), 
             m_SwapChain.get(), 
             VulkanRenderPass::RenderPassPipeline::Graphics);
+
+        InitAllocator();
 
         //Create a frame buffer for each swap chain image view. This could be
         //moved to a handler to more cleanly hold/query the framebuffers.
@@ -338,11 +344,16 @@ namespace Crystal {
 
     void VulkanRendererAPI::InitAllocator()
     {
+        VmaVulkanFunctions vulkanFunctions = {};
+        vulkanFunctions.vkGetInstanceProcAddr = &vkGetInstanceProcAddr;
+        vulkanFunctions.vkGetDeviceProcAddr = &vkGetDeviceProcAddr;
+
         VmaAllocatorCreateInfo createInfo{};
         createInfo.physicalDevice = m_PhysicalDevice->GetVkPhysicalDevice();
         createInfo.device = m_LogicalDevice->GetVkDevice();
         createInfo.instance = m_Instance->GetVkInstance();
-        //createInfo.vulkanApiVersion = VK_API_VERSION_1_1;
+        createInfo.pVulkanFunctions = &vulkanFunctions;
+        createInfo.vulkanApiVersion = VK_API_VERSION_1_0;
 
         vmaCreateAllocator(&createInfo, &m_Allocator);
     }

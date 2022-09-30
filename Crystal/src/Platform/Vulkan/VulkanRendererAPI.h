@@ -14,8 +14,7 @@
 #include "VulkanCommandPool.h"
 #include "VulkanFramesHandler.h"
 
-#define VMA_IMPLEMENTATION
-#include "vk_mem_alloc.h"
+#include "vma/vk_mem_alloc.h"
 
 namespace Crystal {
 	class CRYSTAL_API VulkanRendererAPI : public RendererAPI {
@@ -48,6 +47,7 @@ namespace Crystal {
 		VulkanFramebuffer* GetCurrentFramebuffer() const { return m_Framebuffers[m_CurrentImageIndex].get(); }
 		VkSemaphore GetCurrentImageAvailableSemaphore() const { return m_Frames->GetCurrentImageAvailableSemaphore(); }
 		VkFence GetCurrentInFlightFence() const { return m_Frames->GetCurrentInFlightFence(); }
+		VmaAllocator* GetMemoryAllocator() { return &m_Allocator; }
 
 		//void CreateGraphicsPipeline
 

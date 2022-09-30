@@ -13,7 +13,11 @@ namespace Crystal
 		switch (Renderer::GetAPI())
 		{
 		case(RendererAPI::API::Vulkan):
-			return std::make_shared<VulkanBuffer>(((VulkanRendererAPI*)Renderer::GetRendererAPI())->GetLogicalDevice(), type, size);
+		{
+			VulkanRendererAPI* rendererAPI = (VulkanRendererAPI*)Renderer::GetRendererAPI();
+			return std::make_shared<VulkanBuffer>(rendererAPI->GetLogicalDevice(), rendererAPI->GetMemoryAllocator(), type, size);
+		}
+		break;
 		case(RendererAPI::API::None):
 			CL_CORE_ASSERT(false, "None api not currently supported!");
 			break;

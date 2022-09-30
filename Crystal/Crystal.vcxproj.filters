@@ -28,6 +28,9 @@
     <Filter Include="Platform\Vulkan\ImGui">
       <UniqueIdentifier>{143E69DE-80AA-24D9-499E-BC36B5C94641}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Platform\Vulkan\vma">
+      <UniqueIdentifier>{9D5001DC-09B2-DEE9-921F-259CFE7F15A9}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Platform\Windows">
       <UniqueIdentifier>{64FBD71A-50F4-F66C-7926-DCF1657ED678}</UniqueIdentifier>
     </Filter>
@@ -88,6 +91,9 @@
     <ClInclude Include="src\Crystal\Input\MouseButtonCodes.h">
       <Filter>Crystal\Input</Filter>
     </ClInclude>
+    <ClInclude Include="src\Crystal\Renderer\Buffer.h">
+      <Filter>Crystal\Renderer</Filter>
+    </ClInclude>
     <ClInclude Include="src\Crystal\Renderer\Pipeline.h">
       <Filter>Crystal\Renderer</Filter>
     </ClInclude>
@@ -103,10 +109,16 @@
     <ClInclude Include="src\Crystal\Renderer\Shader.h">
       <Filter>Crystal\Renderer</Filter>
     </ClInclude>
+    <ClInclude Include="src\Crystal\Renderer\Vertex.h">
+      <Filter>Crystal\Renderer</Filter>
+    </ClInclude>
     <ClInclude Include="src\Platform\Vulkan\ImGui\VulkanImguiRenderer.h">
       <Filter>Platform\Vulkan\ImGui</Filter>
     </ClInclude>
     <ClInclude Include="src\Platform\Vulkan\VKGraphicsContext.h">
+      <Filter>Platform\Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\Vulkan\VulkanBuffer.h">
       <Filter>Platform\Vulkan</Filter>
     </ClInclude>
     <ClInclude Include="src\Platform\Vulkan\VulkanCommandBuffer.h">
@@ -151,6 +163,12 @@
     <ClInclude Include="src\Platform\Vulkan\VulkanSwapChain.h">
       <Filter>Platform\Vulkan</Filter>
     </ClInclude>
+    <ClInclude Include="src\Platform\Vulkan\VulkanVertex.h">
+      <Filter>Platform\Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\Vulkan\vma\vk_mem_alloc.h">
+      <Filter>Platform\Vulkan\vma</Filter>
+    </ClInclude>
     <ClInclude Include="src\Platform\Windows\WindowsInput.h">
       <Filter>Platform\Windows</Filter>
     </ClInclude>
@@ -158,10 +176,6 @@
       <Filter>Platform\Windows</Filter>
     </ClInclude>
     <ClInclude Include="src\clpch.h" />
-    <ClInclude Include="src\Crystal\Renderer\Vertex.h" />
-    <ClInclude Include="src\Platform\Vulkan\VulkanVertex.h" />
-    <ClInclude Include="src\Platform\Vulkan\VulkanBuffer.h" />
-    <ClInclude Include="src\Crystal\Renderer\Buffer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Crystal\Core\Application.cpp">
@@ -188,6 +202,9 @@
     <ClCompile Include="src\Crystal\ImGui\ImGuiRenderer.cpp">
       <Filter>Crystal\ImGui</Filter>
     </ClCompile>
+    <ClCompile Include="src\Crystal\Renderer\Buffer.cpp">
+      <Filter>Crystal\Renderer</Filter>
+    </ClCompile>
     <ClCompile Include="src\Crystal\Renderer\Renderer.cpp">
       <Filter>Crystal\Renderer</Filter>
     </ClCompile>
@@ -201,6 +218,9 @@
       <Filter>Platform\Vulkan\ImGui</Filter>
     </ClCompile>
     <ClCompile Include="src\Platform\Vulkan\VKGraphicsContext.cpp">
+      <Filter>Platform\Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Platform\Vulkan\VulkanBuffer.cpp">
       <Filter>Platform\Vulkan</Filter>
     </ClCompile>
     <ClCompile Include="src\Platform\Vulkan\VulkanCommandBuffer.cpp">
@@ -245,6 +265,12 @@
     <ClCompile Include="src\Platform\Vulkan\VulkanSwapChain.cpp">
       <Filter>Platform\Vulkan</Filter>
     </ClCompile>
+    <ClCompile Include="src\Platform\Vulkan\VulkanVertex.cpp">
+      <Filter>Platform\Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Platform\Vulkan\vma\vmabuild.cpp">
+      <Filter>Platform\Vulkan\vma</Filter>
+    </ClCompile>
     <ClCompile Include="src\Platform\Windows\WindowsInput.cpp">
       <Filter>Platform\Windows</Filter>
     </ClCompile>
@@ -252,8 +278,5 @@
       <Filter>Platform\Windows</Filter>
     </ClCompile>
     <ClCompile Include="src\clpch.cpp" />
-    <ClCompile Include="src\Platform\Vulkan\VulkanVertex.cpp" />
-    <ClCompile Include="src\Platform\Vulkan\VulkanBuffer.cpp" />
-    <ClCompile Include="src\Crystal\Renderer\Buffer.cpp" />
   </ItemGroup>
 </Project>

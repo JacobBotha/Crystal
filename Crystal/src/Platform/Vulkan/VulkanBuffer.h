@@ -4,6 +4,7 @@
 #include "Crystal/Renderer/Vertex.h"
 #include "Crystal/Renderer/Buffer.h"
 
+#include "vma/vk_mem_alloc.h"
 #include <vulkan/vulkan.h>
 
 namespace Crystal
@@ -12,7 +13,9 @@ namespace Crystal
 	{
 	public:
 
-		VulkanBuffer(VulkanLogicalDevice* device, BufferType bufferType,
+		VulkanBuffer(VulkanLogicalDevice* device, 
+			VmaAllocator* allocator,
+			BufferType bufferType,
 			size_t size);
 		virtual ~VulkanBuffer() override;
 
@@ -32,6 +35,7 @@ namespace Crystal
 		/// </summary>
 		/// <param name="data">A pointer to the data.</param>
 		void BindData(void* data);
+		void PersistentBindData(void* data);
 
 		virtual BufferType GetType() override
 		{
@@ -45,13 +49,14 @@ namespace Crystal
 
 	private:
 		VulkanLogicalDevice* m_Device;
+		VmaAllocator* m_Allocator;
 		VkBuffer m_Buffer;
 		BufferType m_Type;
 
-		//Buffer Memory
+		VmaAllocationInfo m_AllocInfo;
+		VmaAllocation m_Allocation;
 		size_t m_Size;
 		VkMemoryRequirements m_MemRequirements;
-		VkDeviceMemory m_BufferMemory;
 		void* m_Data;
 	};
 }

@@ -44,7 +44,7 @@ public:
 					{{-0.5f, 0.5f}, {0.0f, 0.0f, 1.0f}}
 				};
 				m_TriangleVertexBuffer->BindData(m_TriangleVertices);
-				Crystal::Renderer::Submit(m_TriangleVertexBuffer, m_TriangleVertices.size());
+				//Crystal::Renderer::Submit(m_TriangleVertexBuffer, m_TriangleVertices.size());
 				CL_INFO("Space key pressed - Updating vertices!");
 			}
 		}
