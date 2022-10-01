@@ -75,22 +75,34 @@ public:
 		Crystal::Renderer::SetClearColor(color);
 
 		m_TriangleVertices = {
-			{{0.0f, -0.5f}, {1.0f, 1.0f, 1.0f}},
-			{{0.5f, 0.5f}, {0.0f, 1.0f, 0.0f}},
-			{{-0.5f, 0.5f}, {0.0f, 0.0f, 1.0f}}
+			{{-0.5f, -0.5f}, {1.0f, 0.0f, 0.0f}},
+			{{0.5f, -0.5f}, {0.0f, 1.0f, 0.0f}},
+			{{0.5f, 0.5f}, {0.0f, 0.0f, 1.0f}},
+			{{-0.5f, 0.5f}, {1.0f, 1.0f, 1.0f}}
+		};
+
+		m_Indices = {
+			0, 1, 2, 2, 3, 0
 		};
 
 		size_t size = sizeof(Crystal::Vertex) * m_TriangleVertices.size();
+		CL_TRACE(size);
 		m_TriangleVertexBuffer = Crystal::Buffer::Create(Crystal::Buffer::BufferType::Vertex, size);
 		m_TriangleVertexBuffer->BindData(m_TriangleVertices);
-		Crystal::Renderer::Submit(m_TriangleVertexBuffer, m_TriangleVertices.size());
 		
+		size = sizeof(Crystal::Index) * m_Indices.size();
+		CL_TRACE(size);
+		m_IndexBuffer = Crystal::Buffer::Create(Crystal::Buffer::BufferType::Index, size);
+		m_IndexBuffer->BindData(m_Indices);
+
+		Crystal::Renderer::Submit(m_TriangleVertexBuffer, m_TriangleVertices.size(), m_IndexBuffer, m_Indices.size());
 	}
 
 	void OnDetach() override {
 		m_VertShader.reset();
 		m_FragShader.reset();
 		m_TriangleVertexBuffer.reset();
+		m_IndexBuffer.reset();
 	}
 
 	std::shared_ptr<Crystal::Shader> m_VertShader;
@@ -99,6 +111,8 @@ public:
 	std::shared_ptr<Crystal::Buffer> m_TriangleVertexBuffer;
 	std::vector<Crystal::Vertex> m_TriangleVertices;
 
+	std::shared_ptr<Crystal::Buffer> m_IndexBuffer;
+	std::vector<Crystal::Index> m_Indices;
 
 };
 

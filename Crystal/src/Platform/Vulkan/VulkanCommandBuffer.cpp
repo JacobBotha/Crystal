@@ -49,7 +49,7 @@ namespace Crystal {
 
 	//This function needs to be removed/split up.
 	void VulkanCommandBuffer::Record(VulkanFramebuffer* framebuffer, 
-		VkPipeline pipeline, RecordInfo& recordInfo, VulkanBuffer* vertexBuffer, uint32_t size) 
+		VkPipeline pipeline, RecordInfo& recordInfo, VulkanBuffer* vertexBuffer, uint32_t size, VulkanBuffer* indexBuffer, uint32_t indexCount) 
 	{
 		Begin();
 		//VkCommandBufferBeginInfo beginInfo{};
@@ -94,7 +94,11 @@ namespace Crystal {
 			VkDeviceSize offsets[] = { 0 };
 			vkCmdBindVertexBuffers(m_CommandBuffer, 0, 1, vertexBuffers, offsets);
 			
-			vkCmdDraw(m_CommandBuffer, size, 1, 0, 0);
+			vkCmdBindIndexBuffer(m_CommandBuffer, indexBuffer->GetVkBuffer(), 0, VK_INDEX_TYPE_UINT32);
+
+			vkCmdDrawIndexed(m_CommandBuffer, indexCount, 1, 0, 0, 0);
+
+			//vkCmdDraw(m_CommandBuffer, size, 1, 0, 0);
 		}
 
 		ImGui_ImplVulkan_RenderDrawData((ImDrawData*)ImGuiLayer::GetDrawData(), m_CommandBuffer);

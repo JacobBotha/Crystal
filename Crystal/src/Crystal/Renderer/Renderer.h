@@ -28,10 +28,10 @@ namespace Crystal {
 
 		static void PresentFrame() { return s_RendererAPI->PresentFrame(); }
 		
-		static void Submit(std::shared_ptr<Buffer> vertexBuffer, uint32_t vertexCount) 
+		static void Submit(std::shared_ptr<Buffer> vertexBuffer, uint32_t vertexCount, std::shared_ptr<Buffer> indexBuffer, uint32_t indexCount) 
 		{ 
 			CL_CORE_ASSERT(vertexBuffer->GetType() == Buffer::BufferType::Vertex, "RenderSubmit must be a vertex buffer.");
-			return s_RendererAPI->Submit(vertexBuffer, vertexCount); 
+			return s_RendererAPI->Submit(vertexBuffer, vertexCount, indexBuffer, indexCount); 
 		}
 
 		static void Clear() { return s_RendererAPI->Clear(); };

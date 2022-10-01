@@ -17,7 +17,7 @@ namespace Crystal {
 
 	VulkanRendererAPI::~VulkanRendererAPI() {
         DestroyGraphicsPipeline();
-        m_VertexBuffer.reset();
+        Clear();
         vmaDestroyAllocator(m_Allocator);
     }
 
@@ -64,6 +64,8 @@ namespace Crystal {
 	{
         m_VertexBuffer.reset();
         m_VertexCount = 0;
+        m_IndexBuffer.reset();
+        m_IndexCount = 0;
 	}
 
 	void VulkanRendererAPI::CreateGraphicsPipeline(GraphicsPipelineCreateInfo createInfo) {
@@ -216,7 +218,7 @@ namespace Crystal {
         VulkanCommandBuffer* commandBuffer = m_Frames->GetCurrentCommandBuffer();
         commandBuffer->Reset();
 
-        commandBuffer->Record(m_Framebuffers[imageIndex].get(), m_GraphicsPipeline, m_RecordInfo, m_VertexBuffer.get(), m_VertexCount);
+        commandBuffer->Record(m_Framebuffers[imageIndex].get(), m_GraphicsPipeline, m_RecordInfo, m_VertexBuffer.get(), m_VertexCount, m_IndexBuffer.get(), m_IndexCount);
 
         //Bellow should be seperate function
         VkSubmitInfo submitInfo{};
@@ -358,9 +360,12 @@ namespace Crystal {
         vmaCreateAllocator(&createInfo, &m_Allocator);
     }
 
-    void VulkanRendererAPI::Submit(std::shared_ptr<Buffer> vertexBuffer, uint32_t vertexCount)
+    void VulkanRendererAPI::Submit(std::shared_ptr<Buffer> vertexBuffer, uint32_t vertexCount, std::shared_ptr<Buffer> indexBuffer, uint32_t indexCount)
     {
         m_VertexBuffer = std::dynamic_pointer_cast<VulkanBuffer>(vertexBuffer);
         m_VertexCount = vertexCount;
+        
+        m_IndexBuffer = std::dynamic_pointer_cast<VulkanBuffer>(indexBuffer);
+        m_IndexCount = indexCount;
     }
 }

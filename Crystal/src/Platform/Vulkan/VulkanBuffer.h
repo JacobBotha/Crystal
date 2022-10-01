@@ -29,6 +29,7 @@ namespace Crystal
 		/// The reference to vertices to store in the buffer.
 		/// </param>
 		virtual void BindData(std::vector<Vertex> &vertices) override;
+		virtual void BindData(std::vector<Index> &indices) override;
 
 		/// <summary>
 		/// Bind CPU data to GPU memory.
@@ -48,6 +49,8 @@ namespace Crystal
 		void VulkanBuffer::CopyBuffer(VulkanBuffer& buffer);
 
 	private:
+		bool BindIfHostVisible(void* data);
+
 		VulkanLogicalDevice* m_Device;
 		VmaAllocator* m_Allocator;
 		VkBuffer m_Buffer;

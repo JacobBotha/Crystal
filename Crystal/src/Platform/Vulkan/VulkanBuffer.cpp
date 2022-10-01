@@ -37,6 +37,10 @@ namespace Crystal
 			propertyFlags = VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT;
 			allocInfo.flags = VMA_ALLOCATION_CREATE_DEDICATED_MEMORY_BIT;
 			break;
+		case BufferType::Index:
+			bufferInfo.usage = VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_INDEX_BUFFER_BIT;
+			allocInfo.flags = VMA_ALLOCATION_CREATE_DEDICATED_MEMORY_BIT;
+			break;
 		case BufferType::Uniform:
 			bufferInfo.usage = VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT;
 			allocInfo.flags = VMA_ALLOCATION_CREATE_DEDICATED_MEMORY_BIT;
@@ -71,19 +75,27 @@ namespace Crystal
 	void VulkanBuffer::BindData(std::vector<Vertex>& vertices)
 	{
 		CL_CORE_ASSERT(m_Type == BufferType::Vertex, 
-			"Cannot bind vertices to a buffer that is not of type vertex");
+			"Cannot bind vertices to a buffer that is not of type vertex!");
 		
 		void* data = vertices.data();
 
-		VkMemoryPropertyFlags memPropFlags;
-		vmaGetAllocationMemoryProperties(*m_Allocator, m_Allocation, &memPropFlags);
+		if (BindIfHostVisible(data));
 
-		if (memPropFlags & VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT)
-		{
-			CL_CORE_INFO("Vertex buffer is stored in mappable memory");
-			PersistentBindData(data);
-			return;
-		}
+		//Create a staging buffer to bind the data then copy into the vertex buffer
+		VulkanBuffer stagingBuffer(m_Device, m_Allocator, BufferType::Staging, m_Size);
+		stagingBuffer.PersistentBindData(data);
+
+		CopyBuffer(stagingBuffer);
+	}
+
+	void VulkanBuffer::BindData(std::vector<Index>& indices)
+	{
+		CL_CORE_ASSERT(m_Type == BufferType::Index, 
+			"Cannot bind indices to a buffer that is not of type Index!")
+
+		void* data = indices.data();
+
+		if (BindIfHostVisible(data)) return;
 
 		//Create a staging buffer to bind the data then copy into the vertex buffer
 		VulkanBuffer stagingBuffer(m_Device, m_Allocator, BufferType::Staging, m_Size);
@@ -102,10 +114,21 @@ namespace Crystal
 		vmaMapMemory(*m_Allocator, m_Allocation, &m_Data);
 		memcpy(m_Data, data, m_Size);
 		vmaUnmapMemory(*m_Allocator, m_Allocation);
+	}
 
-		//vkMapMemory(m_Device->GetVkDevice(), m_BufferMemory, 0, m_Size, 0, &m_Data);
-		//memcpy(m_Data, data, m_Size);
-		//vkUnmapMemory(m_Device->GetVkDevice(), m_BufferMemory);
+	bool VulkanBuffer::BindIfHostVisible(void* data)
+	{
+		VkMemoryPropertyFlags memPropFlags;
+		vmaGetAllocationMemoryProperties(*m_Allocator, m_Allocation, &memPropFlags);
+
+		if (memPropFlags & VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT)
+		{
+			CL_CORE_INFO("Buffer is stored in mappable memory");
+			PersistentBindData(data);
+			return true;
+		}
+
+		return false;
 	}
 
 	void VulkanBuffer::CopyBuffer(VulkanBuffer& buffer) {

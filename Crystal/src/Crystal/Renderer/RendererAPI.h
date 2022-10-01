@@ -25,7 +25,7 @@ namespace Crystal {
 		virtual void CreateGraphicsPipeline(GraphicsPipelineCreateInfo createInfo) = 0;
 		virtual void DrawFrame() = 0;
 		virtual void PresentFrame() = 0;
-		virtual void Submit(std::shared_ptr<Buffer> vertexBuffer, uint32_t vertexCount) = 0;
+		virtual void Submit(std::shared_ptr<Buffer> vertexBuffer, uint32_t vertexCount, std::shared_ptr<Buffer> indexBuffer, uint32_t indexCount) = 0;
 
 		//TODO: Add	draw functions
 

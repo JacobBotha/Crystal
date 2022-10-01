@@ -28,7 +28,8 @@ namespace Crystal {
 
 		void Begin();
 		void End();
-		void Record(VulkanFramebuffer* framebuffer, VkPipeline pipeline, RecordInfo& recordInfo, VulkanBuffer* vertexBuffer, uint32_t size);
+		void Record(VulkanFramebuffer* framebuffer, 
+		VkPipeline pipeline, RecordInfo& recordInfo, VulkanBuffer* vertexBuffer, uint32_t size, VulkanBuffer* indexBuffer, uint32_t indexCount);
 		void Reset(ResetFlags flags = ResetFlags::None);
 		VkCommandBuffer GetVkCommandBuffer() const { return m_CommandBuffer; }
 		

@@ -35,7 +35,7 @@ namespace Crystal {
 		virtual void CreateGraphicsPipeline(GraphicsPipelineCreateInfo createInfo) override;
 		virtual void DrawFrame();
 		virtual void PresentFrame();
-		virtual void Submit(std::shared_ptr<Buffer> vertexBuffer, uint32_t vertexCount) override;
+		virtual void Submit(std::shared_ptr<Buffer> vertexBuffer, uint32_t vertexCount, std::shared_ptr<Buffer> indexBuffer, uint32_t indexCount) override;
 
 		VulkanInstance* GetInstance() const { return m_Instance.get(); }
 		VulkanPhysicalDevice* GetPhysicalDevice () const { return m_PhysicalDevice.get(); }
@@ -86,6 +86,9 @@ namespace Crystal {
 
 		std::shared_ptr<VulkanBuffer> m_VertexBuffer;
 		uint32_t m_VertexCount;
+
+		std::shared_ptr<VulkanBuffer> m_IndexBuffer;
+		uint32_t m_IndexCount;
 
 	};
 }
