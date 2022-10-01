@@ -37,8 +37,8 @@ namespace Crystal {
         //Create a frame buffer for each swap chain image view. This could be
         //moved to a handler to more cleanly hold/query the framebuffers.
         CreateFramebuffers();
-        m_CommandPool = std::make_unique<VulkanCommandPool>(m_LogicalDevice.get());
-        m_TransientCommandPool = std::make_unique<VulkanCommandPool>(m_LogicalDevice.get(), true);
+        m_CommandPool = std::make_unique<VulkanCommandPool>(m_LogicalDevice.get(), QueueFlags::Graphics);
+        m_TransientCommandPool = std::make_unique<VulkanCommandPool>(m_LogicalDevice.get(), QueueFlags::Transfer, true);
         m_Frames = std::make_unique<VulkanFramesHandler>(m_LogicalDevice.get(), m_CommandPool.get(), 2);
 
         InitRecordInfo();

@@ -3,12 +3,12 @@
 #include "VulkanCommandPool.h"
 
 namespace Crystal {
-	VulkanCommandPool::VulkanCommandPool(VulkanLogicalDevice* device, bool transient)
+	VulkanCommandPool::VulkanCommandPool(VulkanLogicalDevice* device, QueueFlags queueFlag, bool transient)
 		: m_Device(device) 
 	{
 		VkCommandPoolCreateInfo poolInfo{};
 		poolInfo.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
-		poolInfo.queueFamilyIndex = device->GetQueueIndex(QueueFlags::Graphics);
+		poolInfo.queueFamilyIndex = device->GetQueueIndex(queueFlag);
 		if (transient)
 		{
 			poolInfo.flags = VK_COMMAND_POOL_CREATE_TRANSIENT_BIT;

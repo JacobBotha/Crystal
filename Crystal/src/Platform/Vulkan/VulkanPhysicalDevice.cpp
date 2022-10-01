@@ -114,6 +114,30 @@ namespace Crystal {
 			i++;
 		}
 
+		//Check for an exclusive transfer and compute queue
+		i = 0;
+		for (const auto& queueFamily : queueFamilies)
+		{
+			if (queueFamily.queueCount > 0 && queueFamily.queueFlags & VK_QUEUE_GRAPHICS_BIT) 
+			{
+				i++;
+				continue;
+			}
+
+			if (queueFamily.queueCount > 0 && queueFamily.queueFlags & VK_QUEUE_COMPUTE_BIT) 
+			{
+				indices[QueueFlags::Compute] = i++;
+				continue;
+			}
+
+			if (queueFamily.queueCount > 0 && queueFamily.queueFlags & VK_QUEUE_TRANSFER_BIT) 
+				indices[QueueFlags::Transfer] = i++;
+
+			if (indices[QueueFlags::Transfer] != indices[QueueFlags::Graphics]
+				&& indices[QueueFlags::Graphics] != indices[QueueFlags::Compute])
+				break;
+		}
+
 		return indices;
 	}
 

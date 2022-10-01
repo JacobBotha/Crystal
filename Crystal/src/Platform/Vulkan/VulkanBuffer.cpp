@@ -135,26 +135,10 @@ namespace Crystal
 		VkBuffer srcBuffer = buffer.GetVkBuffer();
 		VulkanRendererAPI* rendererAPI = (VulkanRendererAPI*) Renderer::GetRendererAPI();
 
-		VulkanCommandPool* commandPool = rendererAPI->GetCommandPool();
+		VulkanCommandPool* commandPool = rendererAPI->GetTransferCommandPool();
 		VulkanCommandBuffer commandBuffer(commandPool, true);
 
 		commandBuffer.Begin(true);
-
-		//VkCommandPool commandPool = rendererAPI->GetCommandPool()->GetVkCommandPool();
-		//VkCommandBufferAllocateInfo allocInfo{};
-		//allocInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
-		//allocInfo.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
-		//allocInfo.commandPool = commandPool;
-		//allocInfo.commandBufferCount = 1;
-
-		//VkCommandBuffer commandBuffer;
-		//vkAllocateCommandBuffers(m_Device->GetVkDevice(), &allocInfo, &commandBuffer);
-
-		//VkCommandBufferBeginInfo beginInfo{};
-		//beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
-		//beginInfo.flags = VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT;
-
-		//vkBeginCommandBuffer(commandBuffer, &beginInfo);
 
 		//Assign area to copy
 		VkBufferCopy copyRegion{};
@@ -165,7 +149,6 @@ namespace Crystal
 		vkCmdCopyBuffer(commandBuffer.GetVkCommandBuffer(), srcBuffer, m_Buffer, 1, &copyRegion);
 
 		commandBuffer.End();
-		//vkEndCommandBuffer(commandBuffer);
 
 		VkSubmitInfo submitInfo{};
 		VkCommandBuffer commandBuffers[] = { commandBuffer.GetVkCommandBuffer() };
@@ -175,7 +158,5 @@ namespace Crystal
 
 		vkQueueSubmit(m_Device->GetQueue(QueueFlags::Transfer), 1, &submitInfo, VK_NULL_HANDLE);
 		vkQueueWaitIdle(m_Device->GetQueue(QueueFlags::Transfer));
-
-		//vkFreeCommandBuffers(m_Device->GetVkDevice(), commandPool, 1, &commandBuffer);
 	}
 }
