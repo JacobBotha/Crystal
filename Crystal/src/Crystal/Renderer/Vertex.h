@@ -2,7 +2,7 @@
 #include <glm/glm.hpp>
 
 namespace Crystal {
-	typedef uint32_t Index;
+	typedef uint16_t Index;
 
 	struct Vertex
 	{

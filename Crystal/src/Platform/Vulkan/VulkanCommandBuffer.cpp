@@ -9,9 +9,11 @@
 
 namespace Crystal {
 	VulkanCommandBuffer::VulkanCommandBuffer(VulkanCommandPool* commandPool,
-		bool primary)
+		bool primary, bool freeOnDestroy)
 		: m_Device(commandPool->GetDevice()),
-		m_Primary(primary)
+		m_CommandPool(commandPool),
+		m_Primary(primary),
+		m_FreeOnDestroy(freeOnDestroy)
 	{
 		VkCommandBufferAllocateInfo allocInfo{};
 		allocInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
@@ -30,10 +32,18 @@ namespace Crystal {
 			&allocInfo, &m_CommandBuffer);
 	}
 
-	void VulkanCommandBuffer::Begin()
+	VulkanCommandBuffer::~VulkanCommandBuffer() 
+	{
+		if (m_FreeOnDestroy)
+			vkFreeCommandBuffers(m_Device->GetVkDevice(), m_CommandPool->GetVkCommandPool(), 1, &m_CommandBuffer);
+	}
+
+	void VulkanCommandBuffer::Begin(bool oneTimeSubmit)
 	{
 		VkCommandBufferBeginInfo beginInfo{};
 		beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
+		if (oneTimeSubmit)
+			beginInfo.flags = VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT;
 
 		VkResult err = vkBeginCommandBuffer(m_CommandBuffer, &beginInfo);
 		CL_CORE_ASSERT(err == VK_SUCCESS, "Could not begine command buffer!");
@@ -52,11 +62,6 @@ namespace Crystal {
 		VkPipeline pipeline, RecordInfo& recordInfo, VulkanBuffer* vertexBuffer, uint32_t size, VulkanBuffer* indexBuffer, uint32_t indexCount) 
 	{
 		Begin();
-		//VkCommandBufferBeginInfo beginInfo{};
-		//beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
-
-		//VkResult err = vkBeginCommandBuffer(m_CommandBuffer, &beginInfo);
-		//CL_CORE_ASSERT(err == VK_SUCCESS, "Could not begine command buffer!");
 
 		VulkanRenderPass* renderPass = framebuffer->GetVulkanRenderPass();
 		VkExtent2D extent = recordInfo.extent;
@@ -94,11 +99,9 @@ namespace Crystal {
 			VkDeviceSize offsets[] = { 0 };
 			vkCmdBindVertexBuffers(m_CommandBuffer, 0, 1, vertexBuffers, offsets);
 			
-			vkCmdBindIndexBuffer(m_CommandBuffer, indexBuffer->GetVkBuffer(), 0, VK_INDEX_TYPE_UINT32);
+			vkCmdBindIndexBuffer(m_CommandBuffer, indexBuffer->GetVkBuffer(), 0, VK_INDEX_TYPE_UINT16);
 
 			vkCmdDrawIndexed(m_CommandBuffer, indexCount, 1, 0, 0, 0);
-
-			//vkCmdDraw(m_CommandBuffer, size, 1, 0, 0);
 		}
 
 		ImGui_ImplVulkan_RenderDrawData((ImDrawData*)ImGuiLayer::GetDrawData(), m_CommandBuffer);
@@ -106,9 +109,6 @@ namespace Crystal {
 		vkCmdEndRenderPass(m_CommandBuffer);
 
 		End();
-		//err = vkEndCommandBuffer(m_CommandBuffer);
-		//CL_CORE_ASSERT(err == VK_SUCCESS, "Failed to end command buffer!");
-		//(void)err;
 	}
 
 	void VulkanCommandBuffer::Reset(ResetFlags flags)
@@ -126,6 +126,4 @@ namespace Crystal {
 
 		vkResetCommandBuffer(m_CommandBuffer, resetFlags);
 	}
-
-	VulkanCommandBuffer::~VulkanCommandBuffer() {}
 }

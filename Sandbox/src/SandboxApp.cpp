@@ -44,6 +44,11 @@ public:
 					{{-0.5f, 0.5f}, {0.0f, 0.0f, 1.0f}}
 				};
 				m_TriangleVertexBuffer->BindData(m_TriangleVertices);
+
+				m_Indices = {
+					0, 1, 2
+				};
+				m_IndexBuffer->BindData(m_Indices);
 				//Crystal::Renderer::Submit(m_TriangleVertexBuffer, m_TriangleVertices.size());
 				CL_INFO("Space key pressed - Updating vertices!");
 			}
