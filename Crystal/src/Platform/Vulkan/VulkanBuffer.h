@@ -17,6 +17,11 @@ namespace Crystal
 			VmaAllocator* allocator,
 			BufferType bufferType,
 			size_t size);
+
+		VulkanBuffer(VulkanLogicalDevice* device, 
+			VmaAllocator* allocator,
+			std::set<BufferType>& bufferTypes,
+			size_t size);
 		virtual ~VulkanBuffer() override;
 
 		/// <summary>
@@ -30,36 +35,40 @@ namespace Crystal
 		/// </param>
 		virtual void BindData(std::vector<Vertex> &vertices) override;
 		virtual void BindData(std::vector<Index> &indices) override;
+		virtual void BindData(std::vector<void*>& data, std::vector<std::tuple<BufferType, uint64_t, uint64_t>>& typeOffsets) override;
 
 		/// <summary>
 		/// Bind CPU data to GPU memory.
 		/// </summary>
 		/// <param name="data">A pointer to the data.</param>
 		void BindData(void* data);
-		void PersistentBindData(void* data);
+		void BindData(void* data, VkDeviceSize size, VkDeviceSize offset);
 
-		virtual BufferType GetType() override
-		{
-			return m_Type;
-		}
+		virtual bool HasType(BufferType type) override;
 
 		VkBuffer GetVkBuffer() const { return m_Buffer; }
 		size_t GetSize() const { return m_Size; }
+		bool GetOffset(BufferType type, VkDeviceSize& offset);
 	
-		void VulkanBuffer::CopyBuffer(VulkanBuffer& buffer);
+		void VulkanBuffer::CopyBuffer(VulkanBuffer& buffer, VkDeviceSize offset = 0);
 
 	private:
-		bool BindIfHostVisible(void* data);
+		bool BindIfHostVisible(void* data, VkDeviceSize size, VkDeviceSize offset);
+		void PersistentBindData(void* data);
+		void PersistentBindData(void* data, VkDeviceSize size, VkDeviceSize offset);
 
 		VulkanLogicalDevice* m_Device;
 		VmaAllocator* m_Allocator;
 		VkBuffer m_Buffer;
-		BufferType m_Type;
+		VkDeviceSize m_Size;
+		//BufferType m_Type;
+		std::vector<BufferType> m_Types;
+		std::vector<VkDeviceSize> m_Offsets;
 
 		VmaAllocationInfo m_AllocInfo;
 		VmaAllocation m_Allocation;
-		size_t m_Size;
 		VkMemoryRequirements m_MemRequirements;
+		
 		void* m_Data;
 	};
 }

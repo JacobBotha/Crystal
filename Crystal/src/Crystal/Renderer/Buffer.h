@@ -9,17 +9,22 @@ namespace Crystal
 	public:
 		enum class BufferType
 		{
+			//Multi,
 			Vertex,
 			Index,
 			Staging,
 			Uniform
 		};
+
 		virtual ~Buffer() = default;
 
 		virtual void BindData(std::vector<Vertex> &vertices) = 0;
 		virtual void BindData(std::vector<Index>& indices) = 0;
-		virtual BufferType GetType() = 0;
+		//virtual void BindData(std::vector<Vertex> &vertices, std::vector<Index> &indices) = 0;
+		virtual void BindData(std::vector<void*>& data, std::vector<std::tuple<BufferType, uint64_t, uint64_t>>& typeOffsets) = 0;
+		virtual bool HasType(BufferType type) = 0;
 
 		static std::shared_ptr<Buffer> Create(BufferType type, size_t size);
+		static std::shared_ptr<Buffer> Create(std::set<BufferType>& types, size_t size);
 	};
 }

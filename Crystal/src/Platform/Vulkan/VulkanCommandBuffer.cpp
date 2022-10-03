@@ -13,7 +13,8 @@ namespace Crystal {
 		: m_Device(commandPool->GetDevice()),
 		m_CommandPool(commandPool),
 		m_Primary(primary),
-		m_FreeOnDestroy(freeOnDestroy)
+		m_FreeOnDestroy(freeOnDestroy),
+		m_CommandBuffer(VK_NULL_HANDLE)
 	{
 		VkCommandBufferAllocateInfo allocInfo{};
 		allocInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
@@ -100,6 +101,22 @@ namespace Crystal {
 			vkCmdBindVertexBuffers(m_CommandBuffer, 0, 1, vertexBuffers, offsets);
 			
 			vkCmdBindIndexBuffer(m_CommandBuffer, indexBuffer->GetVkBuffer(), 0, VK_INDEX_TYPE_UINT16);
+
+			vkCmdDrawIndexed(m_CommandBuffer, indexCount, 1, 0, 0, 0);
+		}
+
+		if (indexBuffer && !vertexBuffer)
+		{
+			VkBuffer buffer = indexBuffer->GetVkBuffer();
+			VkDeviceSize offset = 0;
+			CL_CORE_ASSERT(indexBuffer->GetOffset(Buffer::BufferType::Vertex, offset), "No Vertex buffer!");
+			VkBuffer vertexBuffers[] = { buffer };
+			//Use an offset for each mesh/object - Each vertex is the same size and therefor does not require 
+			VkDeviceSize offsets[] = { offset };
+			vkCmdBindVertexBuffers(m_CommandBuffer, 0, 1, vertexBuffers, offsets);
+			
+			CL_CORE_ASSERT(indexBuffer->GetOffset(Buffer::BufferType::Index, offset), "No Index buffer!");
+			vkCmdBindIndexBuffer(m_CommandBuffer, buffer, offset, VK_INDEX_TYPE_UINT16);
 
 			vkCmdDrawIndexed(m_CommandBuffer, indexCount, 1, 0, 0, 0);
 		}

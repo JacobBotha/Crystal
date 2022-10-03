@@ -50,6 +50,7 @@ public:
 				};
 				m_IndexBuffer->BindData(m_Indices);
 				//Crystal::Renderer::Submit(m_TriangleVertexBuffer, m_TriangleVertices.size());
+				Crystal::Renderer::Submit(m_TriangleVertexBuffer, m_TriangleVertices.size(), m_IndexBuffer, m_Indices.size());
 				CL_INFO("Space key pressed - Updating vertices!");
 			}
 		}
@@ -95,12 +96,24 @@ public:
 		m_TriangleVertexBuffer = Crystal::Buffer::Create(Crystal::Buffer::BufferType::Vertex, size);
 		m_TriangleVertexBuffer->BindData(m_TriangleVertices);
 		
-		size = sizeof(Crystal::Index) * m_Indices.size();
+		size_t indexSize = sizeof(Crystal::Index) * m_Indices.size();
 		CL_TRACE(size);
-		m_IndexBuffer = Crystal::Buffer::Create(Crystal::Buffer::BufferType::Index, size);
+		m_IndexBuffer = Crystal::Buffer::Create(Crystal::Buffer::BufferType::Index, indexSize);
 		m_IndexBuffer->BindData(m_Indices);
 
-		Crystal::Renderer::Submit(m_TriangleVertexBuffer, m_TriangleVertices.size(), m_IndexBuffer, m_Indices.size());
+		std::set<Crystal::Buffer::BufferType> types = { Crystal::Buffer::BufferType::Vertex, Crystal::Buffer::BufferType::Index };
+		std::shared_ptr<Crystal::Buffer> buffer = Crystal::Buffer::Create(types, size + indexSize);
+
+		std::vector<void*> data = { m_TriangleVertices.data(), m_Indices.data()};
+		std::vector<std::tuple<Crystal::Buffer::BufferType, uint64_t, uint64_t>> offsetTypes = {
+			{Crystal::Buffer::BufferType::Vertex, size, 0},
+			{Crystal::Buffer::BufferType::Index, indexSize, size }
+		};
+		buffer->BindData(data, offsetTypes);
+
+		Crystal::Renderer::Submit(nullptr, m_TriangleVertices.size(), buffer, m_Indices.size());
+		//Crystal::Renderer::Submit(m_TriangleVertexBuffer, m_TriangleVertices.size(), m_IndexBuffer, m_Indices.size());
+
 	}
 
 	void OnDetach() override {
@@ -118,7 +131,6 @@ public:
 
 	std::shared_ptr<Crystal::Buffer> m_IndexBuffer;
 	std::vector<Crystal::Index> m_Indices;
-
 };
 
 class Sandbox : public Crystal::Application

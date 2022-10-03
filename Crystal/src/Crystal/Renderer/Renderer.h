@@ -30,7 +30,7 @@ namespace Crystal {
 		
 		static void Submit(std::shared_ptr<Buffer> vertexBuffer, uint32_t vertexCount, std::shared_ptr<Buffer> indexBuffer, uint32_t indexCount) 
 		{ 
-			CL_CORE_ASSERT(vertexBuffer->GetType() == Buffer::BufferType::Vertex, "RenderSubmit must be a vertex buffer.");
+			//CL_CORE_ASSERT(vertexBuffer->HasType(Buffer::BufferType::Vertex), "RenderSubmit must be a vertex buffer.");
 			return s_RendererAPI->Submit(vertexBuffer, vertexCount, indexBuffer, indexCount); 
 		}
 

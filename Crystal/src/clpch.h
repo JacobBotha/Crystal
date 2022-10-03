@@ -16,6 +16,7 @@
 #include <unordered_map>
 #include <unordered_set>
 #include <optional>
+#include <tuple>
 
 #include "Crystal/Core/Core.h"
 #include "Crystal/Core/Log.h"
