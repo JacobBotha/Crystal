@@ -42,7 +42,7 @@ namespace Crystal
 		/// </summary>
 		/// <param name="data">A pointer to the data.</param>
 		void BindData(void* data);
-		void BindData(void* data, VkDeviceSize size, VkDeviceSize offset);
+		void BindData(void* data, VkDeviceSize size, VkDeviceSize offset, VulkanBuffer* stagingBuffer);
 
 		virtual bool HasType(BufferType type) override;
 

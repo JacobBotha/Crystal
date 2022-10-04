@@ -230,6 +230,7 @@ namespace Crystal
 			"The number of data pointers must equal the number of Types");
 
 		VkDeviceSize cumSize = 0;
+		VulkanBuffer stagingBuffer(m_Device, m_Allocator, BufferType::Staging, m_Size);
 		for (uint16_t i = 0; i < typeOffsets.size(); i++)
 		{
 			BufferType type = typeOffsets[i].type;
@@ -243,31 +244,37 @@ namespace Crystal
 			
 			VkDeviceSize size = typeOffsets[i].size;
 			CL_CORE_ASSERT(cumSize <= offset, "Overflow of buffer data!")
-			BindData(data[i], size, offset);
+			BindData(data[i], size, offset, &stagingBuffer);
 
 			cumSize += size;
 		}
 
+		CopyBuffer(stagingBuffer, 0);
 	}
 	
 	void VulkanBuffer::BindData(void* data)
 	{
-		BindData(data, m_Size, 0);
+		BindData(data, m_Size, 0, nullptr);
 	}
 
-	void VulkanBuffer::BindData(void* data, VkDeviceSize size, VkDeviceSize offset)
+	void VulkanBuffer::BindData(void* data, VkDeviceSize size, VkDeviceSize offset, VulkanBuffer* stagingBuffer)
 	{
 		CL_CORE_ASSERT(size + offset <= m_Size, 
 			"Buffer overflow when trying to copy data!");
 
 		if (BindIfHostVisible(data, size, offset)) return;
 
-		CL_CORE_INFO("Creating staging buffer to bind data");
 		//Create a staging buffer to bind the data then copy into the vertex buffer
-		VulkanBuffer stagingBuffer(m_Device, m_Allocator, BufferType::Staging, size);
-		stagingBuffer.PersistentBindData(data);
+		if (stagingBuffer)
+		{
+			stagingBuffer->PersistentBindData(data, size, offset);
+			return;
+		} 
+		
+		VulkanBuffer stagingBuff(m_Device, m_Allocator, BufferType::Staging, size);
+		stagingBuff.PersistentBindData(data);
 
-		CopyBuffer(stagingBuffer, offset);
+		CopyBuffer(stagingBuff, offset);
 	}
 
 	bool VulkanBuffer::HasType(BufferType type)

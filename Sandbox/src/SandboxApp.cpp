@@ -103,12 +103,12 @@ public:
 		size_t size = sizeof(Crystal::Vertex) * m_TriangleVertices.size();
 		m_TriangleVertexBuffer = Crystal::Buffer::Create(
 			Crystal::Buffer::BufferType::Vertex, size);
-		m_TriangleVertexBuffer->BindData(m_TriangleVertices);
+		//m_TriangleVertexBuffer->BindData(m_TriangleVertices);
 		
 		size_t indexSize = sizeof(Crystal::Index) * m_Indices.size();
 		m_IndexBuffer = Crystal::Buffer::Create(
 			Crystal::Buffer::BufferType::Index, indexSize);
-		m_IndexBuffer->BindData(m_Indices);
+		//m_IndexBuffer->BindData(m_Indices);
 
 		std::set<Crystal::Buffer::BufferType> types = 
 		{ 
