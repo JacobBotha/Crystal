@@ -224,7 +224,7 @@ namespace Crystal
 		BindData(data);
 	}
 
-	void VulkanBuffer::BindData(std::vector<void*>& data, std::vector<std::tuple<BufferType, uint64_t, uint64_t>>& typeOffsets)
+	void VulkanBuffer::BindData(std::vector<void*>& data, std::vector<BufferRegion>& typeOffsets)
 	{
 		CL_CORE_ASSERT(data.size() == typeOffsets.size(),
 			"The number of data pointers must equal the number of Types");
@@ -232,16 +232,16 @@ namespace Crystal
 		VkDeviceSize cumSize = 0;
 		for (uint16_t i = 0; i < typeOffsets.size(); i++)
 		{
-			BufferType type = std::get<0>(typeOffsets[i]);
+			BufferType type = typeOffsets[i].type;
 			CL_CORE_ASSERT(Contains(m_Types, type),
 				"Buffer does not contain provided type.");
 
-			VkDeviceSize offset = std::get<2>(typeOffsets[i]);
+			VkDeviceSize offset = typeOffsets[i].offset;
 			uint32_t index = IndexOf(m_Types, type);
 			CL_CORE_ASSERT(index >= 0, "Buffer offset index out of range!");
 			m_Offsets[index] = offset;
 			
-			VkDeviceSize size = std::get<1>(typeOffsets[i]);
+			VkDeviceSize size = typeOffsets[i].size;
 			CL_CORE_ASSERT(cumSize <= offset, "Overflow of buffer data!")
 			BindData(data[i], size, offset);
 

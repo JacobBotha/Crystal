@@ -11,17 +11,17 @@ public:
 	}
 
 	void OnUpdate() override
-	{
-		//Crystal::Renderer::DrawFrame();
-	}
+	{}
 
 	void OnEvent(Crystal::Event& event) override
 	{
-		if(event.GetEventType() == Crystal::EventType::KeyPressed) {
+		if(event.GetEventType() == Crystal::EventType::KeyPressed) 
+		{
 			//Convert event to key event
 			Crystal::KeyPressedEvent* kEvent = (Crystal::KeyPressedEvent*) &event;
 			//Check if Tab key is pressed and reload shaders/graphics pipeline
-			if (kEvent->GetKeyCode() == Crystal::Key::Tab) {
+			if (kEvent->GetKeyCode() == Crystal::Key::Tab) 
+			{
 				m_VertShader = Crystal::Shader::Create("assets/shaders/shader.vert");
 				m_FragShader = Crystal::Shader::Create("assets/shaders/shader.frag");
 				Crystal::GraphicsPipelineCreateInfo graphicsPipelineCreateInfo{};
@@ -33,38 +33,45 @@ public:
 			}
 		}
 
-		if (event.GetEventType() == Crystal::EventType::KeyPressed) {
+		if (event.GetEventType() == Crystal::EventType::KeyPressed) 
+		{
 			//Convert event to key event
 			Crystal::KeyPressedEvent* kEvent = (Crystal::KeyPressedEvent*)&event;
 			//Check if Tab key is pressed and reload shaders/graphics pipeline
-			if (kEvent->GetKeyCode() == Crystal::Key::Space) {
-				m_TriangleVertices = {
+			if (kEvent->GetKeyCode() == Crystal::Key::Space) 
+			{
+				m_TriangleVertices = 
+				{
 					{{0.0f, -0.5f}, {1.0f, 0.0f, 0.0f}},
 					{{0.5f, 0.5f}, {0.0f, 1.0f, 0.0f}},
 					{{-0.5f, 0.5f}, {0.0f, 0.0f, 1.0f}}
 				};
 				m_TriangleVertexBuffer->BindData(m_TriangleVertices);
 
-				m_Indices = {
+				m_Indices = 
+				{
 					0, 1, 2
 				};
 				m_IndexBuffer->BindData(m_Indices);
-				//Crystal::Renderer::Submit(m_TriangleVertexBuffer, m_TriangleVertices.size());
-				Crystal::Renderer::Submit(m_TriangleVertexBuffer, m_TriangleVertices.size(), m_IndexBuffer, m_Indices.size());
+				Crystal::Renderer::Submit(m_TriangleVertexBuffer, 
+					m_TriangleVertices.size(), m_IndexBuffer, m_Indices.size());
 				CL_INFO("Space key pressed - Updating vertices!");
 			}
 		}
 
-		if (event.GetEventType() == Crystal::EventType::KeyPressed) {
+		if (event.GetEventType() == Crystal::EventType::KeyPressed) 
+		{
 			Crystal::KeyPressedEvent* kEvent = (Crystal::KeyPressedEvent*)&event;
-			if (kEvent->GetKeyCode() == Crystal::Key::C) {
+			if (kEvent->GetKeyCode() == Crystal::Key::C) 
+			{
 				Crystal::Renderer::Clear();
 				CL_INFO("C Key pressed - Clearing renderer!");
 			}
 		}
 	}
 
-	void OnAttach() override {
+	void OnAttach() override 
+	{
 		m_VertShader = Crystal::Shader::Create("assets/shaders/shader.vert");
 		m_FragShader = Crystal::Shader::Create("assets/shaders/shader.frag");
 		
@@ -80,43 +87,60 @@ public:
 		color.a = 1.0f;
 		Crystal::Renderer::SetClearColor(color);
 
-		m_TriangleVertices = {
+		m_TriangleVertices = 
+		{
 			{{-0.5f, -0.5f}, {1.0f, 0.0f, 0.0f}},
 			{{0.5f, -0.5f}, {0.0f, 1.0f, 0.0f}},
 			{{0.5f, 0.5f}, {0.0f, 0.0f, 1.0f}},
 			{{-0.5f, 0.5f}, {1.0f, 1.0f, 1.0f}}
 		};
 
-		m_Indices = {
+		m_Indices = 
+		{
 			0, 1, 2, 2, 3, 0
 		};
 
 		size_t size = sizeof(Crystal::Vertex) * m_TriangleVertices.size();
-		CL_TRACE(size);
-		m_TriangleVertexBuffer = Crystal::Buffer::Create(Crystal::Buffer::BufferType::Vertex, size);
+		m_TriangleVertexBuffer = Crystal::Buffer::Create(
+			Crystal::Buffer::BufferType::Vertex, size);
 		m_TriangleVertexBuffer->BindData(m_TriangleVertices);
 		
 		size_t indexSize = sizeof(Crystal::Index) * m_Indices.size();
-		CL_TRACE(size);
-		m_IndexBuffer = Crystal::Buffer::Create(Crystal::Buffer::BufferType::Index, indexSize);
+		m_IndexBuffer = Crystal::Buffer::Create(
+			Crystal::Buffer::BufferType::Index, indexSize);
 		m_IndexBuffer->BindData(m_Indices);
 
-		std::set<Crystal::Buffer::BufferType> types = { Crystal::Buffer::BufferType::Vertex, Crystal::Buffer::BufferType::Index };
-		std::shared_ptr<Crystal::Buffer> buffer = Crystal::Buffer::Create(types, size + indexSize);
+		std::set<Crystal::Buffer::BufferType> types = 
+		{ 
+			Crystal::Buffer::BufferType::Vertex, 
+			Crystal::Buffer::BufferType::Index 
+		};
 
-		std::vector<void*> data = { m_TriangleVertices.data(), m_Indices.data()};
-		std::vector<std::tuple<Crystal::Buffer::BufferType, uint64_t, uint64_t>> offsetTypes = {
+		std::shared_ptr<Crystal::Buffer> buffer = 
+			Crystal::Buffer::Create(types, size + indexSize);
+
+		std::vector<void*> data = 
+		{ 
+			m_TriangleVertices.data(), 
+			m_Indices.data()
+		};
+
+		std::vector<Crystal::Buffer::BufferRegion> offsetTypes = 
+		{
 			{Crystal::Buffer::BufferType::Vertex, size, 0},
 			{Crystal::Buffer::BufferType::Index, indexSize, size }
 		};
 		buffer->BindData(data, offsetTypes);
 
-		Crystal::Renderer::Submit(nullptr, m_TriangleVertices.size(), buffer, m_Indices.size());
-		//Crystal::Renderer::Submit(m_TriangleVertexBuffer, m_TriangleVertices.size(), m_IndexBuffer, m_Indices.size());
+		Crystal::Renderer::Submit(nullptr, m_TriangleVertices.size(), 
+			buffer, m_Indices.size());
+		//Crystal::Renderer::Submit(m_TriangleVertexBuffer, 
+		//	m_TriangleVertices.size(), m_IndexBuffer, m_Indices.size());
 
 	}
 
-	void OnDetach() override {
+	void OnDetach() override 
+	{
 		m_VertShader.reset();
 		m_FragShader.reset();
 		m_TriangleVertexBuffer.reset();
@@ -136,12 +160,14 @@ public:
 class Sandbox : public Crystal::Application
 {
 public:
-	Sandbox() {
+	Sandbox() 
+	{
 		PushLayer(new ExampleLayer());
 	}
 	~Sandbox() {}
 };
 
-Crystal::Application* Crystal::CreateApplication() {
+Crystal::Application* Crystal::CreateApplication() 
+{
 	return new Sandbox();
 }

@@ -35,7 +35,7 @@ namespace Crystal
 		/// </param>
 		virtual void BindData(std::vector<Vertex> &vertices) override;
 		virtual void BindData(std::vector<Index> &indices) override;
-		virtual void BindData(std::vector<void*>& data, std::vector<std::tuple<BufferType, uint64_t, uint64_t>>& typeOffsets) override;
+		virtual void BindData(std::vector<void*>& data, std::vector<BufferRegion>& typeOffsets) override;
 
 		/// <summary>
 		/// Bind CPU data to GPU memory.
